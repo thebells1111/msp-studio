@@ -1,8 +1,10 @@
 <script>
-	let bands = [];
-	let albums = [];
-	let tracks = [];
+	import { library, selectedBand, selectedAlbum, selectedTrack } from '$/stores';
 	let selectedScreen = 'bands';
+
+	import Bands from './Bands.svelte';
+	import Albums from './Albums.svelte';
+	import Tracks from './Tracks.svelte';
 
 	function handleScreenSelect(screen) {
 		selectedScreen = screen;
@@ -14,20 +16,31 @@
 		on:click={handleScreenSelect.bind(this, 'bands')}
 		on:keypress={handleScreenSelect.bind(this, 'bands')}
 	>
-		Bands
+		Band - {$selectedBand.title}
 	</li>
 	<li
 		on:click={handleScreenSelect.bind(this, 'albums')}
 		on:keypress={handleScreenSelect.bind(this, 'albums')}
 	>
-		Albums
+		Album - {$selectedAlbum.title}
 	</li>
 	<li
 		on:click={handleScreenSelect.bind(this, 'tracks')}
 		on:keypress={handleScreenSelect.bind(this, 'tracks')}
 	>
-		Tracks
+		Track - {$selectedTrack.title}
 	</li>
 </ul>
 
 {selectedScreen}
+<h2>{$selectedBand.title}</h2>
+<h3>{$selectedAlbum.title}</h3>
+<h4>{$selectedTrack.title}</h4>
+
+{#if selectedScreen === 'bands'}
+	<Bands bind:selectedScreen />
+{:else if selectedScreen === 'albums'}
+	<Albums bind:selectedScreen />
+{:else if selectedScreen === 'tracks'}
+	<Tracks />
+{/if}

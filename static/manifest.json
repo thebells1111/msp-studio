@@ -1,0 +1,27 @@
+{
+  "name": "Music Side Project",
+  "short_name": "Music Side Project",
+  "description": "Lightning Network Enabled, Decentralized Music For The Masses",
+  "lang": "en-US",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#333",
+  "background_color": "#333",
+  "icons": [
+    {
+      "src": "/msp-white-on-black-circle-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/msp-white-on-black-circle-240.png",
+      "sizes": "240x240",
+      "type": "image/png"
+    },
+    {
+      "src": "/msp-white-on-black-circle-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
