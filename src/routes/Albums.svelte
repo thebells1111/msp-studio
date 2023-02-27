@@ -2,23 +2,29 @@
 	import { library, selectedBand, selectedAlbum } from '$/stores';
 
 	export let selectedScreen;
-	let newAlbumName = '';
-	let newAlbumImage = '';
+
+	let newAlbum = {
+		title: '',
+		artwork: '',
+		tracks: []
+	};
 
 	async function addNewAlbum() {
-		let album = {};
-		album.title = newAlbumName;
-		album.artwork = newAlbumImage;
-		album.tracks = [];
-		console.log($library);
-		$selectedBand.albums = $selectedBand.albums.concat(album);
-		$selectedAlbum = album;
+		const album = {
+			title: newAlbum.title,
+			artwork: newAlbum.artwork,
+			tracks: []
+		};
+		selectedBand.update((band) => ({
+			...band,
+			albums: [...band.albums, album]
+		}));
+		selectedAlbum.set(album);
 		selectedScreen = 'tracks';
 	}
 
 	async function selectAlbum(album) {
-		console.log(album);
-		$selectedAlbum = album;
+		selectedAlbum.set(album);
 		selectedScreen = 'tracks';
 	}
 </script>
@@ -32,12 +38,12 @@
 
 <label>
 	Album Name
-	<input bind:value={newAlbumName} />
+	<input bind:value={newAlbum.title} />
 </label>
 
 <label>
 	Link to Album Image
-	<input bind:value={newAlbumImage} />
+	<input bind:value={newAlbum.artwork} />
 </label>
 
 <button on:click={addNewAlbum}>Add</button>
