@@ -21,7 +21,7 @@
 
 <h4>Tracks</h4>
 <ul>
-	{#each $selectedAlbum.tracks as track}
+	{#each $selectedAlbum?.tracks || [] as track}
 		<li on:click={selectTrack.bind(this, track)}>{track.title}</li>
 	{/each}
 </ul>
