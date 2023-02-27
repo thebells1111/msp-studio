@@ -1,5 +1,5 @@
 <script>
-	import { library, selectedBand, selectedAlbum } from '$/stores';
+	import { selectedBand, selectedAlbum, catalogDB } from '$/stores';
 
 	export let selectedScreen;
 
@@ -15,11 +15,9 @@
 			artwork: newAlbum.artwork,
 			tracks: []
 		};
-		selectedBand.update((band) => ({
-			...band,
-			albums: [...band.albums, album]
-		}));
-		selectedAlbum.set(album);
+		$selectedAlbum = album;
+		$selectedBand.albums = [...$selectedBand.albums, album];
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		selectedScreen = 'tracks';
 	}
 

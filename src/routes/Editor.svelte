@@ -32,11 +32,6 @@
 	</li>
 </ul>
 
-{selectedScreen}
-<h2>{$selectedBand.title}</h2>
-<h3>{$selectedAlbum.title}</h3>
-<h4>{$selectedTrack.title}</h4>
-
 {#if selectedScreen === 'bands'}
 	<Bands bind:selectedScreen />
 {:else if selectedScreen === 'albums'}

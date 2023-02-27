@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 
+export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 export const selectedBand = writable({});
