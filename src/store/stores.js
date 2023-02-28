@@ -6,6 +6,7 @@ export const library = writable([]);
 export const selectedBand = writable({});
 export const selectedAlbum = writable({});
 export const selectedTrack = writable({});
+export const selectedScreen = writable('bands');
 export const playingTrack = writable({});
 export const player = writable();
 export const playerTime = writable(0);

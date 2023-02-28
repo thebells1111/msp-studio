@@ -1,7 +1,5 @@
 <script>
-	import { selectedBand, selectedAlbum, catalogDB } from '$/stores';
-
-	export let selectedScreen;
+	import { selectedBand, selectedAlbum, catalogDB, selectedScreen } from '$/stores';
 
 	let newAlbum = {
 		title: '',
@@ -18,22 +16,11 @@
 		$selectedAlbum = album;
 		$selectedBand.albums = [...$selectedBand.albums, album];
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
-		selectedScreen = 'tracks';
-	}
-
-	async function selectAlbum(album) {
-		selectedAlbum.set(album);
-		selectedScreen = 'tracks';
+		$selectedScreen = 'tracks';
 	}
 </script>
 
-<h4>Albums</h4>
-<ul>
-	{#each $selectedBand?.albums || [] as album}
-		<li on:click={selectAlbum.bind(this, album)}>{album.title}</li>
-	{/each}
-</ul>
-
+<h3>Album</h3>
 <label>
 	Album Name
 	<input bind:value={newAlbum.title} />
@@ -44,4 +31,4 @@
 	<input bind:value={newAlbum.artwork} />
 </label>
 
-<button on:click={addNewAlbum}>Add</button>
+<button on:click={addNewAlbum}>Save</button>

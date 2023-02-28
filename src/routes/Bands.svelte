@@ -1,7 +1,6 @@
 <script>
-	import { library, selectedBand, selectedAlbum, selectedTrack, catalogDB } from '$/stores';
+	import { library, selectedBand, catalogDB, selectedScreen } from '$/stores';
 
-	export let selectedScreen;
 	let newBandName = '';
 	let newBandImage = '';
 
@@ -14,24 +13,11 @@
 		$library = $library.concat(band);
 		$catalogDB.setItem(band.title, band);
 		$selectedBand = band;
-		selectedScreen = 'albums';
-	}
-
-	async function selectBand(band) {
-		$selectedBand = band;
-		$selectedAlbum = '';
-		$selectedTrack = '';
-		selectedScreen = 'albums';
+		$selectedScreen = 'albums';
 	}
 </script>
 
-<h3>Bands</h3>
-<ul>
-	{#each $library as band}
-		<li on:click={selectBand.bind(this, band)}>{band.title}</li>
-	{/each}
-</ul>
-
+<h3>Band</h3>
 <label>
 	Band Name
 	<input bind:value={newBandName} />
@@ -42,4 +28,4 @@
 	<input bind:value={newBandImage} />
 </label>
 
-<button on:click={addNewBand}>Add</button>
+<button on:click={addNewBand}>Save</button>

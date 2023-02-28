@@ -1,31 +1,23 @@
 <script>
-	import { selectedAlbum, selectedTrack } from '$/stores';
+	import { selectedBand, selectedAlbum, selectedTrack, catalogDB } from '$/stores';
 
 	let newTrackName = '';
 	let newTrackImage = '';
 
 	async function addNewTrack() {
-		let track = {};
-		track.title = newTrackName;
-		track.artwork = newTrackImage;
+		let track = {
+			title: newTrackName,
+			artwork: newTrackImage
+		};
 
-		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
 		$selectedTrack = track;
-	}
+		$selectedAlbum.tracks = [...$selectedAlbum.tracks, track];
 
-	async function selectTrack(Track) {
-		console.log(Track);
-		$selectedTrack = Track;
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 </script>
 
-<h4>Tracks</h4>
-<ul>
-	{#each $selectedAlbum?.tracks || [] as track}
-		<li on:click={selectTrack.bind(this, track)}>{track.title}</li>
-	{/each}
-</ul>
-
+<h3>Track</h3>
 <label>
 	Track Name
 	<input bind:value={newTrackName} />
@@ -36,4 +28,4 @@
 	<input bind:value={newTrackImage} />
 </label>
 
-<button on:click={addNewTrack}>Add</button>
+<button on:click={addNewTrack}>Save</button>

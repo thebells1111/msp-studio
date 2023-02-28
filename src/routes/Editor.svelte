@@ -1,13 +1,29 @@
 <script>
-	import { library, selectedBand, selectedAlbum, selectedTrack } from '$/stores';
-	let selectedScreen = 'bands';
+	import { library, selectedBand, selectedAlbum, selectedTrack, selectedScreen } from '$/stores';
 
 	import Bands from './Bands.svelte';
 	import Albums from './Albums.svelte';
 	import Tracks from './Tracks.svelte';
 
 	function handleScreenSelect(screen) {
-		selectedScreen = screen;
+		$selectedScreen = screen;
+	}
+
+	async function selectBand(band) {
+		$selectedBand = band;
+		$selectedAlbum = '';
+		$selectedTrack = '';
+		$selectedScreen = 'albums';
+	}
+
+	async function selectAlbum(album) {
+		$selectedAlbum = album;
+		$selectedScreen = 'tracks';
+	}
+
+	async function selectTrack(Track) {
+		console.log(Track);
+		$selectedTrack = Track;
 	}
 </script>
 
@@ -32,10 +48,31 @@
 	</li>
 </ul>
 
-{#if selectedScreen === 'bands'}
-	<Bands bind:selectedScreen />
-{:else if selectedScreen === 'albums'}
-	<Albums bind:selectedScreen />
-{:else if selectedScreen === 'tracks'}
+{#if $selectedScreen === 'bands'}
+	<h3>Bands</h3>
+	<ul>
+		{#each $library as band}
+			<li on:click={selectBand.bind(this, band)}>{band.title}</li>
+		{/each}
+		<Bands />
+	</ul>
+{:else if $selectedScreen === 'albums'}
+	<Bands />
+
+	<h4>Albums</h4>
+	<ul>
+		{#each $selectedBand?.albums || [] as album}
+			<li on:click={selectAlbum.bind(this, album)}>{album.title}</li>
+		{/each}
+	</ul>
+	<Albums />
+{:else if $selectedScreen === 'tracks'}
+	<Albums />
+	<h4>Tracks</h4>
+	<ul>
+		{#each $selectedAlbum?.tracks || [] as track}
+			<li on:click={selectTrack.bind(this, track)}>{track.title}</li>
+		{/each}
+	</ul>
 	<Tracks />
 {/if}
