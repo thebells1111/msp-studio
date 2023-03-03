@@ -3,7 +3,15 @@ import { writable } from 'svelte/store';
 export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
+
 export const selectedBand = writable({});
+export const selectedBandIndex = writable(-1);
+export const newBand = writable({
+	title: '',
+	artwork: '',
+	albums: []
+});
+
 export const selectedAlbum = writable({});
 export const selectedTrack = writable({});
 export const selectedScreen = writable('bands');

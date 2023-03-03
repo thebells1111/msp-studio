@@ -1,5 +1,13 @@
 <script>
-	import { library, selectedBand, selectedAlbum, selectedTrack, selectedScreen } from '$/stores';
+	import {
+		library,
+		selectedBand,
+		selectedBandIndex,
+		newBand,
+		selectedAlbum,
+		selectedTrack,
+		selectedScreen
+	} from '$/stores';
 
 	import Bands from './Bands.svelte';
 	import Albums from './Albums.svelte';
@@ -7,13 +15,17 @@
 
 	function handleScreenSelect(screen) {
 		$selectedScreen = screen;
+		if (screen === 'bands') {
+			$selectedBand = newBand;
+		}
 	}
 
-	async function selectBand(band) {
+	async function selectBand(band, index) {
 		$selectedBand = band;
 		$selectedAlbum = '';
 		$selectedTrack = '';
 		$selectedScreen = 'albums';
+		$selectedBandIndex = index;
 	}
 
 	async function selectAlbum(album) {
@@ -51,10 +63,10 @@
 {#if $selectedScreen === 'bands'}
 	<h3>Bands</h3>
 	<ul>
-		{#each $library as band}
-			<li on:click={selectBand.bind(this, band)}>{band.title}</li>
+		{#each $library as band, i}
+			<li on:click={selectBand.bind(this, band, i)}>{band.title}</li>
 		{/each}
-		<Bands />
+		<Bands add={true} />
 	</ul>
 {:else if $selectedScreen === 'albums'}
 	<Bands />
