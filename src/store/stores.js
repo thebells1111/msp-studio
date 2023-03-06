@@ -4,7 +4,7 @@ export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 
-export const selectedBand = writable({});
+export const selectedBand = writable({ title: '', artwork: '', albums: [] });
 export const selectedBandIndex = writable(-1);
 export const newBand = writable({
 	title: '',
@@ -12,8 +12,31 @@ export const newBand = writable({
 	albums: []
 });
 
-export const selectedAlbum = writable({});
+export const selectedAlbum = writable({ title: '', artwork: '', tracks: [] });
+export const selectedAlbumIndex = writable(-1);
+export const newAlbum = writable({
+	title: '',
+	artwork: '',
+	tracks: []
+});
+
 export const selectedTrack = writable({});
+export const selectedTrackIndex = writable(-1);
+export const newTrack = writable({
+	title: '',
+	artwork: '',
+	url: '',
+	value: []
+});
+
+export const newPerson = writable({
+	name: '',
+	address: '',
+	key: '',
+	value: '',
+	split: 0
+});
+
 export const selectedScreen = writable('bands');
 export const playingTrack = writable({});
 export const player = writable();
