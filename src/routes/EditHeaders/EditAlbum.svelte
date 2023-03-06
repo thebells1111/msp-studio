@@ -6,15 +6,6 @@
 </script>
 
 <album-name>
-	<img
-		width="100"
-		height="100"
-		alt={$selectedAlbum.artwork
-			? `${`${$selectedAlbum.title} ` || ''}cover art`
-			: 'add Album Image link'}
-		src={$selectedAlbum.artwork}
-	/>
-	<h2>{$selectedAlbum.title}</h2>
 	<button
 		on:click={() => {
 			showEdit = !showEdit;
@@ -27,9 +18,20 @@
 			$selectedScreen = 'albums';
 			$selectedAlbum = $newAlbum;
 		}}
+		class="select"
 	>
 		Select Different Album
 	</button>
+
+	<h2>{$selectedAlbum.title}</h2>
+	<img
+		width="150"
+		height="150"
+		alt={$selectedAlbum.artwork
+			? `${`${$selectedAlbum.title} ` || ''}cover art`
+			: 'add Album Image link'}
+		src={$selectedAlbum.artwork}
+	/>
 </album-name>
 
 {#if showEdit}
@@ -41,15 +43,24 @@
 <style>
 	album-name {
 		display: flex;
-		align-items: center;
-		margin-left: 32px;
+		align-items: flex-start;
+		position: relative;
+		margin-bottom: 8px;
 	}
 	h2 {
-		margin: 8px 16px;
-		width: 50%;
+		margin: 0;
+		margin-left: 16px;
+		flex-grow: 1;
 	}
 
 	img {
 		border: 1px solid black;
+		position: absolute;
+		right: 0;
+		top: -44px;
+	}
+
+	.select {
+		width: 203px;
 	}
 </style>

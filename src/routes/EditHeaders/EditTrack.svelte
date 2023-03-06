@@ -6,24 +6,17 @@
 </script>
 
 <track-name>
-	<img
-		width="100"
-		height="100"
-		alt={$selectedTrack.artwork
-			? `${`${$selectedTrack.title} ` || ''}cover art`
-			: 'add Track Image link'}
-		src={$selectedTrack.artwork}
-	/>
-	<h2>{$selectedTrack.title}</h2>
-
 	<button
 		on:click={() => {
 			$selectedScreen = 'tracks';
 			$selectedTrack = $newTrack;
 		}}
+		class="select"
 	>
 		Select Different Track
 	</button>
+
+	<h2>{$selectedTrack.title}</h2>
 </track-name>
 
 <audio src={$selectedTrack.url} controls />
@@ -37,12 +30,14 @@
 <style>
 	track-name {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		margin-left: 64px;
+		margin-bottom: 24px;
 	}
 	h2 {
-		margin: 8px 16px;
-		width: 50%;
+		margin: 0;
+		margin-left: 24px;
+		flex-grow: 1;
 	}
 
 	img {
@@ -52,5 +47,9 @@
 	audio {
 		margin: 8px 64px;
 		width: calc(100% - 128px);
+	}
+
+	.select {
+		width: 203px;
 	}
 </style>

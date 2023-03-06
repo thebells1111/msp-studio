@@ -17,18 +17,18 @@
 <value-block>
 	<h3>Value Recipients</h3>
 	<ul>
-		{#each valueBlock || [] as p, i}
+		{#each valueBlock || [] as person, i}
 			<li>
-				<EditPerson person={valueBlock[i]} index={i} />
+				<EditPerson {person} />
 			</li>
 		{/each}
 	</ul>
 
 	<button on:click={addPerson}>Add New Recipient</button>
-	<button on:click={save}>Save</button>
 </value-block>
 
 <style>
-	value-block {
+	li {
+		list-style-type: none;
 	}
 </style>

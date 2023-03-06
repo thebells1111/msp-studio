@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import localforage from 'localforage';
+	import './styles.css';
 
 	import Editor from './Editor.svelte';
 	import FileUploader from './FileUploader.svelte';

@@ -62,6 +62,14 @@
 		<button on:click={() => (add ? addNewTrack() : saveTrack())}>
 			{add ? 'Add Track' : 'Save Track'}
 		</button>
+		<img
+			width="100"
+			height="100"
+			alt={$selectedTrack.artwork
+				? `${`${$selectedTrack.title} ` || ''}cover art`
+				: 'add Track Image link'}
+			src={$selectedTrack.artwork}
+		/>
 		<label>
 			<p>Track Name (required)</p>
 			<input bind:value={newTrackName} />

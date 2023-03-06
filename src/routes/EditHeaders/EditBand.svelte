@@ -8,7 +8,6 @@
 </script>
 
 <band-name>
-	<h2>{$selectedBand.title}</h2>
 	<button
 		on:click={() => {
 			showEdit = !showEdit;
@@ -21,9 +20,11 @@
 			$selectedScreen = 'bands';
 			$selectedBand = $newBand;
 		}}
+		class="select"
 	>
 		Select Different Band
 	</button>
+	<h1>{$selectedBand.title}</h1>
 </band-name>
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>
@@ -35,9 +36,14 @@
 	band-name {
 		display: flex;
 		align-items: center;
+		margin-bottom: 8px;
 	}
-	h2 {
-		margin: 8px;
-		width: 50%;
+	h1 {
+		margin: 0;
+		margin-left: 8px;
+	}
+
+	.select {
+		width: 203px;
 	}
 </style>

@@ -42,20 +42,10 @@
 html, body {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
+	
 }
 
-@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-  html {
-    transform: rotate(-90deg);
-    transform-origin: left top;
-    width: 100vh;
-    height: 100vw;
-    overflow-x: hidden;
-    position: absolute;
-    top: 100%;
-    left: 0;
-  }
-}
+
 
 body {
 	margin: 0;
@@ -64,10 +54,9 @@ body {
 	-webkit-tap-highlight-color: transparent !important;
 	outline: none !important;
 	margin:0 auto;
-	display:flex;
-	align-items: center;
-	justify-content: center;
-	overflow:hidden
+	padding: 8px;
+	height: calc(100% - 16px)
+
 }
 
 
@@ -107,7 +96,13 @@ button {
 button{
 	cursor: pointer;
 	border: none;
-	padding: 0;
+	margin:2px;
+	color: var(--color-text-0);
+	background-color: var(--color-bg-support-button);
+	padding: 8px 16px;
+	border-radius: 20px;
+	font-weight: 550;
+
 }
 
 button:focus:not(:focus-visible) {

@@ -1,12 +1,4 @@
 <script>
-	import { onMount } from 'svelte';
-
-	let name = '';
-	let address = '';
-	let key = '';
-	let value = '';
-	let split = 0;
-
 	let provider = '';
 	let username = '';
 	let noUserFound = false;
@@ -14,12 +6,6 @@
 	let showAdvanced = false;
 
 	export let person = {};
-
-	onMount(() => {
-		console.log(person);
-		name = person.name;
-		address = person.address;
-	});
 
 	async function handleProviderSelect(providerName) {
 		showProviderInput = true;
@@ -39,9 +25,9 @@
 			try {
 				info = await res.json();
 				if (info.status === 'OK') {
-					address = info.pubkey;
-					value = info.customData[0].customValue;
-					key = info.customData[0].customKey;
+					person.address = info.pubkey;
+					person.value = info.customData[0].customValue;
+					person.key = info.customData[0].customKey;
 				} else {
 					throw new Error();
 				}
@@ -51,14 +37,14 @@
 				info = undefined;
 			}
 		} else if (provider === 'Fountain') {
-			let res = await fetch(` https://fountain.fm/.well-known/keysend/adam`);
+			let res = await fetch(` https://fountain.fm/.well-known/keysend/${name[0]}`);
 			let info;
 			try {
 				info = await res.json();
 				if (info.status === 'OK') {
-					address = info.pubkey;
-					value = info.customData[0].customValue;
-					key = info.customData[0].customKey;
+					person.address = info.pubkey;
+					person.value = info.customData[0].customValue;
+					person.key = info.customData[0].customKey;
 				} else {
 					throw new Error();
 				}
@@ -67,40 +53,11 @@
 				noUserFound = true;
 				info = undefined;
 			}
-
-			// let res = await fetch('https://api.fountain.fm/v1/content/lookup', {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		'Content-Type': 'application/json'
-			// 	},
-			// 	body: JSON.stringify({ username: name[0] })
-			// });
-			// let info;
-
-			// try {
-			// 	info = await res.json();
-			// 	if (!info?.keysend?.customValue) {
-			// 		throw new Error();
-			// 	}
-			// 	if (info?.username) {
-			// 		data['podcast:valueRecipient'][index - 1]['@_name'] = info.keysend.name;
-			// 		data['podcast:valueRecipient'][index - 1]['@_address'] = info.keysend.address;
-			// 		data['podcast:valueRecipient'][index - 1]['@_customValue'] = info.keysend.customValue;
-			// 		data['podcast:valueRecipient'][index - 1]['@_customKey'] = info.keysend.customKey;
-			// 	}
-			// 	cancelProviderSubmit();
-			// } catch (error) {
-			// 	noUserFound = true;
-			// 	info = undefined;
-			// }
-			// console.log(info);
 		} else if (provider === 'v4v.app') {
 			if (name[0]) {
-				data['podcast:valueRecipient'][index - 1]['@_name'] = username;
-				data['podcast:valueRecipient'][index - 1]['@_address'] =
-					'0266ad2656c7a19a219d37e82b280046660f4d7f3ae0c00b64a1629de4ea567668';
-				data['podcast:valueRecipient'][index - 1]['@_customValue'] = name[0];
-				data['podcast:valueRecipient'][index - 1]['@_customKey'] = 818818;
+				person.address = '0266ad2656c7a19a219d37e82b280046660f4d7f3ae0c00b64a1629de4ea567668';
+				person.value = name[0];
+				person.key = 818818;
 
 				cancelProviderSubmit();
 			} else {
@@ -131,21 +88,7 @@
 {:else}
 	<div class="person-block">
 		<label>
-			<h4>
-				Name
-				<button class="provider alby" on:click={handleProviderSelect.bind(this, 'Alby')}>
-					<img src="alby.png" width="15" />
-					<span>Use Alby</span>
-				</button>
-				<button class="provider fountain" on:click={handleProviderSelect.bind(this, 'Fountain')}>
-					<img src="fountain.png" />
-					<span>Use Fountain</span>
-				</button>
-				<button class="provider v4vapp" on:click={handleProviderSelect.bind(this, 'v4v.app')}>
-					<img src="v4vapp.webp" />
-					<span>Use v4v.app</span>
-				</button>
-			</h4>
+			<h4>Name</h4>
 			<input
 				type="text"
 				bind:value={person.name}
@@ -165,6 +108,18 @@
 			paid)
 		</p>
 
+		<button class="provider alby" on:click={handleProviderSelect.bind(this, 'Alby')}>
+			<img src="alby.png" width="15" />
+			<span>Use Alby</span>
+		</button>
+		<button class="provider fountain" on:click={handleProviderSelect.bind(this, 'Fountain')}>
+			<img src="fountain.png" />
+			<span>Use Fountain</span>
+		</button>
+		<button class="provider v4vapp" on:click={handleProviderSelect.bind(this, 'v4v.app')}>
+			<img src="v4vapp.webp" />
+			<span>Use v4v.app</span>
+		</button>
 		<button
 			on:click={() => {
 				showAdvanced = !showAdvanced;
