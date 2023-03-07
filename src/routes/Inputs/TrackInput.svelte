@@ -59,55 +59,89 @@
 	<button on:click={() => (showAddNewButton = false)}>Add New Track</button>
 {:else}
 	<div>
-		<button on:click={() => (add ? addNewTrack() : saveTrack())}>
-			{add ? 'Add Track' : 'Save Track'}
-		</button>
-		<img
-			width="100"
-			height="100"
-			alt={$selectedTrack.artwork
-				? `${`${$selectedTrack.title} ` || ''}cover art`
-				: 'add Track Image link'}
-			src={$selectedTrack.artwork}
-		/>
-		<label>
-			<p>Track Name (required)</p>
-			<input bind:value={newTrackName} />
-		</label>
+		<top-pane>
+			<edit-pane>
+				<label>
+					<p>Track Name (required)</p>
+					<input bind:value={newTrackName} />
+				</label>
 
-		<label>
-			<p>Link to Track Image (optional)</p>
-			<input bind:value={newTrackImage} />
-		</label>
+				<label>
+					<p>Link to Track mp3 File (required)</p>
+					<input bind:value={newTrackEnclosure} />
+				</label>
+				<label>
+					<p>Link to Track Image (optional)</p>
+					<input bind:value={newTrackImage} />
+				</label>
+			</edit-pane>
 
-		<label>
-			<p>Link to Track mp3 File (required)</p>
-			<input bind:value={newTrackEnclosure} />
-		</label>
-
-		<button
-			style="display:block"
-			on:click={() => {
-				showValueBlock = true;
-			}}
-		>
-			Edit Value 4 Value
-		</button>
-
-		{#if showValueBlock}
-			<ValueBlock bind:valueBlock={newTrackValue} />
-		{/if}
+			<image-pane>
+				<img
+					width="160"
+					height="160"
+					alt={$selectedTrack.artwork
+						? `${`${$selectedTrack.title} ` || ''}cover art`
+						: 'add Track Image link'}
+					src={$selectedTrack.artwork}
+				/>
+			</image-pane>
+		</top-pane>
+		<bottom-pane>
+			<label class="track-description">
+				<p>Track Description</p>
+				<textarea />
+				<button class="save" on:click={() => (add ? addNewTrack() : saveTrack())}>
+					{add ? 'Add Track' : 'Save Track'}
+				</button>
+			</label>
+			<value>
+				<ValueBlock bind:valueBlock={newTrackValue} />
+			</value>
+		</bottom-pane>
 	</div>
 {/if}
 
 <style>
 	div {
-		margin: 1em 0 0 0;
+		margin: 8px 16px 0 16px;
+	}
+	top-pane {
+		display: flex;
+	}
+
+	edit-pane {
+		flex-grow: 1;
+	}
+
+	image-pane {
+		display: flex;
+		flex-direction: column;
+		margin-top: 20px;
+	}
+
+	bottom-pane {
+		display: flex;
+		align-items: flex-start;
+	}
+
+	.track-description {
+		width: 33%;
+	}
+
+	.track-description textarea {
+		width: 100%;
+		height: 200px;
+		resize: none;
 	}
 
 	label {
-		padding: 0 1em 0 0;
-		margin: 8px;
+		display: block;
+		margin: 0 16px 16px 0;
+	}
+
+	input {
+		width: 100%;
 	}
 
 	p {
@@ -115,7 +149,12 @@
 		margin: 0;
 	}
 
-	input {
-		margin-bottom: 16px;
+	.save {
+		margin-top: 8px;
+	}
+
+	value {
+		margin-left: 8px;
+		flex-grow: 1;
 	}
 </style>

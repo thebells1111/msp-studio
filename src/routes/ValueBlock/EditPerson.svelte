@@ -1,23 +1,25 @@
 <script>
-	import PersonValue from './PersonValue.svelte';
 	export let person = {};
-	let showPersonEdit = false;
+	export let selectedPerson = {};
+	export let showPersonEdit = false;
 </script>
 
 <person>
-	<p>{person.name}</p>
-	<p>{person.split}%</p>
 	<button
 		on:click={() => {
-			showPersonEdit = !showPersonEdit;
+			if (JSON.stringify(selectedPerson) === JSON.stringify(person)) {
+				showPersonEdit = !showPersonEdit;
+			} else {
+				showPersonEdit = true;
+				selectedPerson = person;
+			}
 		}}
 	>
 		Edit Recipient
 	</button>
+	<input class="split" type="text" bind:value={person.split} /><span>%</span>
+	<p>{person.name}</p>
 </person>
-{#if showPersonEdit}
-	<PersonValue bind:person />
-{/if}
 
 <style>
 	person {
@@ -25,7 +27,12 @@
 		align-items: center;
 	}
 
-	p {
+	.split {
+		margin: 0;
+		width: 30px;
+	}
+
+	span {
 		margin: 0 8px 0 0;
 	}
 </style>
