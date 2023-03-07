@@ -43,8 +43,7 @@
 <style>
 	album-name {
 		display: flex;
-		align-items: flex-start;
-		position: relative;
+		align-items: center;
 		margin-bottom: 8px;
 	}
 	h2 {
@@ -56,11 +55,16 @@
 	img {
 		border: 1px solid black;
 		position: absolute;
-		right: 0;
-		top: -44px;
+		right: 8px;
+		top: 68px;
 	}
 
-	.select {
+	button {
+		background-color: var(--color-bg-edit-album);
+	}
+
+	button.select {
 		width: 203px;
+		background-color: var(--color-bg-select-album);
 	}
 </style>

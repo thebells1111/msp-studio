@@ -16,7 +16,7 @@
 		Select Different Track
 	</button>
 
-	<h2>{$selectedTrack.title}</h2>
+	<h3>{$selectedTrack.title}</h3>
 </track-name>
 
 <audio src={$selectedTrack.url} controls />
@@ -30,11 +30,11 @@
 <style>
 	track-name {
 		display: flex;
-		align-items: flex-start;
-		margin-left: 64px;
+		align-items: center;
+		margin-left: 66px;
 		margin-bottom: 24px;
 	}
-	h2 {
+	h3 {
 		margin: 0;
 		margin-left: 24px;
 		flex-grow: 1;
@@ -49,7 +49,12 @@
 		width: calc(100% - 128px);
 	}
 
-	.select {
+	button {
+		background-color: var(--color-bg-edit-track);
+	}
+
+	button.select {
 		width: 203px;
+		background-color: var(--color-bg-select-track);
 	}
 </style>

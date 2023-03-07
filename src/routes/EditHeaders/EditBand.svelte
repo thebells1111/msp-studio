@@ -43,7 +43,12 @@
 		margin-left: 8px;
 	}
 
-	.select {
+	button {
+		background-color: var(--color-bg-edit-band);
+	}
+
+	button.select {
 		width: 203px;
+		background-color: var(--color-bg-select-band);
 	}
 </style>

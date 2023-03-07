@@ -1,4 +1,5 @@
 <script>
+	import deleteItem from '../functions/deleteItem';
 	import {
 		library,
 		selectedBand,
@@ -60,6 +61,11 @@
 		<button on:click={() => (add ? addNewAlbum() : saveAlbum())}>
 			{add ? 'Add Album' : 'Save Album'}
 		</button>
+		{#if !add}
+			<button on:click={deleteItem.bind(this, $selectedBand.title, deleteBand)} class="delete">
+				Delete
+			</button>
+		{/if}
 	</div>
 {/if}
 
@@ -67,15 +73,23 @@
 	div {
 		display: flex;
 		align-items: flex-end;
-		margin: 1em 0 0 0;
+		margin: 4px 0 8px 16px;
 	}
 
 	label {
 		padding: 0 1em 0 0;
+		flex-grow: 1;
+	}
+
+	input {
+		width: 100%;
 	}
 
 	p {
 		padding: 0;
 		margin: 0;
+	}
+	button.delete {
+		margin-right: 158px;
 	}
 </style>

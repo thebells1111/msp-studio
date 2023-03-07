@@ -13,6 +13,15 @@
 	--color-progressbar-1: hsl(0, 0%, 97%);
 	--color-text-0: hsl(0, 0%, 97%);
 	--color-bg-support-button: hsl(234, 100%, 62%);
+	--color-bg-edit-band: hsl(198, 100%, 42%);
+	--color-bg-edit-album: hsl(198, 100%, 52%);
+	--color-bg-edit-track: hsl(198, 100%, 62%);
+	--color-bg-select-band: hsl(198, 50%, 42%);
+	--color-bg-select-album: hsl(198, 50%, 52%);
+	--color-bg-select-track: hsl(198, 50%, 62%);
+	--color-bg-delete: hsl(0, 100%, 30%);
+	--color-bg-support-button: hsl(234, 100%, 62%);
+	--color-bg-support-button: hsl(234, 100%, 62%);
 	--color-playbar-text-0: hsl(0, 0%, 84%);
 	--color-text-0: hsl(0, 0%, 100%);
 	--color-text-1: hsl(0, 0%, 75%);
@@ -54,8 +63,6 @@ body {
 	-webkit-tap-highlight-color: transparent !important;
 	outline: none !important;
 	margin:0 auto;
-	padding: 8px;
-	height: calc(100% - 16px)
 
 }
 
@@ -124,9 +131,11 @@ button:focus:not(:focus-visible) {
 
 input, textarea{	
 	color: var(--color-input-text-0);
+	background-color: var(--color-input-bg-0);
 	border-radius: 4px;
 	outline: 0;
 	border: none;
+	padding: 4px;
 }
 
 input::placeholder {
@@ -162,4 +171,8 @@ ul,
 div {
 	scrollbar-color: var(--color-scroll-bar) transparent;
 	scrollbar-width: thin;
+}
+
+button.delete {
+	background-color: var(--color-bg-delete);
 }
