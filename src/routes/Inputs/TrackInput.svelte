@@ -20,6 +20,7 @@
 	let newTrackEnclosure = '';
 	let newTrackValue = [];
 	let showValueBlock = false;
+	export let showEdit = false;
 
 	onMount(() => {
 		console.log($selectedTrack);
@@ -39,7 +40,7 @@
 		$selectedTrack = track;
 		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
-		$selectedScreen = 'trackEditor';
+		showEdit = false;
 	}
 
 	async function saveTrack() {
@@ -50,16 +51,29 @@
 		$selectedTrack.value = newTrackValue;
 		$selectedAlbum.tracks[$selectedTrackIndex] = $selectedTrack;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
+		showEdit = false;
 	}
 
 	$: console.log(newTrackValue);
 </script>
 
-{#if showAddNewButton && add}
-	<button on:click={() => (showAddNewButton = false)}>Add New Track</button>
-{:else}
-	<div>
+<blurred-background
+	on:click|self={() => {
+		showEdit = false;
+	}}
+>
+	<track-modal>
 		<top-pane>
+			<image-pane>
+				<img
+					width="160"
+					height="160"
+					alt={$selectedTrack.artwork
+						? `${`${$selectedTrack.title} ` || ''}cover art`
+						: 'add Track Image link'}
+					src={$selectedTrack.artwork}
+				/>
+			</image-pane>
 			<edit-pane>
 				<label>
 					<p>Track Name (required)</p>
@@ -75,18 +89,8 @@
 					<input bind:value={newTrackImage} />
 				</label>
 			</edit-pane>
-
-			<image-pane>
-				<img
-					width="160"
-					height="160"
-					alt={$selectedTrack.artwork
-						? `${`${$selectedTrack.title} ` || ''}cover art`
-						: 'add Track Image link'}
-					src={$selectedTrack.artwork}
-				/>
-			</image-pane>
 		</top-pane>
+		<audio src={$selectedTrack.url} controls />
 		<bottom-pane>
 			<label class="track-description">
 				<p>Track Description</p>
@@ -99,13 +103,10 @@
 				<ValueBlock bind:valueBlock={newTrackValue} />
 			</value>
 		</bottom-pane>
-	</div>
-{/if}
+	</track-modal>
+</blurred-background>
 
 <style>
-	div {
-		margin: 8px 16px 0 16px;
-	}
 	top-pane {
 		display: flex;
 	}
@@ -156,5 +157,32 @@
 	value {
 		margin-left: 8px;
 		flex-grow: 1;
+	}
+
+	audio {
+		margin: 8px 64px;
+		width: calc(100% - 128px);
+	}
+
+	blurred-background {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		top: 0;
+		right: 0;
+		z-index: 3;
+	}
+
+	track-modal {
+		width: calc(100% - 50px);
+		height: calc(100% - 50px);
+		background-color: black;
+		border-radius: 8px;
+		padding: 8px;
+		overflow: auto;
 	}
 </style>

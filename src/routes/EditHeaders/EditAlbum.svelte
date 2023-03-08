@@ -1,29 +1,18 @@
 <script>
 	import { slide } from 'svelte/transition';
 	import AlbumInput from '../Inputs/AlbumInput.svelte';
+	import EditSquare from '../icons/EditSquare.svelte';
 	import { selectedAlbum, selectedScreen, newAlbum } from '$/stores';
-	let showEdit = false;
+	export let showEdit = false;
 </script>
 
-<album-name>
-	<button
-		on:click={() => {
-			showEdit = !showEdit;
-		}}
-	>
-		Edit
-	</button>
-	<button
-		on:click={() => {
-			$selectedScreen = 'albums';
-			$selectedAlbum = $newAlbum;
-		}}
-		class="select"
-	>
-		Select Different Album
-	</button>
+{#if showEdit}
+	<div transition:slide={{ duration: 50 }}>
+		<AlbumInput bind:showEdit />
+	</div>
+{/if}
 
-	<h2>{$selectedAlbum.title}</h2>
+<album>
 	<img
 		width="150"
 		height="150"
@@ -32,38 +21,57 @@
 			: 'add Album Image link'}
 		src={$selectedAlbum.artwork}
 	/>
-</album-name>
 
-{#if showEdit}
-	<div transition:slide={{ duration: 50 }}>
-		<AlbumInput bind:showEdit />
-	</div>
-{/if}
+	<album-name>
+		<button
+			on:click={() => {
+				showEdit = !showEdit;
+			}}
+		>
+			<EditSquare size={22} />
+
+			<h2>{$selectedAlbum.title}</h2>
+		</button>
+	</album-name>
+</album>
+
+<button
+	on:click={() => {
+		$selectedScreen = 'albums';
+		$selectedAlbum = $newAlbum;
+	}}
+	class="select-album"
+>
+	Select Different Album
+</button>
 
 <style>
-	album-name {
+	album {
 		display: flex;
+		flex-direction: column;
+	}
+
+	album-name button {
+		display: flex;
+		width: 100%;
 		align-items: center;
 		margin-bottom: 8px;
 	}
 	h2 {
-		margin: 0;
-		margin-left: 16px;
-		flex-grow: 1;
+		margin: 0 0 0 8px;
 	}
 
 	img {
+		display: block;
 		border: 1px solid black;
-		position: absolute;
-		right: 8px;
-		top: 68px;
 	}
 
 	button {
-		background-color: var(--color-bg-edit-album);
+		background-color: transparent;
+		padding: 8px;
 	}
 
-	button.select {
+	button.select-album {
 		width: 203px;
 		background-color: var(--color-bg-select-album);
 	}

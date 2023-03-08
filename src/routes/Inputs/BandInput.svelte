@@ -20,7 +20,6 @@
 
 	export let add = false;
 	export let showEdit = false;
-	let showAddNewButton = true;
 	let newBandName = '';
 	let newBandImage = '';
 
@@ -73,9 +72,11 @@
 	}
 </script>
 
-{#if showAddNewButton && add}
-	<button on:click={() => (showAddNewButton = false)}>Add New Band</button>
-{:else}
+<band-modal
+	on:click|self={() => {
+		showEdit = false;
+	}}
+>
 	<div>
 		<label class="band-name">
 			<p>Band Name</p>
@@ -91,7 +92,7 @@
 			</button>
 		{/if}
 	</div>
-{/if}
+</band-modal>
 
 <style>
 	div {
@@ -118,5 +119,28 @@
 	}
 	button.delete {
 		margin-right: 158px;
+	}
+
+	band-modal {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		top: 0;
+		right: 0;
+		z-index: 3;
+	}
+
+	band-modal div {
+		width: calc(100% - 100px);
+		height: calc(100% - 100px);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: black;
+		border-radius: 8px;
 	}
 </style>

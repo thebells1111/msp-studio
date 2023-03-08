@@ -13,7 +13,6 @@
 
 	export let add = false;
 	export let showEdit = false;
-	let showAddNewButton = true;
 	let newAlbumName = '';
 	let newAlbumImage = '';
 
@@ -46,10 +45,12 @@
 	}
 </script>
 
-{#if showAddNewButton && add}
-	<button on:click={() => (showAddNewButton = false)}>Add New Album</button>
-{:else}
-	<div>
+<blurred-background
+	on:click|self={() => {
+		showEdit = false;
+	}}
+>
+	<album-modal>
 		<label>
 			<p>Album Name (required)</p>
 			<input bind:value={newAlbumName} />
@@ -66,16 +67,10 @@
 				Delete
 			</button>
 		{/if}
-	</div>
-{/if}
+	</album-modal>
+</blurred-background>
 
 <style>
-	div {
-		display: flex;
-		align-items: flex-end;
-		margin: 4px 0 8px 16px;
-	}
-
 	label {
 		padding: 0 1em 0 0;
 		flex-grow: 1;
@@ -91,5 +86,28 @@
 	}
 	button.delete {
 		margin-right: 158px;
+	}
+
+	blurred-background {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background: transparent;
+		top: 0;
+		right: 0;
+		z-index: 3;
+	}
+
+	album-modal {
+		width: calc(100% - 100px);
+		height: calc(100% - 100px);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: black;
+		border-radius: 8px;
 	}
 </style>

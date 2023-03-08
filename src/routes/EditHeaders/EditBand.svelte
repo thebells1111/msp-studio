@@ -1,6 +1,7 @@
 <script>
 	import { slide } from 'svelte/transition';
 	import BandInput from '../Inputs/BandInput.svelte';
+	import EditSquare from '../icons/EditSquare.svelte';
 	import { selectedBand, selectedScreen, newBand } from '$/stores';
 	let showEdit = false;
 
@@ -9,23 +10,25 @@
 
 <band-name>
 	<button
+		class="edit-band"
 		on:click={() => {
 			showEdit = !showEdit;
 		}}
 	>
-		Edit
+		<EditSquare size={24} />
+
+		<h1>{$selectedBand.title}</h1>
 	</button>
-	<button
-		on:click={() => {
-			$selectedScreen = 'bands';
-			$selectedBand = $newBand;
-		}}
-		class="select"
-	>
-		Select Different Band
-	</button>
-	<h1>{$selectedBand.title}</h1>
 </band-name>
+<button
+	class="select-band"
+	on:click={() => {
+		$selectedScreen = 'bands';
+		$selectedBand = $newBand;
+	}}
+>
+	Select Different Band
+</button>
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>
 		<BandInput bind:showEdit />
@@ -34,21 +37,22 @@
 
 <style>
 	band-name {
-		display: flex;
-		align-items: center;
+		display: block;
 		margin-bottom: 8px;
 	}
+	band-name button {
+		display: flex;
+		align-items: center;
+		background-color: transparent;
+		padding: 0;
+	}
 	h1 {
-		margin: 0;
-		margin-left: 8px;
+		margin: 0 0 0 8px;
 	}
 
-	button {
-		background-color: var(--color-bg-edit-band);
-	}
-
-	button.select {
+	button.select-band {
 		width: 203px;
 		background-color: var(--color-bg-select-band);
+		margin-bottom: 8px;
 	}
 </style>
