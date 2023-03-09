@@ -55,29 +55,22 @@
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		showEdit = false;
 	}
-
-	$: console.log(newTrackValue);
+	function closeModal() {
+		showEdit = false;
+		add ? addNewTrack() : saveTrack();
+	}
 </script>
 
-<blurred-background
-	on:click|self={() => {
-		showEdit = false;
-	}}
->
+<blurred-background on:click|self={closeModal}>
 	<track-modal>
-		<button
-			class="close"
-			on:click={() => {
-				showEdit = false;
-			}}
-		>
+		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
 		<top-pane>
 			<image-pane>
 				<img
-					width="160"
-					height="160"
+					width="204"
+					height="204"
 					alt={$selectedTrack.artwork
 						? `${`${$selectedTrack.title} ` || ''}cover art`
 						: 'add Track Image link'}
@@ -86,16 +79,16 @@
 			</image-pane>
 			<edit-pane>
 				<label>
-					<p>Track Name (required)</p>
+					<h4>Track Name (required)</h4>
 					<input bind:value={newTrackName} />
 				</label>
 
 				<label>
-					<p>Link to Track mp3 File (required)</p>
+					<h4>Link to Track mp3 File (required)</h4>
 					<input bind:value={newTrackEnclosure} />
 				</label>
 				<label>
-					<p>Link to Track Image (optional)</p>
+					<h4>Link to Track Image (optional)</h4>
 					<input bind:value={newTrackImage} />
 				</label>
 			</edit-pane>
@@ -103,11 +96,8 @@
 		<audio src={$selectedTrack.url} controls />
 		<bottom-pane>
 			<label class="track-description">
-				<p>Track Description</p>
+				<h4>Track Description</h4>
 				<textarea />
-				<button class="save" on:click={() => (add ? addNewTrack() : saveTrack())}>
-					{add ? 'Add Track' : 'Save Track'}
-				</button>
 			</label>
 			<value>
 				<ValueBlock bind:valueBlock={newTrackValue} />
@@ -120,15 +110,14 @@
 	top-pane {
 		display: flex;
 	}
-
-	edit-pane {
-		flex-grow: 1;
-	}
-
 	image-pane {
 		display: flex;
 		flex-direction: column;
-		margin-top: 20px;
+	}
+
+	edit-pane {
+		width: 100%;
+		margin: 8px 0 0 8px;
 	}
 
 	bottom-pane {
@@ -155,13 +144,9 @@
 		width: 100%;
 	}
 
-	p {
+	h4 {
 		padding: 0;
 		margin: 0;
-	}
-
-	.save {
-		margin-top: 8px;
 	}
 
 	value {

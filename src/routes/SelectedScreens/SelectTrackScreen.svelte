@@ -1,7 +1,7 @@
 <script>
 	import { slide } from 'svelte/transition';
-	import EditBand from '../EditHeaders/EditBand.svelte';
-	import EditAlbum from '../EditHeaders/EditAlbum.svelte';
+	import ChangeBand from './ChangeBand.svelte';
+	import ChangeAlbum from './ChangeAlbum.svelte';
 	import TrackInput from '../Inputs/TrackInput.svelte';
 	import Add from '../icons/Add.svelte';
 	import EditSquare from '../icons/EditSquare.svelte';
@@ -38,9 +38,8 @@
 	}
 </script>
 
-<EditBand />
-
-<EditAlbum />
+<ChangeBand />
+<ChangeAlbum />
 <select-track>
 	<header>
 		<h3>Select a Track</h3>
@@ -99,6 +98,7 @@
 		position: relative;
 		left: 232px;
 		top: -175px;
+		width: calc(100% - 232px);
 	}
 
 	button {

@@ -12,6 +12,7 @@
 	--color-progressbar-0: hsl(208, 100%, 42%);
 	--color-progressbar-1: hsl(0, 0%, 97%);
 	--color-text-0: hsl(0, 0%, 97%);
+	--color-button-shadow:  hsl(0, 0%, 0%);
 	--color-bg-button: hsl(234, 100%, 62%);
 	--color-bg-support-button: hsl(234, 100%, 62%);
 	--color-bg-add-band: hsl(198, 100%, 42%);
@@ -110,7 +111,6 @@ button{
 	padding: 8px 16px;
 	border-radius: 20px;
 	font-weight: 550;
-
 }
 
 button:focus:not(:focus-visible) {

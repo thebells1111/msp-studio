@@ -53,6 +53,7 @@
 	button.select-band {
 		width: 203px;
 		background-color: var(--color-bg-select-band);
+		box-shadow: 0 2px 5px 0 var(--color-button-shadow);
 		margin-bottom: 8px;
 	}
 </style>

@@ -1,6 +1,6 @@
 <script>
 	import { slide } from 'svelte/transition';
-	import EditBand from '../EditHeaders/EditBand.svelte';
+	import ChangeBand from './ChangeBand.svelte';
 	import AlbumInput from '../Inputs/AlbumInput.svelte';
 	import Add from '../icons/Add.svelte';
 	import Delete from '../icons/Delete.svelte';
@@ -38,7 +38,7 @@
 	}
 </script>
 
-<EditBand />
+<ChangeBand />
 <header>
 	<h3>Select an Album</h3>
 	<button on:click={() => (showEdit = true)}>

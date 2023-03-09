@@ -74,6 +74,7 @@
 	button.select-album {
 		width: 203px;
 		background-color: var(--color-bg-select-album);
+		box-shadow: 0 2px 5px 0 var(--color-button-shadow);
 		margin-left: 16px;
 	}
 </style>
