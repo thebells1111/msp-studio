@@ -17,7 +17,7 @@
 	>
 		<EditSquare size={24} />
 
-		<h1>{$selectedBand.title}</h1>
+		<h1>{$selectedBand.title || 'Blank Band'}</h1>
 	</button>
 </band-name>
 <button

@@ -12,10 +12,11 @@
 	--color-progressbar-0: hsl(208, 100%, 42%);
 	--color-progressbar-1: hsl(0, 0%, 97%);
 	--color-text-0: hsl(0, 0%, 97%);
+	--color-bg-button: hsl(234, 100%, 62%);
 	--color-bg-support-button: hsl(234, 100%, 62%);
-	--color-bg-edit-band: hsl(198, 100%, 42%);
-	--color-bg-edit-album: hsl(198, 100%, 52%);
-	--color-bg-edit-track: hsl(198, 100%, 62%);
+	--color-bg-add-band: hsl(198, 100%, 42%);
+	--color-bg-add-album: hsl(198, 100%, 52%);
+	--color-bg-add-track: hsl(198, 100%, 62%);
 	--color-bg-select-band: hsl(198, 50%, 42%);
 	--color-bg-select-album: hsl(198, 50%, 52%);
 	--color-bg-select-track: hsl(198, 50%, 62%);
@@ -105,7 +106,7 @@ button{
 	border: none;
 	margin:2px;
 	color: var(--color-text-0);
-	background-color: var(--color-bg-support-button);
+	background-color: var(--color-bg-button);
 	padding: 8px 16px;
 	border-radius: 20px;
 	font-weight: 550;

@@ -14,8 +14,8 @@
 
 <album>
 	<img
-		width="150"
-		height="150"
+		width="203"
+		height="203"
 		alt={$selectedAlbum.artwork
 			? `${`${$selectedAlbum.title} ` || ''}cover art`
 			: 'add Album Image link'}
@@ -30,7 +30,7 @@
 		>
 			<EditSquare size={22} />
 
-			<h2>{$selectedAlbum.title}</h2>
+			<h2>{$selectedAlbum.title || 'Blank Album'}</h2>
 		</button>
 	</album-name>
 </album>
@@ -48,7 +48,7 @@
 <style>
 	album {
 		display: flex;
-		flex-direction: column;
+		margin: 0 0 8px 16px;
 	}
 
 	album-name button {
@@ -74,5 +74,6 @@
 	button.select-album {
 		width: 203px;
 		background-color: var(--color-bg-select-album);
+		margin-left: 16px;
 	}
 </style>

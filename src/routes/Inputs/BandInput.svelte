@@ -1,7 +1,7 @@
 <script>
-	import deleteItem from '../functions/deleteItem';
-
 	import { onMount } from 'svelte';
+
+	import Close from '../icons/Close.svelte';
 
 	import {
 		library,
@@ -57,71 +57,26 @@
 		showEdit = false;
 	}
 
-	async function deleteBand() {
-		console.log($selectedBandIndex);
-		$library.splice($selectedBandIndex, 1);
-		$library = $library;
-		$selectedBandIndex = -1;
-		$selectedAlbumIndex = -1;
-		$selectedTrackIndex = -1;
-		$catalogDB.removeItem($selectedBand.title);
-		$selectedBand = $newBand;
-		$selectedAlbum = $newAlbum;
-		$selectedScreen = 'bands';
+	function closeModal() {
 		showEdit = false;
+		add ? addNewBand() : saveBand();
 	}
 </script>
 
-<band-modal
-	on:click|self={() => {
-		showEdit = false;
-	}}
->
-	<div>
+<blurred-background on:click|self={closeModal}>
+	<band-modal>
+		<button class="close" on:click={closeModal}>
+			<Close size="24" />
+		</button>
 		<label class="band-name">
 			<p>Band Name</p>
 			<input bind:value={newBandName} placeholder="band name" />
 		</label>
-
-		<button on:click={() => (add ? addNewBand() : saveBand())}>
-			{add ? 'Add Band' : 'Save Band'}
-		</button>
-		{#if !add}
-			<button on:click={deleteItem.bind(this, $selectedBand.title, deleteBand)} class="delete">
-				Delete
-			</button>
-		{/if}
-	</div>
-</band-modal>
+	</band-modal>
+</blurred-background>
 
 <style>
-	div {
-		display: flex;
-		align-items: flex-end;
-		margin: 4px 0 8px 16px;
-	}
-
-	label {
-		padding: 0 1em 0 0;
-	}
-
-	.band-name {
-		flex-grow: 1;
-	}
-
-	.band-name input {
-		width: 100%;
-	}
-
-	p {
-		padding: 0;
-		margin: 0;
-	}
-	button.delete {
-		margin-right: 158px;
-	}
-
-	band-modal {
+	blurred-background {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -131,16 +86,46 @@
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 3;
+		z-index: 99;
+		backdrop-filter: blur(5px);
 	}
 
-	band-modal div {
+	band-modal {
+		position: relative;
 		width: calc(100% - 100px);
 		height: calc(100% - 100px);
 		display: flex;
-		align-items: center;
-		justify-content: center;
-		background-color: black;
 		border-radius: 8px;
+		background-color: var(--color-poster-bg-0);
+		background-image: linear-gradient(
+			180deg,
+			var(--color-poster-bg-0) 33%,
+			var(--color-poster-bg-1) 66%
+		);
+		box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 1);
+	}
+
+	.band-name {
+		width: 100%;
+		margin: 32px 8px;
+	}
+
+	.band-name input {
+		margin: 0 8px;
+		width: calc(100% - 24px);
+	}
+
+	p {
+		padding: 0;
+		margin: 0;
+	}
+
+	.close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: transparent;
+		padding: 8px;
+		color: rgba(255, 255, 255, 0.75);
 	}
 </style>

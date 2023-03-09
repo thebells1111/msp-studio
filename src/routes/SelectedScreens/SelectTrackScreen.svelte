@@ -3,8 +3,25 @@
 	import EditBand from '../EditHeaders/EditBand.svelte';
 	import EditAlbum from '../EditHeaders/EditAlbum.svelte';
 	import TrackInput from '../Inputs/TrackInput.svelte';
+	import Add from '../icons/Add.svelte';
+	import EditSquare from '../icons/EditSquare.svelte';
+	import Delete from '../icons/Delete.svelte';
+	import deleteItem from '../functions/deleteItem';
 
-	import { selectedAlbum, selectedTrack, selectedTrackIndex } from '$/stores';
+	import {
+		selectedBand,
+		selectedBandIndex,
+		selectedAlbum,
+		selectedAlbumIndex,
+		selectedTrack,
+		selectedTrackIndex,
+		newTrack,
+		catalogDB,
+		selectedScreen
+	} from '$/stores';
+
+	let showEdit = false;
+	let addTrack = false;
 
 	async function selectTrack(track, index) {
 		$selectedTrack = track;
@@ -12,33 +29,47 @@
 		showEdit = true;
 	}
 
-	let showEdit = false;
-	let addTrack = false;
+	async function deleteTrack(index) {
+		$selectedTrackIndex = index || $selectedTrackIndex;
+		$selectedAlbum.tracks.splice($selectedTrackIndex, 1);
+		$selectedAlbum = $selectedAlbum;
+		$selectedTrackIndex = -1;
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
+	}
 </script>
 
 <EditBand />
 
-<container>
-	<left-pane>
-		<EditAlbum />
-	</left-pane>
-	<right-pane>
-		<h4>Select a Track</h4>
-		<ul>
-			{#each $selectedAlbum?.tracks || [] as track, i}
-				<li on:click={selectTrack.bind(this, track, i)}>{track.title}</li>
-			{/each}
-		</ul>
+<EditAlbum />
+<select-track>
+	<header>
+		<h3>Select a Track</h3>
 		<button
 			on:click={() => {
 				showEdit = true;
 				addTrack = true;
 			}}
 		>
-			Add New Track
+			<Add size="30" />
 		</button>
-	</right-pane>
-</container>
+	</header>
+	<ul>
+		{#each $selectedAlbum?.tracks || [] as track, i}
+			<li>
+				<button
+					on:click={deleteItem.bind(this, track.title || 'Blank Track', deleteTrack.bind(this, i))}
+					class="delete"
+				>
+					<Delete size="18" />
+				</button>
+				<p on:click={selectTrack.bind(this, track, i)}>
+					<EditSquare />
+					{track.title || 'Blank Track'}
+				</p>
+			</li>
+		{/each}
+	</ul>
+</select-track>
 
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>
@@ -47,15 +78,45 @@
 {/if}
 
 <style>
-	container {
+	header {
 		display: flex;
+		align-items: center;
 	}
-	left-pane,
-	right-pane {
-		width: 50%;
+	h3 {
+		margin: 0;
+	}
+	ul {
+		padding: 0 0 0 16px;
 	}
 
-	h4 {
-		margin: 0 0 8px 0;
+	li {
+		list-style: none;
+		display: flex;
+	}
+
+	select-track {
+		display: block;
+		position: relative;
+		left: 232px;
+		top: -175px;
+	}
+
+	button {
+		color: var(--color-bg-select-track);
+		background-color: transparent;
+		padding: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-left: 8px;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	button.delete {
+		color: var(--color-bg-delete);
+		margin: 0 8px 0 0;
 	}
 </style>

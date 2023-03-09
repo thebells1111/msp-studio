@@ -1,5 +1,7 @@
 <script>
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import Close from '../icons/Close.svelte';
+
 	import { onMount } from 'svelte';
 
 	import {
@@ -63,6 +65,14 @@
 	}}
 >
 	<track-modal>
+		<button
+			class="close"
+			on:click={() => {
+				showEdit = false;
+			}}
+		>
+			<Close size="24" />
+		</button>
 		<top-pane>
 			<image-pane>
 				<img
@@ -174,15 +184,32 @@
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 3;
+		z-index: 99;
+		backdrop-filter: blur(5px);
 	}
 
 	track-modal {
+		position: relative;
 		width: calc(100% - 50px);
 		height: calc(100% - 50px);
-		background-color: black;
 		border-radius: 8px;
 		padding: 8px;
 		overflow: auto;
+		background-color: var(--color-poster-bg-0);
+		background-image: linear-gradient(
+			180deg,
+			var(--color-poster-bg-0) 33%,
+			var(--color-poster-bg-1) 66%
+		);
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+
+	.close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: transparent;
+		padding: 8px;
+		color: rgba(255, 255, 255, 0.75);
 	}
 </style>

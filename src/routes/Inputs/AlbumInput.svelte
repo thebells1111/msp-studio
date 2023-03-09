@@ -1,5 +1,7 @@
 <script>
 	import deleteItem from '../functions/deleteItem';
+	import Close from '../icons/Close.svelte';
+
 	import {
 		library,
 		selectedBand,
@@ -43,15 +45,19 @@
 		$selectedScreen = 'tracks';
 		showEdit = false;
 	}
+
+	function closeModal() {
+		showEdit = false;
+		add ? addNewAlbum() : saveAlbum();
+	}
 </script>
 
-<blurred-background
-	on:click|self={() => {
-		showEdit = false;
-	}}
->
+<blurred-background on:click|self={closeModal}>
 	<album-modal>
-		<label>
+		<button class="close" on:click={closeModal}>
+			<Close size="24" />
+		</button>
+		<label class="album-name">
 			<p>Album Name (required)</p>
 			<input bind:value={newAlbumName} />
 		</label>
@@ -59,35 +65,18 @@
 			<p>Link to Album Image (required)</p>
 			<input bind:value={newAlbumImage} />
 		</label>
-		<button on:click={() => (add ? addNewAlbum() : saveAlbum())}>
-			{add ? 'Add Album' : 'Save Album'}
-		</button>
-		{#if !add}
-			<button on:click={deleteItem.bind(this, $selectedBand.title, deleteBand)} class="delete">
-				Delete
-			</button>
-		{/if}
+		<image-container>
+			<img
+				width="203"
+				height="203"
+				alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
+				src={newAlbumImage}
+			/>
+		</image-container>
 	</album-modal>
 </blurred-background>
 
 <style>
-	label {
-		padding: 0 1em 0 0;
-		flex-grow: 1;
-	}
-
-	input {
-		width: 100%;
-	}
-
-	p {
-		padding: 0;
-		margin: 0;
-	}
-	button.delete {
-		margin-right: 158px;
-	}
-
 	blurred-background {
 		display: flex;
 		align-items: center;
@@ -98,16 +87,58 @@
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 3;
+		z-index: 99;
+		backdrop-filter: blur(5px);
 	}
 
 	album-modal {
+		position: relative;
 		width: calc(100% - 100px);
 		height: calc(100% - 100px);
 		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		border-radius: 8px;
+		background-color: var(--color-poster-bg-0);
+		background-image: linear-gradient(
+			180deg,
+			var(--color-poster-bg-0) 33%,
+			var(--color-poster-bg-1) 66%
+		);
+		box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 1);
+	}
+
+	label {
+		width: 100%;
+		margin: 8px;
+	}
+	.album-name {
+		margin: 32px 8px;
+	}
+
+	label input {
+		margin: 0 8px;
+		width: calc(100% - 40px);
+	}
+
+	p {
+		padding: 0;
+		margin: 0;
+	}
+	.close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: transparent;
+		padding: 8px;
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	image-container {
+		width: 100%;
+		display: flex;
 		align-items: center;
 		justify-content: center;
-		background-color: black;
-		border-radius: 8px;
+		margin-top: 16px;
 	}
 </style>

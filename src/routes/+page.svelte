@@ -11,6 +11,8 @@
 
 	$: console.log($library);
 
+	let isLoading = true;
+
 	onMount(() => {
 		$catalogDB = localforage.createInstance({
 			name: 'catalogDB'
@@ -24,6 +26,9 @@
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
 				$library = await Promise.all(_catalog);
 				$library = $library;
+				setTimeout(() => {
+					isLoading = false;
+				}, 2000);
 			})
 			.catch(function (err) {
 				// This code runs if there were any errors
@@ -32,9 +37,15 @@
 	});
 </script>
 
-<Editor />
-<!-- <FileUploader /> -->
-<!-- <FileForm /> -->
+{#if isLoading}
+	<div class="record-container">
+		<img src="/msp-record-300.png" alt="Record" class="record" />
+	</div>
+{:else}
+	<Editor />
+	<!-- <FileUploader /> -->
+	<!-- <FileForm /> -->
+{/if}
 
 <background>
 	<div class="header-background" />
@@ -86,5 +97,32 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
+	}
+
+	.record-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		top: 0;
+	}
+
+	.record {
+		height: 300px;
+		width: 300px;
+		animation: spin 2s infinite linear;
+		border-radius: 50%;
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
 	}
 </style>
