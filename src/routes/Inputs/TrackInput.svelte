@@ -1,27 +1,24 @@
 <script>
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
+	import Player from '../Player/Player.svelte';
 
 	import { onMount } from 'svelte';
 
 	import {
-		library,
 		catalogDB,
 		selectedBand,
 		selectedAlbum,
-		selectedAlbumIndex,
 		selectedTrack,
 		selectedTrackIndex,
-		selectedScreen
+		MSPValue
 	} from '$/stores';
 
 	export let add = false;
-	let showAddNewButton = true;
 	let newTrackName = '';
 	let newTrackImage = '';
 	let newTrackEnclosure = '';
 	let newTrackValue = [];
-	let showValueBlock = false;
 	export let showEdit = false;
 
 	onMount(() => {
@@ -29,7 +26,10 @@
 		newTrackName = $selectedTrack.title || '';
 		newTrackImage = $selectedTrack.artwork || '';
 		newTrackEnclosure = $selectedTrack.url || '';
-		newTrackValue = $selectedTrack.value || [];
+		newTrackValue =
+			$selectedTrack.value && $selectedTrack.value.length > 0
+				? $selectedTrack.value
+				: [...$selectedAlbum.value] || [...$MSPValue];
 	});
 
 	async function addNewTrack() {
@@ -37,7 +37,7 @@
 			title: newTrackName,
 			artwork: newTrackImage,
 			url: newTrackEnclosure,
-			value: []
+			value: [...$selectedAlbum.value] || [...$MSPValue]
 		};
 		$selectedTrack = track;
 		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
@@ -61,7 +61,7 @@
 	}
 </script>
 
-<blurred-background on:click|self={closeModal}>
+<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 	<track-modal>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
@@ -93,7 +93,7 @@
 				</label>
 			</edit-pane>
 		</top-pane>
-		<audio src={$selectedTrack.url} controls />
+		<Player source={$selectedTrack.url} />
 		<bottom-pane>
 			<label class="track-description">
 				<h4>Track Description</h4>
@@ -152,11 +152,6 @@
 	value {
 		margin-left: 8px;
 		flex-grow: 1;
-	}
-
-	audio {
-		margin: 8px 64px;
-		width: calc(100% - 128px);
 	}
 
 	blurred-background {

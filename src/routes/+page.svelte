@@ -11,7 +11,7 @@
 
 	$: console.log($library);
 
-	let isLoading = true;
+	let isLoading = false;
 
 	onMount(() => {
 		$catalogDB = localforage.createInstance({

@@ -63,7 +63,7 @@
 	}
 </script>
 
-<blurred-background on:click|self={closeModal}>
+<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 	<band-modal>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />

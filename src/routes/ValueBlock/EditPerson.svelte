@@ -1,23 +1,32 @@
 <script>
-	export let person = {};
-	export let selectedPerson = {};
-	export let showPersonEdit = false;
 	import EditSquare from '../icons/EditSquare.svelte';
 	import Delete from '../icons/Delete.svelte';
+
+	export let person = {};
+	export let showPersonEdit = false;
+	export let valueBlock;
+	export let index;
+	export let selectedIndex;
+
+	function deletePerson() {
+		valueBlock.splice(index, 1);
+		valueBlock = valueBlock;
+		selectedIndex = -1;
+	}
 </script>
 
 <person>
-	<button class="delete">
+	<button class="delete" on:click={deletePerson}>
 		<Delete size="20" />
 	</button>
 	<input class="split" type="text" bind:value={person.split} /><span>%</span>
 	<person-name
 		on:click={() => {
-			if (JSON.stringify(selectedPerson) === JSON.stringify(person)) {
+			if (selectedIndex === index) {
 				showPersonEdit = !showPersonEdit;
 			} else {
 				showPersonEdit = true;
-				selectedPerson = person;
+				selectedIndex = index;
 			}
 		}}
 	>

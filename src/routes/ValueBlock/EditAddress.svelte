@@ -1,4 +1,6 @@
 <script>
+	export let valueBlock = [{ name: '' }];
+	export let selectedIndex = 0;
 	let provider = '';
 	let username = '';
 	let noUserFound = false;
@@ -6,7 +8,7 @@
 	let showProviderInput = false;
 	let showAdvanced = false;
 
-	export let selectedPerson = {};
+	let selectedPerson = valueBlock[selectedIndex];
 
 	async function handleProviderSelect(providerName) {
 		showProviderInput = true;
@@ -106,7 +108,7 @@
 		<h4>Name</h4>
 		<input
 			type="text"
-			bind:value={selectedPerson.name}
+			bind:value={valueBlock[selectedIndex].name}
 			placeholder="Choose a name so people can send Boostagrams"
 		/>
 	</label>

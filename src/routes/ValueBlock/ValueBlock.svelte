@@ -6,8 +6,8 @@
 	import { newPerson } from '$/stores';
 
 	export let valueBlock = [];
-	let selectedPerson = {};
 	let showPersonEdit = false;
+	let selectedIndex = -1;
 
 	function addPerson() {
 		valueBlock = valueBlock.concat({ ...$newPerson });
@@ -16,6 +16,10 @@
 	$: splitTotal = valueBlock.reduce((t, v) => {
 		return t + Number(v.split);
 	}, 0);
+
+	$: if (selectedIndex === -1) {
+		showPersonEdit = false;
+	}
 </script>
 
 <value-block>
@@ -30,9 +34,9 @@
 			<split-name>Name</split-name>
 		</value-header>
 		<ul>
-			{#each valueBlock || [] as person, i}
+			{#each valueBlock || [] as person, index}
 				<li>
-					<EditPerson bind:person bind:showPersonEdit bind:selectedPerson />
+					<EditPerson bind:person bind:showPersonEdit bind:valueBlock bind:selectedIndex {index} />
 				</li>
 			{/each}
 		</ul>
@@ -53,7 +57,7 @@
 	</left-pane>
 	<right-pane>
 		{#if showPersonEdit}
-			<EditAddress bind:selectedPerson />
+			<EditAddress bind:valueBlock {selectedIndex} />
 		{/if}
 	</right-pane>
 </value-block>
@@ -104,6 +108,7 @@
 	value-header {
 		border-bottom: 1px solid var(--color-text-0);
 		margin-bottom: 8px;
+		padding-bottom: 4px;
 	}
 
 	value-footer {

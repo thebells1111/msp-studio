@@ -22,8 +22,6 @@
 	--color-bg-select-album: hsl(198, 50%, 52%);
 	--color-bg-select-track: hsl(198, 50%, 62%);
 	--color-bg-delete: hsl(0, 100%, 30%);
-	--color-bg-support-button: hsl(234, 100%, 62%);
-	--color-bg-support-button: hsl(234, 100%, 62%);
 	--color-playbar-text-0: hsl(0, 0%, 84%);
 	--color-text-0: hsl(0, 0%, 100%);
 	--color-text-1: hsl(0, 0%, 75%);
@@ -46,7 +44,6 @@
 	--color-list-divider: rgba(255, 255, 255, 0.2);
 	--color-scroll-bar: hsl(208, 40%, 22.5%);
 	font-family: var(--font-body);
-	color: var(--color-text-0);
 	color: var(--color-text-0);
 }
 

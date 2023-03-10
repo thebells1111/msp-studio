@@ -1,14 +1,14 @@
 <script>
-	import deleteItem from '../functions/deleteItem';
 	import Close from '../icons/Close.svelte';
+	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 
 	import {
-		library,
 		selectedBand,
 		selectedAlbum,
 		selectedAlbumIndex,
 		catalogDB,
-		selectedScreen
+		selectedScreen,
+		MSPValue
 	} from '$/stores';
 
 	import { onMount } from 'svelte';
@@ -17,11 +17,13 @@
 	export let showEdit = false;
 	let newAlbumName = '';
 	let newAlbumImage = '';
+	let newAlbumValue = [];
 
 	onMount(() => {
-		console.log($selectedAlbum);
 		newAlbumName = $selectedAlbum.title || '';
 		newAlbumImage = $selectedAlbum.artwork || '';
+		newAlbumValue =
+			$selectedAlbum.value && $selectedAlbum.value.length > 0 ? $selectedAlbum.value : [$MSPValue];
 	});
 
 	async function addNewAlbum() {
@@ -29,6 +31,7 @@
 		album.title = newAlbumName;
 		album.artwork = newAlbumImage;
 		album.tracks = [];
+		album.value = [$MSPValue];
 		$selectedAlbum = album;
 		$selectedBand.albums = $selectedBand.albums.concat($selectedAlbum);
 		$selectedAlbumIndex = $selectedBand.albums.length - 1;
@@ -40,6 +43,7 @@
 	async function saveAlbum() {
 		$selectedAlbum.title = newAlbumName;
 		$selectedAlbum.artwork = newAlbumImage;
+		$selectedAlbum.value = newAlbumValue;
 		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		$selectedScreen = 'tracks';
@@ -52,27 +56,33 @@
 	}
 </script>
 
-<blurred-background on:click|self={closeModal}>
+<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 	<album-modal>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
-		<label class="album-name">
-			<p>Album Name (required)</p>
-			<input bind:value={newAlbumName} />
-		</label>
-		<label>
-			<p>Link to Album Image (required)</p>
-			<input bind:value={newAlbumImage} />
-		</label>
-		<image-container>
+
+		<top-container>
 			<img
 				width="203"
 				height="203"
 				alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
 				src={newAlbumImage}
 			/>
-		</image-container>
+			<album-inputs>
+				<label class="album-name">
+					<p>Album Name (required)</p>
+					<input bind:value={newAlbumName} />
+				</label>
+				<label>
+					<p>Link to Album Image (required)</p>
+					<input bind:value={newAlbumImage} />
+				</label>
+			</album-inputs>
+		</top-container>
+		<value>
+			<ValueBlock bind:valueBlock={newAlbumValue} />
+		</value>
 	</album-modal>
 </blurred-background>
 
@@ -134,11 +144,19 @@
 		color: rgba(255, 255, 255, 0.75);
 	}
 
-	image-container {
+	top-container {
 		width: 100%;
 		display: flex;
-		align-items: center;
 		justify-content: center;
-		margin-top: 16px;
+		margin: 16px 0 0 16px;
+	}
+
+	album-inputs {
+		width: calc(100% - 16px);
+		margin: 0 8px;
+	}
+
+	value {
+		padding: 16px;
 	}
 </style>
