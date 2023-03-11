@@ -71,10 +71,8 @@
 				<img
 					width="204"
 					height="204"
-					alt={$selectedTrack.artwork
-						? `${`${$selectedTrack.title} ` || ''}cover art`
-						: 'add Track Image link'}
-					src={$selectedTrack.artwork}
+					alt={newTrackImage ? `${`${newTrackImage} ` || ''}cover art` : 'add Track Image link'}
+					src={newTrackImage}
 				/>
 			</image-pane>
 			<edit-pane>
@@ -93,7 +91,7 @@
 				</label>
 			</edit-pane>
 		</top-pane>
-		<Player source={$selectedTrack.url} />
+		<Player source={newTrackEnclosure} />
 		<bottom-pane>
 			<label class="track-description">
 				<h4>Track Description</h4>
@@ -191,5 +189,9 @@
 		background-color: transparent;
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
+	}
+
+	img {
+		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 	}
 </style>

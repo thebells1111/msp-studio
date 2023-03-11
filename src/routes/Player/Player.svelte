@@ -16,14 +16,11 @@
 		};
 		player.onloadedmetadata = () => {
 			player.duration = player.duration;
-			console.log(player.duration);
 		};
-		console.log(source);
-		console.log(player);
 	}
 </script>
 
-<audio playsinline preload="metadata" bind:this={player} />
+<audio playsinline preload="metadata" bind:this={player} src={source} />
 
 <player>
 	<PlayPauseButton {player} size="30" />

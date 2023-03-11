@@ -17,7 +17,16 @@ export const selectedAlbumIndex = writable(-1);
 export const newAlbum = writable({
 	title: '',
 	artwork: '',
-	tracks: []
+	tracks: [],
+	value: [
+		{
+			name: 'Music Side Project',
+			address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+			key: '696969',
+			value: 'UzrnTK2oEHR55gw7Djmb',
+			split: 5
+		}
+	]
 });
 
 export const selectedTrack = writable({});
@@ -26,7 +35,15 @@ export const newTrack = writable({
 	title: '',
 	artwork: '',
 	url: '',
-	value: []
+	value: [
+		{
+			name: 'Music Side Project',
+			address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+			key: '696969',
+			value: 'UzrnTK2oEHR55gw7Djmb',
+			split: 5
+		}
+	]
 });
 
 export const MSPValue = writable({

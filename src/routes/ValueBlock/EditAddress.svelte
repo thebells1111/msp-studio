@@ -8,7 +8,7 @@
 	let showProviderInput = false;
 	let showAdvanced = false;
 
-	let selectedPerson = valueBlock[selectedIndex];
+	$: selectedPerson = valueBlock[selectedIndex];
 
 	async function handleProviderSelect(providerName) {
 		showProviderInput = true;
@@ -35,7 +35,7 @@
 				} else {
 					throw new Error();
 				}
-				cancelProviderSubmit();
+				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
 			} catch (error) {
 				console.log(error);
 				noUserFound = true;
@@ -54,7 +54,7 @@
 				} else {
 					throw new Error();
 				}
-				cancelProviderSubmit();
+				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
 			} catch (error) {
 				noUserFound = true;
 				info = undefined;
@@ -67,21 +67,20 @@
 				selectedPerson.key = 818818;
 				userFound = name;
 
-				cancelProviderSubmit();
+				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
 			} else {
 				noUserFound = true;
 			}
 		}
 	}
 
-	async function cancelProviderSubmit() {
-		setTimeout(() => {
-			showProviderInput = false;
-			provider = '';
-			username = '';
-			noUserFound = false;
-			userFound = false;
-		}, 3500);
+	async function cancelProviderSubmit(show) {
+		showProviderInput = false;
+		provider = '';
+		username = '';
+		noUserFound = false;
+		userFound = false;
+		showAdvanced = show;
 	}
 </script>
 
@@ -251,9 +250,9 @@
 	wallets,
 	advanced-button {
 		display: flex;
-		width: 381px;
 		align-items: center;
 		justify-content: center;
+		flex-wrap: wrap;
 	}
 
 	advanced-button button {
@@ -262,5 +261,10 @@
 
 	advanced {
 		display: block;
+	}
+
+	advanced input {
+		margin: 0 8px;
+		width: calc(100% - 18px);
 	}
 </style>

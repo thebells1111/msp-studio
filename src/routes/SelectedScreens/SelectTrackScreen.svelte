@@ -7,6 +7,7 @@
 	import EditSquare from '../icons/EditSquare.svelte';
 	import Delete from '../icons/Delete.svelte';
 	import deleteItem from '../functions/deleteItem';
+	import Publish from '../Publish/Publish.svelte';
 
 	import {
 		selectedBand,
@@ -69,6 +70,8 @@
 		{/each}
 	</ul>
 </select-track>
+
+<Publish />
 
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>

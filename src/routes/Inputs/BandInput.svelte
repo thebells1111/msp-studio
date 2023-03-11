@@ -30,14 +30,12 @@
 
 	async function addNewBand() {
 		let band = {};
-		console.log(newBandName);
 		band.title = newBandName;
 		band.artwork = newBandImage;
 		band.albums = [];
 		$library = $library.concat(band);
 		$selectedBandIndex = $library.length - 1;
 		$catalogDB.setItem(band.title, band);
-		console.log(band);
 		$selectedBand = band;
 		$selectedAlbum = $newAlbum;
 		$selectedAlbumIndex = -1;
@@ -51,7 +49,6 @@
 		$selectedBand.title = newBandName;
 		$selectedBand.artwork = newBandImage;
 		$library[$selectedBandIndex] = $selectedBand;
-		$library = $library.concat($selectedBand);
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		$selectedScreen = 'albums';
 		showEdit = false;

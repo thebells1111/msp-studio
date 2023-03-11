@@ -64,6 +64,7 @@
 	img {
 		display: block;
 		border: 1px solid black;
+		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 	}
 
 	button {
@@ -74,7 +75,7 @@
 	button.select-album {
 		width: 203px;
 		background-color: var(--color-bg-select-album);
-		box-shadow: 0 2px 5px 0 var(--color-button-shadow);
+		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 		margin-left: 16px;
 	}
 </style>
