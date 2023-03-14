@@ -5,6 +5,7 @@
 	import { v5 as uuidv5 } from 'uuid';
 
 	import { selectedBand, selectedAlbum } from '$/stores';
+	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 
 	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
 
@@ -35,14 +36,15 @@
 			generator: 'Music Side Project',
 			title: $selectedAlbum.title,
 			'itunes:author': $selectedBand.title,
-			description: 'add the description',
+			description: $selectedAlbum.description,
 			'itunes:category': { '@_text': 'Music' },
 			'itunes:keywords': 'music',
 			'podcast:medium': 'music',
 			'itunes:image': { '@_href': $selectedAlbum.artwork },
-			'itunes:explicit': 'add explicit radio',
+			'itunes:explicit': $selectedAlbum.explicit,
 			link: 'add optional link',
-			'itunes:owner': { '@_itunes:name': $selectedBand.title, '@_itunes:email': 'band@email.com' }
+			'itunes:owner': { '@_itunes:name': $selectedBand.title, '@_itunes:email': 'band@email.com' },
+			'podcast:value': buildValue($selectedAlbum.value)
 		};
 
 		let items = $selectedAlbum.tracks.map((track, index) => {
@@ -51,23 +53,12 @@
 				enclosure: { '@_url': track.url, '@_type': 'mp3', '@_length': 'add file size' },
 				pubDate: 'add pubDate',
 				description: track.description,
+				'itunes:explicit': track.explicit,
 				'itunes:duration': 'add duration',
 				'itunes:image': { '@_href': track.artwork },
 				'podcast:season': 1,
-				'podcast:episode': index,
-				'podcast:value': {
-					'@_type': 'lightning',
-					'@_method': 'keysend',
-					'podcast:valueRecipient': {
-						'@_name': 'Musician',
-						'@_type': 'node',
-						'@_address': 'alby',
-						'@_customKey': '16180339',
-						'@_customValue': 'xyz',
-						'@_split': '100'
-					}
-				},
-				'itunes:explicit': false,
+				'podcast:episode': index + 1,
+				'podcast:value': buildValue(track.value),
 				'itunes:duration': '00:03:53'
 			};
 		});
@@ -108,6 +99,25 @@
 		var blob = new Blob([xmlFile], { type: 'text/plain;charset=utf-8' });
 
 		saveAs(blob, `${title} - ${d.replace(/\//g, '-').replace(',', '').replace(/:/g, '.')}.xml`);
+	}
+
+	function buildValue(tag) {
+		let value = {
+			'@_type': 'lightning',
+			'@_method': 'keysend',
+			'podcast:valueRecipient': tag.map((v) => {
+				return {
+					'@_name': v.name,
+					'@_type': 'node',
+					'@_address': v.address,
+					'@_customKey': v.key,
+					'@_customValue': v.value,
+					'@_split': v.split
+				};
+			})
+		};
+
+		return value;
 	}
 </script>
 

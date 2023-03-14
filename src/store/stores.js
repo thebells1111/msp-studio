@@ -17,6 +17,8 @@ export const selectedAlbumIndex = writable(-1);
 export const newAlbum = writable({
 	title: '',
 	artwork: '',
+	description: '',
+	explicit: 'no',
 	tracks: [],
 	value: [
 		{
@@ -35,6 +37,8 @@ export const newTrack = writable({
 	title: '',
 	artwork: '',
 	url: '',
+	description: '',
+	explicit: 'no',
 	value: [
 		{
 			name: 'Music Side Project',

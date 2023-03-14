@@ -13,37 +13,28 @@
 
 	import { onMount } from 'svelte';
 
-	export let add = false;
 	export let showEdit = false;
 	let newAlbumName = '';
 	let newAlbumImage = '';
 	let newAlbumValue = [];
+	let newAlbumDescription = '';
+	let explicit = 'no';
 
 	onMount(() => {
 		newAlbumName = $selectedAlbum.title || '';
 		newAlbumImage = $selectedAlbum.artwork || '';
 		newAlbumValue =
 			$selectedAlbum.value && $selectedAlbum.value.length > 0 ? $selectedAlbum.value : [$MSPValue];
+		newAlbumDescription = $selectedAlbum.description || '';
+		explicit = $selectedAlbum.explicit || 'no';
 	});
-
-	async function addNewAlbum() {
-		let album = {};
-		album.title = newAlbumName;
-		album.artwork = newAlbumImage;
-		album.tracks = [];
-		album.value = [$MSPValue];
-		$selectedAlbum = album;
-		$selectedBand.albums = $selectedBand.albums.concat($selectedAlbum);
-		$selectedAlbumIndex = $selectedBand.albums.length - 1;
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
-		$selectedScreen = 'tracks';
-		showAddNewButton = true;
-	}
 
 	async function saveAlbum() {
 		$selectedAlbum.title = newAlbumName;
 		$selectedAlbum.artwork = newAlbumImage;
 		$selectedAlbum.value = newAlbumValue;
+		$selectedAlbum.description = newAlbumDescription;
+		$selectedAlbum.explicit = explicit;
 		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		$selectedScreen = 'tracks';
@@ -52,7 +43,7 @@
 
 	function closeModal() {
 		showEdit = false;
-		add ? addNewAlbum() : saveAlbum();
+		saveAlbum();
 	}
 </script>
 
@@ -70,19 +61,42 @@
 				src={newAlbumImage}
 			/>
 			<album-inputs>
-				<label class="album-name">
-					<p>Album Name (required)</p>
-					<input bind:value={newAlbumName} />
-				</label>
-				<label>
-					<p>Link to Album Image (required)</p>
-					<input bind:value={newAlbumImage} />
-				</label>
+				<album-name>
+					<label>
+						<p>Album Name (required)</p>
+						<input bind:value={newAlbumName} />
+					</label>
+				</album-name>
+				<album-image>
+					<label>
+						<p>Link to Album Image (required)</p>
+						<input bind:value={newAlbumImage} />
+					</label>
+				</album-image>
+				<explicit>
+					<p>Explicit Content (required)</p>
+					<explicit-radio>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
+							No
+						</label>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
+							Yes
+						</label>
+					</explicit-radio>
+				</explicit>
 			</album-inputs>
 		</top-container>
-		<value>
-			<ValueBlock bind:valueBlock={newAlbumValue} />
-		</value>
+		<bottom-pane>
+			<label class="album-description">
+				<h4>Album Description (required)</h4>
+				<textarea bind:value={newAlbumDescription} />
+			</label>
+			<value>
+				<ValueBlock bind:valueBlock={newAlbumValue} />
+			</value>
+		</bottom-pane>
 	</album-modal>
 </blurred-background>
 
@@ -118,17 +132,52 @@
 		box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 1);
 	}
 
-	label {
+	bottom-pane {
+		display: flex;
+		align-items: flex-start;
+		margin: 0 16px 0 8px;
+	}
+
+	.album-description {
+		width: 33%;
+	}
+
+	.album-description textarea {
+		width: 100%;
+		height: 200px;
+		resize: none;
+	}
+
+	album-image {
+		display: block;
+		margin: 16px 0;
+	}
+	album-name label,
+	album-image input {
 		width: 100%;
 		margin: 8px;
 	}
-	.album-name {
-		margin: 32px 8px;
-	}
 
-	label input {
+	album-name input,
+	album-image input {
 		margin: 0 8px;
 		width: calc(100% - 40px);
+	}
+
+	explicit {
+		display: flex;
+		flex-direction: column;
+	}
+
+	explicit-radio {
+		display: block;
+		margin: 0 8px;
+	}
+
+	explicit-radio label {
+		display: inline-block;
+		width: 100px;
+		cursor: pointer;
 	}
 
 	p {
@@ -156,10 +205,15 @@
 		margin: 0 8px;
 	}
 
-	value {
-		padding: 16px;
+	h4 {
+		padding: 0;
+		margin: 0;
 	}
 
+	value {
+		margin-left: 8px;
+		flex-grow: 1;
+	}
 	img {
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 	}

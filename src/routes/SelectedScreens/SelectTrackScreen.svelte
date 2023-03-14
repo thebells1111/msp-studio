@@ -16,13 +16,11 @@
 		selectedAlbumIndex,
 		selectedTrack,
 		selectedTrackIndex,
-		newTrack,
 		catalogDB,
-		selectedScreen
+		MSPValue
 	} from '$/stores';
 
 	let showEdit = false;
-	let addTrack = false;
 
 	async function selectTrack(track, index) {
 		$selectedTrack = track;
@@ -36,6 +34,20 @@
 		$selectedTrackIndex = -1;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
+
+	async function addNewTrack() {
+		let track = {
+			title: '',
+			artwork: '',
+			url: '',
+			value: $selectedAlbum.value ? [...$selectedAlbum.value] : [...$MSPValue],
+			description: '',
+			explicit: 'no'
+		};
+		$selectedTrack = track;
+		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
+	}
 </script>
 
 <ChangeBand />
@@ -45,8 +57,8 @@
 		<h3>Select a Track</h3>
 		<button
 			on:click={() => {
+				addNewTrack();
 				showEdit = true;
-				addTrack = true;
 			}}
 		>
 			<Add size="30" />
@@ -74,7 +86,7 @@
 
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>
-		<TrackInput bind:showEdit add={addTrack} />
+		<TrackInput bind:showEdit />
 	</div>
 {/if}
 

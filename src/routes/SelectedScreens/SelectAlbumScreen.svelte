@@ -15,7 +15,8 @@
 		selectedTrackIndex,
 		newTrack,
 		catalogDB,
-		selectedScreen
+		selectedScreen,
+		MSPValue
 	} from '$/stores';
 
 	let showEdit = false;
@@ -35,12 +36,31 @@
 		$selectedTrackIndex = -1;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
+
+	async function addNewAlbum() {
+		let album = {};
+		album.title = '';
+		album.artwork = '';
+		album.tracks = [];
+		album.value = [$MSPValue];
+		album.decription = '';
+		album.explicit = 'no';
+		$selectedAlbum = album;
+		$selectedBand.albums = $selectedBand.albums.concat($selectedAlbum);
+		$selectedAlbumIndex = $selectedBand.albums.length - 1;
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
+	}
 </script>
 
 <ChangeBand />
 <header>
 	<h3>Select an Album</h3>
-	<button on:click={() => (showEdit = true)}>
+	<button
+		on:click={() => {
+			addNewAlbum();
+			showEdit = true;
+		}}
+	>
 		<Add size="30" />
 	</button>
 </header>
@@ -53,14 +73,14 @@
 			>
 				<Delete size="18" />
 			</button>
-			<p on:click={selectAlbum.bind(this, album, i)} add={true}>{album.title || 'Blank Album'}</p>
+			<p on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</p>
 		</li>
 	{/each}
 </ul>
 
 {#if showEdit}
 	<div transition:slide={{ duration: 50 }}>
-		<AlbumInput bind:showEdit add={true} />
+		<AlbumInput bind:showEdit />
 	</div>
 {/if}
 

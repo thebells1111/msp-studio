@@ -14,50 +14,42 @@
 		MSPValue
 	} from '$/stores';
 
-	export let add = false;
 	let newTrackName = '';
 	let newTrackImage = '';
 	let newTrackEnclosure = '';
 	let newTrackValue = [];
+	let newTrackDescription = '';
+	let explicit = 'no';
 	export let showEdit = false;
 
 	onMount(() => {
-		console.log($selectedTrack);
 		newTrackName = $selectedTrack.title || '';
 		newTrackImage = $selectedTrack.artwork || '';
 		newTrackEnclosure = $selectedTrack.url || '';
+		newTrackDescription = $selectedTrack.description || '';
+		explicit = $selectedTrack.explicit || 'no';
 		newTrackValue =
 			$selectedTrack.value && $selectedTrack.value.length > 0
 				? $selectedTrack.value
-				: [...$selectedAlbum.value] || [...$MSPValue];
+				: $selectedAlbum.value
+				? [...$selectedAlbum.value]
+				: [...$MSPValue];
 	});
 
-	async function addNewTrack() {
-		let track = {
-			title: newTrackName,
-			artwork: newTrackImage,
-			url: newTrackEnclosure,
-			value: [...$selectedAlbum.value] || [...$MSPValue]
-		};
-		$selectedTrack = track;
-		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
-		showEdit = false;
-	}
-
 	async function saveTrack() {
-		console.log(newTrackValue);
 		$selectedTrack.title = newTrackName;
 		$selectedTrack.artwork = newTrackImage;
 		$selectedTrack.url = newTrackEnclosure;
 		$selectedTrack.value = newTrackValue;
+		$selectedTrack.description = newTrackDescription;
+		$selectedTrack.explicit = explicit;
 		$selectedAlbum.tracks[$selectedTrackIndex] = $selectedTrack;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		showEdit = false;
 	}
 	function closeModal() {
 		showEdit = false;
-		add ? addNewTrack() : saveTrack();
+		saveTrack();
 	}
 </script>
 
@@ -69,8 +61,8 @@
 		<top-pane>
 			<image-pane>
 				<img
-					width="204"
-					height="204"
+					width="238"
+					height="238"
 					alt={newTrackImage ? `${`${newTrackImage} ` || ''}cover art` : 'add Track Image link'}
 					src={newTrackImage}
 				/>
@@ -89,13 +81,26 @@
 					<h4>Link to Track Image (optional)</h4>
 					<input bind:value={newTrackImage} />
 				</label>
+				<explicit>
+					<h4>Explicit Content (required)</h4>
+					<explicit-radio>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
+							No
+						</label>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
+							Yes
+						</label>
+					</explicit-radio>
+				</explicit>
 			</edit-pane>
 		</top-pane>
 		<Player source={newTrackEnclosure} />
 		<bottom-pane>
 			<label class="track-description">
 				<h4>Track Description</h4>
-				<textarea />
+				<textarea bind:value={newTrackDescription} />
 			</label>
 			<value>
 				<ValueBlock bind:valueBlock={newTrackValue} />
@@ -150,6 +155,27 @@
 	value {
 		margin-left: 8px;
 		flex-grow: 1;
+	}
+
+	explicit {
+		display: flex;
+		flex-direction: column;
+	}
+
+	explicit-radio {
+		display: block;
+		margin: 0 8px;
+	}
+
+	explicit-radio label {
+		display: inline-block;
+		width: 100px;
+		cursor: pointer;
+		margin: 0;
+	}
+
+	explicit-radio input {
+		width: initial;
 	}
 
 	blurred-background {
