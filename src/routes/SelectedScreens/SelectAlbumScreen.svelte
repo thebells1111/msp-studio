@@ -29,8 +29,7 @@
 	}
 
 	async function deleteAlbum(index) {
-		$selectedAlbumIndex = index || $selectedAlbumIndex;
-		$selectedBand.albums.splice($selectedAlbumIndex, 1);
+		$selectedBand.albums.splice(index, 1);
 		$selectedBand = $selectedBand;
 		$selectedAlbumIndex = -1;
 		$selectedTrackIndex = -1;

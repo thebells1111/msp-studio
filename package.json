@@ -26,6 +26,7 @@
 		"form-data": "^4.0.0",
 		"html-entities": "^2.3.3",
 		"just-clone": "^6.2.0",
-		"localforage": "^1.10.0"
+		"localforage": "^1.10.0",
+		"uuid": "^9.0.0"
 	}
 }

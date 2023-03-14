@@ -31,8 +31,7 @@
 	}
 
 	async function deleteTrack(index) {
-		$selectedTrackIndex = index || $selectedTrackIndex;
-		$selectedAlbum.tracks.splice($selectedTrackIndex, 1);
+		$selectedAlbum.tracks.splice(index, 1);
 		$selectedAlbum = $selectedAlbum;
 		$selectedTrackIndex = -1;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
