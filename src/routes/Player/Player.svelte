@@ -4,23 +4,29 @@
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import convertTime from '../functions/convertTime';
 
-	export let source;
+	export let newTrackEnclosure;
+	import { selectedTrack } from '$/stores';
 	let player;
 
 	onMount(setupPlayer);
 
 	function setupPlayer() {
-		player.src = source;
+		player.src = newTrackEnclosure.url;
 		player.ontimeupdate = () => {
 			player.currentTime = player.currentTime;
 		};
-		player.onloadedmetadata = () => {
+		player.onloadedmetadata = async () => {
 			player.duration = player.duration;
+			$selectedTrack.duration = player.duration;
+			const response = await fetch('/api/enclosureproxy?url=' + newTrackEnclosure.url);
+			let { enclosureLength, enclosureType } = await response.json();
+			newTrackEnclosure.enclosureLength = enclosureLength;
+			newTrackEnclosure.type = enclosureType;
 		};
 	}
 </script>
 
-<audio playsinline preload="metadata" bind:this={player} src={source} />
+<audio playsinline preload="metadata" bind:this={player} src={newTrackEnclosure.url} />
 
 <player>
 	<PlayPauseButton {player} size="30" />

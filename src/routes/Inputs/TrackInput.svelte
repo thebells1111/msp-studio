@@ -16,7 +16,7 @@
 
 	let newTrackName = '';
 	let newTrackImage = '';
-	let newTrackEnclosure = '';
+	let newTrackEnclosure = { url: '', enclosureLength: '', type: '' };
 	let newTrackValue = [];
 	let newTrackDescription = '';
 	let explicit = 'no';
@@ -25,7 +25,11 @@
 	onMount(() => {
 		newTrackName = $selectedTrack.title || '';
 		newTrackImage = $selectedTrack.artwork || '';
-		newTrackEnclosure = $selectedTrack.url || '';
+		newTrackEnclosure = {
+			url: $selectedTrack?.enclosure?.url || '',
+			enclosureLength: $selectedTrack?.enclosure?.enclosureLength || '',
+			type: $selectedTrack?.enclosure?.type || ''
+		};
 		newTrackDescription = $selectedTrack.description || '';
 		explicit = $selectedTrack.explicit || 'no';
 		newTrackValue =
@@ -37,9 +41,10 @@
 	});
 
 	async function saveTrack() {
+		console.log(newTrackEnclosure);
 		$selectedTrack.title = newTrackName;
 		$selectedTrack.artwork = newTrackImage;
-		$selectedTrack.url = newTrackEnclosure;
+		$selectedTrack.enclosure = newTrackEnclosure;
 		$selectedTrack.value = newTrackValue;
 		$selectedTrack.description = newTrackDescription;
 		$selectedTrack.explicit = explicit;
@@ -75,7 +80,7 @@
 
 				<label>
 					<h4>Link to Track mp3 File (required)</h4>
-					<input bind:value={newTrackEnclosure} />
+					<input bind:value={newTrackEnclosure.url} />
 				</label>
 				<label>
 					<h4>Link to Track Image (optional)</h4>
@@ -96,7 +101,7 @@
 				</explicit>
 			</edit-pane>
 		</top-pane>
-		<Player source={newTrackEnclosure} />
+		<Player bind:newTrackEnclosure />
 		<bottom-pane>
 			<label class="track-description">
 				<h4>Track Description</h4>

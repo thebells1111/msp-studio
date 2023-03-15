@@ -1,13 +1,13 @@
 <script>
 	import parser from 'fast-xml-parser';
-	import clone from 'just-clone';
 	import { saveAs } from 'file-saver';
 	import { v5 as uuidv5 } from 'uuid';
 
 	import { selectedBand, selectedAlbum } from '$/stores';
-	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 
 	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
+
+	let errors = [];
 
 	function downloadFeed() {
 		let js2xml = new parser.j2xParser({
@@ -22,8 +22,6 @@
 			attrValueProcessor: (val, attrName) => escapeAttr(`${val}`),
 			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
 		});
-		console.log($selectedBand);
-		console.log($selectedAlbum);
 
 		let rss = {
 			'@_version': '2.0',
@@ -34,32 +32,74 @@
 
 		let channel = {
 			generator: 'Music Side Project',
-			title: $selectedAlbum.title,
-			'itunes:author': $selectedBand.title,
-			description: $selectedAlbum.description,
 			'itunes:category': { '@_text': 'Music' },
 			'itunes:keywords': 'music',
-			'podcast:medium': 'music',
-			'itunes:image': { '@_href': $selectedAlbum.artwork },
-			'itunes:explicit': $selectedAlbum.explicit,
-			link: 'add optional link',
-			'itunes:owner': { '@_itunes:name': $selectedBand.title, '@_itunes:email': 'band@email.com' },
-			'podcast:value': buildValue($selectedAlbum.value)
+			'podcast:medium': 'music'
 		};
+
+		if ($selectedBand.title) {
+			channel['itunes:author'] = $selectedBand.title;
+			channel['itunes:owner'] = { '@_itunes:name': $selectedBand.title, '@_itunes:email': '' };
+		} else {
+			errors.push('Band needs a name');
+		}
+
+		if ($selectedAlbum.title) {
+			channel.title = $selectedAlbum.title;
+		} else {
+			errors.push('Album needs a name');
+		}
+
+		if ($selectedAlbum.description) {
+			channel['description'] = $selectedAlbum.description;
+		} else {
+			errors.push('Album needs a description');
+		}
+
+		if ($selectedAlbum.artwork) {
+			channel['itunes:image'] = { '@_href': $selectedAlbum.artwork };
+		} else {
+			errors.push('Album needs some artwork');
+		}
+
+		if ($selectedAlbum.explicit) {
+			channel['itunes:explicit'] = $selectedAlbum.explicit;
+		} else {
+			errors.push('Is the album explicit?');
+		}
+
+		if ($selectedAlbum.link) {
+			channel['link'] = $selectedAlbum.link;
+		}
+		if ($selectedAlbum.explicit) {
+			channel['itunes:explicit'] = $selectedAlbum.explicit;
+		} else {
+			errors.push('Is the album explicit?');
+		}
+
+		if ($selectedAlbum.value) {
+			channel['podcast:value'] = buildValue($selectedAlbum.value);
+		} else {
+			errors.push('Add some value to the album');
+		}
 
 		let items = $selectedAlbum.tracks.map((track, index) => {
 			return {
 				title: track.title,
-				enclosure: { '@_url': track.url, '@_type': 'mp3', '@_length': 'add file size' },
-				pubDate: 'add pubDate',
+				enclosure: {
+					'@_url': track?.enclosure?.url,
+					'@_type': track?.enclosure?.type,
+					'@_length': track?.enclosure?.enclosureLength
+				},
+				pubDate:
+					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
 				description: track.description,
 				'itunes:explicit': track.explicit,
-				'itunes:duration': 'add duration',
+				'itunes:duration': convertDurationToITunesFormat(track.duration),
 				'itunes:image': { '@_href': track.artwork },
 				'podcast:season': 1,
 				'podcast:episode': index + 1,
-				'podcast:value': buildValue(track.value),
-				'itunes:duration': '00:03:53'
+				'podcast:value': buildValue(track.value)
 			};
 		});
 
@@ -119,6 +159,19 @@
 
 		return value;
 	}
+
+	function convertDurationToITunesFormat(durationInSeconds) {
+		// Convert duration to iTunes format (HH:MM:SS)
+		const hours = Math.floor(durationInSeconds / 3600);
+		const minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
+		const seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
+		const durationInITunesFormat = `${hours.toString().padStart(2, '0')}:${minutes
+			.toString()
+			.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+		// Return duration in iTunes format
+		return durationInITunesFormat;
+	}
 </script>
 
 <button class="download" on:click={downloadFeed}>Download Album</button>
@@ -130,5 +183,7 @@
 		padding: 8px 16px;
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 		display: block;
+		margin: 16px 0 8px 16px;
+		width: 203px;
 	}
 </style>

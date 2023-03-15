@@ -67,7 +67,8 @@
 <ul>
 	{#each $selectedBand?.albums || [] as album, i}
 		<li>
-			<p on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</p>
+			<img width="50" height="50" src={album.artwork || './msp-record-300.png'} />
+			<h3 on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</h3>
 			<button
 				on:click|stopPropagation={deleteItem.bind(
 					this,
@@ -121,13 +122,11 @@
 		background-color: var(--color-poster-bg-0);
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 	}
-	li p {
-		width: 100%;
-	}
 
-	p {
+	li h3 {
 		margin: 0 8px;
 		padding: 0;
+		width: 100%;
 	}
 
 	button.delete {

@@ -54,6 +54,6 @@
 		width: 203px;
 		background-color: var(--color-bg-select-band);
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-		margin-bottom: 8px;
+		margin: 8px 16px;
 	}
 </style>

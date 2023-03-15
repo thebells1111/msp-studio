@@ -172,7 +172,7 @@
 		display: block;
 		position: relative;
 		left: 232px;
-		top: -175px;
+		top: -225px;
 		width: calc(100% - 232px);
 	}
 

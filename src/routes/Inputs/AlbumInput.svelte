@@ -16,6 +16,7 @@
 	export let showEdit = false;
 	let newAlbumName = '';
 	let newAlbumImage = '';
+	let newAlbumLink = '';
 	let newAlbumValue = [];
 	let newAlbumDescription = '';
 	let explicit = 'no';
@@ -23,6 +24,7 @@
 	onMount(() => {
 		newAlbumName = $selectedAlbum.title || '';
 		newAlbumImage = $selectedAlbum.artwork || '';
+		newAlbumLink = $selectedAlbum.link || '';
 		newAlbumValue =
 			$selectedAlbum.value && $selectedAlbum.value.length > 0 ? $selectedAlbum.value : [$MSPValue];
 		newAlbumDescription = $selectedAlbum.description || '';
@@ -35,6 +37,7 @@
 		$selectedAlbum.value = newAlbumValue;
 		$selectedAlbum.description = newAlbumDescription;
 		$selectedAlbum.explicit = explicit;
+		$selectedAlbum.link = newAlbumLink;
 		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		$selectedScreen = 'tracks';
@@ -55,8 +58,8 @@
 
 		<top-container>
 			<img
-				width="203"
-				height="203"
+				width="258"
+				height="258"
 				alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
 				src={newAlbumImage}
 			/>
@@ -73,6 +76,12 @@
 						<input bind:value={newAlbumImage} />
 					</label>
 				</album-image>
+				<album-link>
+					<label>
+						<p>Link to Album Website (optional)</p>
+						<input bind:value={newAlbumLink} />
+					</label>
+				</album-link>
 				<explicit>
 					<p>Explicit Content (required)</p>
 					<explicit-radio>
@@ -135,17 +144,19 @@
 	bottom-pane {
 		display: flex;
 		align-items: flex-start;
-		margin: 0 16px 0 8px;
+		margin: 16px 16px 0 8px;
 	}
 
 	.album-description {
 		width: 33%;
+		margin: 8px 0 0 8px;
 	}
 
 	.album-description textarea {
-		width: 100%;
+		width: calc(100% - 16px);
 		height: 200px;
 		resize: none;
+		margin: 8px 0 0 8px;
 	}
 
 	album-image {
@@ -153,18 +164,20 @@
 		margin: 16px 0;
 	}
 	album-name label,
-	album-image input {
+	album-image label,
+	album-link label {
 		width: 100%;
-		margin: 8px;
 	}
 
 	album-name input,
-	album-image input {
+	album-image input,
+	album-link input {
 		margin: 0 8px;
 		width: calc(100% - 40px);
 	}
 
 	explicit {
+		margin-top: 16px;
 		display: flex;
 		flex-direction: column;
 	}
