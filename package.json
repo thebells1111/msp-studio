@@ -27,6 +27,7 @@
 		"html-entities": "^2.3.3",
 		"just-clone": "^6.2.0",
 		"localforage": "^1.10.0",
+		"svelte-sortable-list": "^1.1.0",
 		"uuid": "^9.0.0"
 	}
 }

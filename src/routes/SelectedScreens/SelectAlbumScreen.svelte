@@ -67,13 +67,17 @@
 <ul>
 	{#each $selectedBand?.albums || [] as album, i}
 		<li>
+			<p on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</p>
 			<button
-				on:click={deleteItem.bind(this, album.title || 'Blank Album', deleteAlbum.bind(this, i))}
+				on:click|stopPropagation={deleteItem.bind(
+					this,
+					album.title || 'Blank Album',
+					deleteAlbum.bind(this, i)
+				)}
 				class="delete"
 			>
-				<Delete size="18" />
+				<Delete size="30" />
 			</button>
-			<p on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</p>
 		</li>
 	{/each}
 </ul>
@@ -109,8 +113,16 @@
 
 	li {
 		list-style: none;
-		padding: 4px 0;
 		display: flex;
+		margin: 0 8px 8px 0;
+		padding: 4px;
+		border-radius: 6px;
+		min-height: 55px;
+		background-color: var(--color-poster-bg-0);
+		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+	}
+	li p {
+		width: 100%;
 	}
 
 	p {
@@ -120,5 +132,8 @@
 
 	button.delete {
 		color: var(--color-bg-delete);
+		margin: 0;
+		padding: 8px;
+		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
 	}
 </style>

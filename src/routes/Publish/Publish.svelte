@@ -129,5 +129,6 @@
 		background-color: blueviolet;
 		padding: 8px 16px;
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
+		display: block;
 	}
 </style>
