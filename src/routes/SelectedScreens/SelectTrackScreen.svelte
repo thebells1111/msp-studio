@@ -40,7 +40,7 @@
 			title: '',
 			artwork: '',
 			url: '',
-			value: $selectedAlbum.value ? [...$selectedAlbum.value] : [...$MSPValue],
+			value: $selectedAlbum.value ? clone($selectedAlbum.value) : clone($MSPValue),
 			description: '',
 			explicit: 'no'
 		};
@@ -51,7 +51,7 @@
 	}
 
 	function sortTracks(index, direction) {
-		const newArray = [...$selectedAlbum.tracks];
+		const newArray = clone($selectedAlbum.tracks);
 		let a = newArray[index];
 		let b = newArray[index + direction];
 		newArray[index + direction] = a;

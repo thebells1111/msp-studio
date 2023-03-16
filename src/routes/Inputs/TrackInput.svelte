@@ -2,6 +2,7 @@
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
+	import clone from 'just-clone';
 
 	import { onMount } from 'svelte';
 
@@ -36,8 +37,8 @@
 			$selectedTrack.value && $selectedTrack.value.length > 0
 				? $selectedTrack.value
 				: $selectedAlbum.value
-				? [...$selectedAlbum.value]
-				: [...$MSPValue];
+				? clone($selectedAlbum.value)
+				: clone($MSPValue);
 	});
 
 	async function saveTrack() {
@@ -87,7 +88,7 @@
 					<input bind:value={newTrackImage} />
 				</label>
 				<explicit>
-					<h4>Explicit Content (required)</h4>
+					<h4>Explicit Content (optional)</h4>
 					<explicit-radio>
 						<label>
 							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />

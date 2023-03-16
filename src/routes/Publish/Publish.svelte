@@ -3,11 +3,14 @@
 	import { saveAs } from 'file-saver';
 	import { v5 as uuidv5 } from 'uuid';
 
-	import { selectedBand, selectedAlbum } from '$/stores';
+	import ErrorModal from './ErrorModal.svelte';
+
+	import { selectedBand, selectedAlbum, catalogDB } from '$/stores';
 
 	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
 
 	let rssErrors = [];
+	let showModal = false;
 
 	function downloadFeed() {
 		rssErrors = [];
@@ -32,7 +35,7 @@
 		};
 
 		let channel = {
-			generator: 'Music Side Project',
+			generator: 'Music Side Project Studio',
 			'itunes:category': { '@_text': 'Music' },
 			'itunes:keywords': 'music',
 			'podcast:medium': 'music'
@@ -70,7 +73,12 @@
 		}
 
 		if ($selectedAlbum.link) {
-			channel['link'] = $selectedAlbum.link;
+			console.log(isValidUrl($selectedAlbum.link));
+			if (isValidUrl($selectedAlbum.link)) {
+				channel['link'] = $selectedAlbum.link;
+			} else {
+				rssErrors.push('Link to Album Website is an invalid link');
+			}
 		}
 		if ($selectedAlbum.explicit) {
 			channel['itunes:explicit'] = $selectedAlbum.explicit;
@@ -79,7 +87,7 @@
 		}
 
 		if ($selectedAlbum.value) {
-			channel['podcast:value'] = buildValue($selectedAlbum.value);
+			channel['podcast:value'] = buildValue($selectedAlbum.value, 'Album');
 		} else {
 			rssErrors.push('Add some value to the album');
 		}
@@ -88,6 +96,7 @@
 			let title = track.title;
 			let trackJSON = {
 				pubDate:
+					track.pubDate ||
 					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
 				'podcast:season': 1,
 				'podcast:episode': index + 1
@@ -125,7 +134,7 @@
 			}
 
 			if (track.value) {
-				trackJSON['podcast:value'] = buildValue(track.value);
+				trackJSON['podcast:value'] = buildValue(track.value, title);
 			}
 
 			return trackJSON;
@@ -137,11 +146,13 @@
 
 		let xmlJson = { rss: rss };
 
-		console.log(xmlJson.rss.channel);
-
 		let xml = js2xml.parse(xmlJson);
-		console.log(xml);
-		console.log(rssErrors);
+		if (rssErrors.length) {
+			showModal = true;
+		} else {
+			$catalogDB.setItem($selectedBand.title, $selectedBand);
+			saveFeed($selectedAlbum.title, xml);
+		}
 	}
 
 	const escapeAttr = (str) =>
@@ -166,23 +177,56 @@
 
 	async function saveFeed(title, xmlFile) {
 		var blob = new Blob([xmlFile], { type: 'text/plain;charset=utf-8' });
+		let date = new Date();
+		let d = date.toLocaleString('en-US', { hour12: false });
 
 		saveAs(blob, `${title} - ${d.replace(/\//g, '-').replace(',', '').replace(/:/g, '.')}.xml`);
 	}
 
-	function buildValue(tag) {
+	function buildValue(tag, name) {
+		let splitTotal = tag.reduce((t, v) => {
+			return t + Number(v.split);
+		}, 0);
+
+		if (splitTotal !== 100) {
+			rssErrors.push(
+				`The splits for ${
+					name === 'Album' ? 'the "Album"' : `track "${name}"`
+				} don't add up to 100%`
+			);
+		}
 		let value = {
 			'@_type': 'lightning',
 			'@_method': 'keysend',
-			'podcast:valueRecipient': tag.map((v) => {
-				return {
-					'@_name': v.name,
-					'@_type': 'node',
-					'@_address': v.address,
-					'@_customKey': v.key,
-					'@_customValue': v.value,
-					'@_split': v.split
-				};
+			'podcast:valueRecipient': tag.map((v, i) => {
+				let rec = { '@_type': 'node' };
+				let person = v.name;
+				if (v.name) {
+					rec['@_name'] = v.name;
+				} else {
+					person = `Recepient #${i + 1}`;
+					rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
+				}
+				if (v.address) {
+					rec['@_address'] = v.address;
+				} else {
+					rssErrors.push(
+						`Person "${person}" in the "${name}" value tag block needs an lightning address`
+					);
+				}
+
+				if (v.key) {
+					rec['@_customKey'] = v.key;
+				}
+				if (v.value) {
+					rec['@_customValue'] = v.value;
+				}
+				if (Number(v.split)) {
+					rec['@_split'] = v.split;
+				} else {
+					rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
+				}
+				return rec;
 			})
 		};
 
@@ -201,9 +245,21 @@
 		// Return duration in iTunes format
 		return durationInITunesFormat;
 	}
+	function isValidUrl(url) {
+		// Create a regular expression pattern that matches valid URLs with http, https, or ftp protocols
+		const urlPattern =
+			/^(http|https|ftp):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/;
+
+		// Test whether the provided URL matches the pattern
+		return urlPattern.test(url);
+	}
 </script>
 
 <button class="download" on:click={downloadFeed}>Download Album</button>
+
+{#if showModal}
+	<ErrorModal {rssErrors} bind:showModal />
+{/if}
 
 <style>
 	button.download {
