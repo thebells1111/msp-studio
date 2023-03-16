@@ -128,6 +128,8 @@
 		position: relative;
 		width: calc(100% - 100px);
 		height: calc(100% - 100px);
+		overflow-y: auto;
+		overflow-x: hidden;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -148,7 +150,7 @@
 	}
 
 	.album-description {
-		width: 33%;
+		min-width: 33%;
 		margin: 8px 0 0 8px;
 	}
 
@@ -229,5 +231,6 @@
 	}
 	img {
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+		min-width: 258px;
 	}
 </style>

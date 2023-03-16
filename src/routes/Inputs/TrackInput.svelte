@@ -134,7 +134,7 @@
 	}
 
 	.track-description {
-		width: 33%;
+		min-width: 33%;
 	}
 
 	.track-description textarea {
@@ -201,6 +201,8 @@
 		position: relative;
 		width: calc(100% - 50px);
 		height: calc(100% - 50px);
+		overflow-y: auto;
+		overflow-x: hidden;
 		border-radius: 8px;
 		padding: 8px;
 		overflow: auto;

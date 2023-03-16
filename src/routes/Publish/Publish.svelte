@@ -7,9 +7,10 @@
 
 	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
 
-	let errors = [];
+	let rssErrors = [];
 
 	function downloadFeed() {
+		rssErrors = [];
 		let js2xml = new parser.j2xParser({
 			attributeNamePrefix: '@_',
 			//attrNodeName: false,
@@ -41,31 +42,31 @@
 			channel['itunes:author'] = $selectedBand.title;
 			channel['itunes:owner'] = { '@_itunes:name': $selectedBand.title, '@_itunes:email': '' };
 		} else {
-			errors.push('Band needs a name');
+			rssErrors.push('Band needs a name');
 		}
 
 		if ($selectedAlbum.title) {
 			channel.title = $selectedAlbum.title;
 		} else {
-			errors.push('Album needs a name');
+			rssErrors.push('Album needs a name');
 		}
 
 		if ($selectedAlbum.description) {
 			channel['description'] = $selectedAlbum.description;
 		} else {
-			errors.push('Album needs a description');
+			rssErrors.push('Album needs a description');
 		}
 
 		if ($selectedAlbum.artwork) {
 			channel['itunes:image'] = { '@_href': $selectedAlbum.artwork };
 		} else {
-			errors.push('Album needs some artwork');
+			rssErrors.push('Album needs some artwork');
 		}
 
 		if ($selectedAlbum.explicit) {
 			channel['itunes:explicit'] = $selectedAlbum.explicit;
 		} else {
-			errors.push('Is the album explicit?');
+			rssErrors.push('Is the album explicit?');
 		}
 
 		if ($selectedAlbum.link) {
@@ -74,33 +75,60 @@
 		if ($selectedAlbum.explicit) {
 			channel['itunes:explicit'] = $selectedAlbum.explicit;
 		} else {
-			errors.push('Is the album explicit?');
+			rssErrors.push('Is the album explicit?');
 		}
 
 		if ($selectedAlbum.value) {
 			channel['podcast:value'] = buildValue($selectedAlbum.value);
 		} else {
-			errors.push('Add some value to the album');
+			rssErrors.push('Add some value to the album');
 		}
 
 		let items = $selectedAlbum.tracks.map((track, index) => {
-			return {
-				title: track.title,
-				enclosure: {
+			let title = track.title;
+			let trackJSON = {
+				pubDate:
+					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
+				'podcast:season': 1,
+				'podcast:episode': index + 1
+			};
+
+			if (track.title) {
+				trackJSON.title = track.title;
+			} else {
+				title = `Track ${index + 1}`;
+				rssErrors.push(title + ' needs a name');
+			}
+
+			if (track?.enclosure?.url) {
+				trackJSON.enclosure = {
 					'@_url': track?.enclosure?.url,
 					'@_type': track?.enclosure?.type,
 					'@_length': track?.enclosure?.enclosureLength
-				},
-				pubDate:
-					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
-				description: track.description,
-				'itunes:explicit': track.explicit,
-				'itunes:duration': convertDurationToITunesFormat(track.duration),
-				'itunes:image': { '@_href': track.artwork },
-				'podcast:season': 1,
-				'podcast:episode': index + 1,
-				'podcast:value': buildValue(track.value)
-			};
+				};
+
+				trackJSON['itunes:duration'] = convertDurationToITunesFormat(track.duration);
+			} else {
+				rssErrors.push(title + ' needs a link to the mp3 file');
+			}
+
+			if (track.description) {
+				trackJSON.description = track.description;
+			}
+
+			if (track.explicit) {
+				trackJSON['itunes:explicit'] = track.explicit;
+			}
+
+			if (track.artwork) {
+				trackJSON['itunes:image'] = { '@_href': track.artwork };
+			}
+
+			if (track.value) {
+				trackJSON['podcast:value'] = buildValue(track.value);
+			}
+
+			return trackJSON;
 		});
 
 		channel.items = items;
@@ -113,6 +141,7 @@
 
 		let xml = js2xml.parse(xmlJson);
 		console.log(xml);
+		console.log(rssErrors);
 	}
 
 	const escapeAttr = (str) =>
