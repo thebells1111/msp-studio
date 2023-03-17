@@ -4,6 +4,8 @@ export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 
+export const user = writable({ loggedIn: false });
+
 export const selectedBand = writable({ title: '', artwork: '', albums: [] });
 export const selectedBandIndex = writable(-1);
 export const newBand = writable({
@@ -76,9 +78,3 @@ export const posterSwiper = writable();
 export const satsPerTrack = writable(0);
 export const satsPerBoost = writable(1000);
 export const senderName = writable('');
-export const user = writable({
-	name: '',
-	balance: 0,
-	loggedIn: false,
-	preferences: { wallet: 'albyApi' }
-});

@@ -59,7 +59,7 @@
 </ul>
 
 {#if showEdit}
-	<div transition:slide={{ duration: 50 }}>
+	<div transition:slide={{ duration: 25 }}>
 		<BandInput bind:showEdit add={true} />
 	</div>
 {/if}

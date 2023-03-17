@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	import Close from '../icons/Close.svelte';
 
@@ -61,7 +62,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<band-modal>
+	<band-modal transition:fade={{ duration: 25 }}>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>

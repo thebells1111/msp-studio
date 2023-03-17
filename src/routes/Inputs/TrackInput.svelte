@@ -1,10 +1,10 @@
 <script>
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
 	import clone from 'just-clone';
-
-	import { onMount } from 'svelte';
 
 	import {
 		catalogDB,
@@ -60,7 +60,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<track-modal>
+	<track-modal transition:fade={{ duration: 25 }}>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>

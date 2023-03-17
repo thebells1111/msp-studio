@@ -1,7 +1,7 @@
 <script>
 	import EditPerson from './EditPerson.svelte';
 	import EditAddress from './EditAddress.svelte';
-	import Add from '../icons/Add.svelte';
+	import Add from '../icons/GroupAdd.svelte';
 
 	import { newPerson } from '$/stores';
 
@@ -26,12 +26,12 @@
 	<left-pane>
 		<header>
 			<h4>Value Recipients</h4>
-			<button class="add-value" on:click={addPerson}><Add size="30" /></button>
 		</header>
 		<instructions>for splits, use whole numbers only</instructions>
 		<value-header>
 			<split-percent>Split %</split-percent>
 			<split-name>Name</split-name>
+			<button class="add-value" on:click={addPerson}><Add size="24" /></button>
 		</value-header>
 		<ul>
 			{#each valueBlock || [] as person, index}
@@ -97,7 +97,7 @@
 		display: block;
 		font-style: italic;
 		font-size: 0.9em;
-		margin-left: 8px;
+		margin: 2px 0 0 8px;
 	}
 	value-header,
 	value-footer {
@@ -109,6 +109,7 @@
 		border-bottom: 1px solid var(--color-text-0);
 		margin-bottom: 8px;
 		padding-bottom: 4px;
+		position: relative;
 	}
 
 	value-footer {
@@ -132,12 +133,15 @@
 	}
 
 	button.add-value {
-		color: var(--color-bg-add-band);
-		background-color: transparent;
-		padding: 0;
-		display: flex;
+		background-color: var(--color-bg-add-band);
+		color: var(--color-text-0);
+		padding: 6px;
+		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		margin-left: 8px;
+		position: absolute;
+		top: -14px;
+		right: 0;
 	}
 </style>

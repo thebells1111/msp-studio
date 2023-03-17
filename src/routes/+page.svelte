@@ -7,13 +7,22 @@
 	import FileUploader from './FileUploader.svelte';
 	import FileForm from './FileForm.svelte';
 
-	import { catalogDB, library } from '$/stores';
+	import { catalogDB, library, user } from '$/stores';
 
 	$: console.log($library);
 
 	let isLoading = false;
 
 	onMount(() => {
+		fetch('/api/alby/refresh')
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				$user.loggedIn = data.loggedIn;
+				console.log($user);
+			});
+
 		$catalogDB = localforage.createInstance({
 			name: 'catalogDB'
 		});

@@ -1,5 +1,4 @@
 <script>
-	import { slide } from 'svelte/transition';
 	import AlbumInput from '../Inputs/AlbumInput.svelte';
 	import EditSquare from '../icons/EditSquare.svelte';
 	import { selectedAlbum, selectedScreen, newAlbum } from '$/stores';
@@ -7,7 +6,7 @@
 </script>
 
 {#if showEdit}
-	<div transition:slide={{ duration: 50 }}>
+	<div>
 		<AlbumInput bind:showEdit />
 	</div>
 {/if}

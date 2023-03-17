@@ -1,6 +1,6 @@
 <script>
 	import EditSquare from '../icons/EditSquare.svelte';
-	import Delete from '../icons/Delete.svelte';
+	import Delete from '../icons/PersonRemove.svelte';
 
 	export let person = {};
 	export let showPersonEdit = false;
@@ -16,9 +16,6 @@
 </script>
 
 <person>
-	<button class="delete" on:click={deletePerson}>
-		<Delete size="20" />
-	</button>
 	<input class="split" type="text" bind:value={person.split} /><span>%</span>
 	<person-name
 		on:click={() => {
@@ -35,6 +32,9 @@
 		</edit>
 		<p>{person.name || 'Blank Person'}</p>
 	</person-name>
+	<button class="delete" on:click={deletePerson}>
+		<Delete size="26" />
+	</button>
 </person>
 
 <style>
@@ -47,6 +47,7 @@
 	person-name {
 		display: flex;
 		position: relative;
+		flex-grow: 1;
 	}
 
 	edit {

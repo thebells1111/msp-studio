@@ -1,6 +1,4 @@
 <script>
-	import { slide } from 'svelte/transition';
-	import { onMount } from 'svelte';
 	import ChangeBand from './ChangeBand.svelte';
 	import ChangeAlbum from './ChangeAlbum.svelte';
 	import TrackInput from '../Inputs/TrackInput.svelte';
@@ -118,7 +116,7 @@
 </select-track>
 
 {#if showEdit}
-	<div transition:slide={{ duration: 50 }}>
+	<div>
 		<TrackInput bind:showEdit />
 	</div>
 {/if}

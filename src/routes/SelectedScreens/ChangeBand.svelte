@@ -1,5 +1,4 @@
 <script>
-	import { slide } from 'svelte/transition';
 	import BandInput from '../Inputs/BandInput.svelte';
 	import EditSquare from '../icons/EditSquare.svelte';
 	import { selectedBand, selectedScreen, newBand } from '$/stores';
@@ -30,14 +29,16 @@
 	Select Different Band
 </button>
 {#if showEdit}
-	<div transition:slide={{ duration: 50 }}>
+	<div>
 		<BandInput bind:showEdit />
 	</div>
 {/if}
 
 <style>
 	band-name {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		margin-bottom: 8px;
 	}
 	band-name button {

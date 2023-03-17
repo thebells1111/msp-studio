@@ -1,4 +1,6 @@
 <script>
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import Close from '../icons/Close.svelte';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 
@@ -10,8 +12,6 @@
 		selectedScreen,
 		MSPValue
 	} from '$/stores';
-
-	import { onMount } from 'svelte';
 
 	export let showEdit = false;
 	let newAlbumName = '';
@@ -51,7 +51,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<album-modal>
+	<album-modal transition:fade={{ duration: 25 }}>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
