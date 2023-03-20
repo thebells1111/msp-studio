@@ -5,6 +5,8 @@ export const indexSearchResults = writable([]);
 export const library = writable([]);
 
 export const user = writable({ loggedIn: false });
+export const currentModal = writable();
+export const uploadCB = writable(() => {});
 
 export const selectedBand = writable({ title: '', artwork: '', albums: [] });
 export const selectedBandIndex = writable(-1);

@@ -3,12 +3,9 @@
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
 
-	import { user } from '$/stores';
+	import { user, currentModal } from '$/stores';
 
 	let expandMenu = false;
-	export let currentModal = false;
-
-	$: console.log(currentModal);
 
 	function gotoAlby() {
 		goto(
@@ -43,7 +40,7 @@
 					<li on:click={logout}>Log Out</li>
 					<li
 						on:click={() => {
-							currentModal = 'preferences';
+							$currentModal = 'preferences';
 							expandMenu = false;
 						}}
 					>

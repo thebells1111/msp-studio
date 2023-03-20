@@ -3,14 +3,14 @@
 	import FileUploader from './FileUploader.svelte';
 	import Close from '../icons/Close.svelte';
 
-	export let currentModal;
+	import { currentModal } from '$/stores';
 
 	function closeModal() {
-		currentModal = '';
+		$currentModal = '';
 	}
 </script>
 
-{#if currentModal}
+{#if $currentModal}
 	<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 		<modal>
 			<button class="close" on:click={closeModal}>
@@ -18,9 +18,12 @@
 			</button>
 
 			<container>
-				{#if currentModal === 'preferences'}
+				{#if $currentModal === 'preferences'}
+					<Preferences />
+				{/if}
+
+				{#if $currentModal === 'fileUploader'}
 					<FileUploader />
-					<!-- <Preferences /> -->
 				{/if}
 			</container>
 		</modal>

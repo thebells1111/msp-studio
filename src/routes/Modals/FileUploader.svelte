@@ -1,21 +1,27 @@
 <script>
 	let fileInput;
 	let files;
-	let avatar;
-	let results;
+
+	let fileLocation;
+
+	import { uploadCB, currentModal } from '$/stores';
+
 	function upload() {
 		const formData = new FormData();
 		formData.append('file', files[0]);
 
 		console.log(files[0]);
 
-	fetch(`api/fileupload?`, {
+		fetch(`api/fileupload?`, {
 			method: 'POST',
 			body: formData
 		})
 			.then((response) => response.json())
 			.then((result) => {
 				console.log(result);
+				$uploadCB(result.source_url);
+				fileLocation = result.source_url;
+				$currentModal = '';
 			})
 			.catch((error) => {
 				console.error('Error:', error);
@@ -33,7 +39,6 @@
 		bind:this={fileInput}
 		on:change={upload}
 	/>
-	<button on:click={() => fileInput.click()}>Upload</button>
 </div>
 
-{@html results}
+<p>{fileLocation}</p>

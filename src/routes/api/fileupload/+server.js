@@ -32,6 +32,7 @@ export async function POST({ request, cookies }) {
 		}
 
 		const name = await getUserInfo(token);
+		console.log(name);
 		if (!name) {
 			return json({ loggedIn: false, name: '' });
 		}

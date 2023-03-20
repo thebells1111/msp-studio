@@ -5,11 +5,9 @@
 	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
 	import Modals from './Modals/Modals.svelte';
 	import { selectedScreen } from '$/stores';
-
-	let currentModal = '';
 </script>
 
-<MainMenu bind:currentModal />
+<MainMenu />
 <main>
 	{#if $selectedScreen === 'bands'}
 		<SelectBandScreen />
@@ -20,7 +18,7 @@
 	{/if}
 </main>
 
-<Modals bind:currentModal />
+<Modals />
 
 <style>
 	main {

@@ -10,7 +10,9 @@
 		selectedAlbumIndex,
 		catalogDB,
 		selectedScreen,
-		MSPValue
+		MSPValue,
+		currentModal,
+		uploadCB
 	} from '$/stores';
 
 	export let showEdit = false;
@@ -48,6 +50,10 @@
 		showEdit = false;
 		saveAlbum();
 	}
+
+	function setImage(url) {
+		newAlbumImage = url;
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -73,7 +79,15 @@
 				<album-image>
 					<label>
 						<p>Link to Album Image (required)</p>
-						<input bind:value={newAlbumImage} />
+						<upload>
+							<button
+								on:click={() => {
+									$currentModal = 'fileUploader';
+									$uploadCB = setImage;
+								}}>Upload</button
+							>
+							<input bind:value={newAlbumImage} />
+						</upload>
 					</label>
 				</album-image>
 				<album-link>
@@ -126,21 +140,20 @@
 
 	album-modal {
 		position: relative;
-		width: calc(100% - 100px);
-		height: calc(100% - 100px);
+		width: calc(100% - 50px);
+		height: calc(100% - 50px);
 		overflow-y: auto;
 		overflow-x: hidden;
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
 		border-radius: 8px;
+		padding: 8px;
+		overflow: auto;
 		background-color: var(--color-poster-bg-0);
 		background-image: linear-gradient(
 			180deg,
 			var(--color-poster-bg-0) 33%,
 			var(--color-poster-bg-1) 66%
 		);
-		box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 1);
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 	}
 
 	bottom-pane {
@@ -176,6 +189,11 @@
 	album-link input {
 		margin: 0 8px;
 		width: calc(100% - 40px);
+	}
+
+	upload {
+		display: flex;
+		margin-right: 16px;
 	}
 
 	explicit {
