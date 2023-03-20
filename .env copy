@@ -6,3 +6,4 @@ JWT =
 ALBY_ID =   
 ALBY_SECRET =
 ALBY_JWT = 
+WP_SECRET_KEY = #random 32-character string of hex digits 

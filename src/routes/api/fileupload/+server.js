@@ -1,4 +1,15 @@
-import { json, text } from '@sveltejs/kit';
+import dotenv from 'dotenv';
+import { getUserInfo, checkAwtCookie } from '../alby/helpers';
+
+import { json } from '@sveltejs/kit';
+import { getCollection } from '../database/_db/connect';
+import { decryptString } from '../database/_db/keys';
+
+if (!process.env.WP_SECRET_KEY) {
+	dotenv.config();
+}
+
+const { WP_SECRET_KEY } = process.env;
 
 //You likely changed the Settings -> Permalink
 
@@ -10,37 +21,67 @@ import { json, text } from '@sveltejs/kit';
 
 // Install WP Extra File Types and enable RSS - Really Simple Syndication	.xml
 
-const mediaEndpoint = 'https://truefansmusic.com' + '/wp-json/wp/v2/media';
-
-export async function POST({ request }) {
-	const formData = await request.formData();
-
-	// Send a POST request to the media endpoint with the FormData
-	const response = await fetch(mediaEndpoint, {
-		method: 'POST',
-		body: formData,
-		headers: {
-			Authorization: 'Basic ' + btoa('user:password'),
-			'Content-Disposition': 'form-data; filename="tmp.png"'
+export async function POST({ request, cookies }) {
+	try {
+		const { token, error } = await checkAwtCookie(cookies);
+		if (!token) {
+			if (error) {
+				console.error('Token verification error:', error);
+			}
+			return json({ loggedIn: false, name: '' });
 		}
-	});
 
-	// console.log(response);
-	const jsonData = await response.json();
-	console.log(jsonData);
+		const name = await getUserInfo(token);
+		if (!name) {
+			return json({ loggedIn: false, name: '' });
+		}
 
-	return json(jsonData);
+		const collection = await getCollection('users');
+		const userArray = await collection.find({ name }).toArray();
+		const user = userArray[0] ? { ...userArray[0], _id: undefined } : {};
 
-	// If the response was successful, return the JSON data
-	if (response.ok) {
-		const jsonData = await response.json();
-		return json(jsonData);
+		if (!user.wordPressCreds) {
+			return json({ wpCreds: false });
+		}
+
+		const WP_CREDS = JSON.parse(decryptString(user.wordPressCreds, WP_SECRET_KEY));
+
+		const mediaEndpoint = WP_CREDS.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
+
+		const formData = await request.formData();
+		let filename = '';
+
+		for (const entry of formData.entries()) {
+			if (entry[0] === 'file') {
+				filename = entry[1].name;
+				break;
+			}
+		}
+
+		const response = await fetch(mediaEndpoint, {
+			method: 'POST',
+			body: formData,
+			headers: {
+				Authorization:
+					'Basic ' + Buffer.from(`${WP_CREDS.name}:${WP_CREDS.secret}`).toString('base64'),
+				'Content-Disposition': `form-data; filename="${filename}"`
+			}
+		});
+
+		if (response.ok) {
+			const jsonData = await response.json();
+			jsonData.wpCreds = true;
+			return json(jsonData);
+		} else {
+			console.log(
+				`Failed to upload file to WordPress: ${response.status} ${
+					response.statusText
+				} ${JSON.stringify(response)}`
+			);
+			return json('failedAuth: true');
+		}
+	} catch (error) {
+		console.error(error);
+		throw error(500);
 	}
-
-	// // If the response was not successful, throw an error
-	// throw new Error(
-	// 	`Failed to upload file to WordPress: ${response.status} ${response.statusText} ${JSON.stringify(
-	// 		response
-	// 	)}`
-	// );
 }

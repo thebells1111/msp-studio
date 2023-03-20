@@ -3,12 +3,22 @@
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
 
+	import { user } from '$/stores';
+
 	let expandMenu = false;
+	export let currentModal = false;
+
+	$: console.log(currentModal);
 
 	function gotoAlby() {
 		goto(
 			'https://getalby.com/oauth?client_id=32dVOIuGiA&response_type=code&redirect_uri=http://localhost:3000/api/alby/auth&scope=account:read'
 		);
+	}
+
+	function logout() {
+		$user = { loggedIn: false };
+		fetch('/api/alby/logout');
 	}
 </script>
 
@@ -29,25 +39,24 @@
 		<menu>
 			<account-button-hover />
 			<ul transition:slide={{ duration: 200 }}>
-				<li on:click={gotoAlby}>Log In</li>
+				{#if $user.loggedIn}
+					<li on:click={logout}>Log Out</li>
+					<li
+						on:click={() => {
+							currentModal = 'preferences';
+							expandMenu = false;
+						}}
+					>
+						Preferences
+					</li>
+				{:else}
+					<li on:click={gotoAlby}>Log In</li>
+				{/if}
 			</ul>
 		</menu>
 	</container>
 {/if}
 
-<!-- <div on:click={hideMenu}>
-	<ul >
-		<li on:click={handleLogIn}>Log {$loggedIn ? 'Out' : 'In'}</li>
-
-		<li on:click={handleModalSwiper.bind(this, 'preferences')}>Preferences</li>
-		<li on:click={showPlaylist}>Queue</li>
-		<li on:click={handleModalSwiper.bind(this, 'wallet')}>Wallet</li>
-		<li on:click={handleSupport}>Support CurioCaster</li>
-		<li on:click={handleModalSwiper.bind(this, 'opml')}>OPML</li>
-		<li on:click={handleModalSwiper.bind(this, 'disclaimer')}>Issues?</li>
-		<li><Refresh /></li>
-	</ul>
-</div> -->
 <style>
 	container {
 		width: 100vw;

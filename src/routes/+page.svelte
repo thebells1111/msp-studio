@@ -4,12 +4,8 @@
 	import './styles.css';
 
 	import Editor from './Editor.svelte';
-	import FileUploader from './FileUploader.svelte';
-	import FileForm from './FileForm.svelte';
 
 	import { catalogDB, library, user } from '$/stores';
-
-	$: console.log($library);
 
 	let isLoading = false;
 
@@ -20,7 +16,14 @@
 			})
 			.then((data) => {
 				$user.loggedIn = data.loggedIn;
-				console.log($user);
+				$user.name = data.name;
+				fetch('api/database/fetch-catalog')
+					.then((res) => res.json())
+					.then((data) => {
+						console.log(data);
+						$user.wpCreds = data.wpCreds;
+						console.log($user);
+					});
 			});
 
 		$catalogDB = localforage.createInstance({
@@ -30,8 +33,6 @@
 		$catalogDB
 			.keys()
 			.then(async function (keys) {
-				// An array of all the key names.
-				console.log(keys);
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
 				$library = await Promise.all(_catalog);
 				$library = $library;
@@ -40,7 +41,6 @@
 				}, 2000);
 			})
 			.catch(function (err) {
-				// This code runs if there were any errors
 				console.log(err);
 			});
 	});
@@ -52,8 +52,6 @@
 	</div>
 {:else}
 	<Editor />
-	<!-- <FileUploader /> -->
-	<!-- <FileForm /> -->
 {/if}
 
 <background>

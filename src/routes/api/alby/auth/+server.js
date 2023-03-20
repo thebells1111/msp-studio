@@ -37,27 +37,6 @@ export async function GET({ url, cookies }) {
 			expiresIn: '10d'
 		});
 
-		// let account = await axios({
-		// 	url: 'https://api.getalby.com/user/value4value',
-		// 	headers: { Authorization: `Bearer ${resolve.data.access_token}` }
-		// }).catch((error) => {
-		// 	// console.log('error: ', error.response.data);
-
-		// 	throw error(500, { message: error.response.data.error_description });
-		// });
-
-		// let balance = await axios({
-		// 	url: 'https://api.getalby.com/user/summary',
-		// 	headers: { Authorization: `Bearer ${resolve.data.access_token}` }
-		// }).catch((error) => {
-		// 	// console.log('error: ', error.response.data);
-		// 	throw error(500, { message: error.response.data.error_description });
-		// });
-
-		// console.log(account.data);
-		// console.log(balance.data);
-		// let user = { ...account.data, ...balance.data };
-
 		throw redirect(302, '/');
 	} catch (err) {
 		if (newToken) {

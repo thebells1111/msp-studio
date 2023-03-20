@@ -29,6 +29,7 @@
 		"jsonwebtoken": "^9.0.0",
 		"just-clone": "^6.2.0",
 		"localforage": "^1.10.0",
+		"mongodb": "^5.1.0",
 		"svelte-sortable-list": "^1.1.0",
 		"uuid": "^9.0.0"
 	}

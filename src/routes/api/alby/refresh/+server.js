@@ -1,41 +1,30 @@
 import dotenv from 'dotenv';
-import axios from 'axios';
 import jwt from 'jsonwebtoken';
-
-import { json, error, text, redirect } from '@sveltejs/kit';
+import { json, error } from '@sveltejs/kit';
 import { dev } from '$app/environment';
+import { refreshToken, getUserInfo, checkAwtCookie } from '../helpers';
 
 if (!process.env.ALBY_JWT) {
 	dotenv.config();
 }
 
-const { ALBY_ID, ALBY_SECRET, ALBY_JWT } = process.env;
+const { ALBY_JWT } = process.env;
 
 export async function GET({ url, cookies }) {
 	try {
-		let awt = cookies.get('awt');
-		let token = awt ? jwt.verify(awt, ALBY_JWT) : undefined;
+		const { token, error } = await checkAwtCookie(cookies);
+		if (!token) {
+			if (error) {
+				console.error('Token verification error:', error);
+			}
+			return json({ loggedIn: false, name: '' });
+		}
 
 		if (token) {
-			let res = await axios.post(
-				'https://api.getalby.com/oauth/token',
-				{
-					refresh_token: token.refresh_token,
-					grant_type: 'refresh_token'
-				},
-				{
-					auth: {
-						username: ALBY_ID,
-						password: ALBY_SECRET
-					},
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					}
-				}
-			);
+			const refreshedToken = await refreshToken(token);
 
-			if (res.data.access_token) {
-				let newToken = jwt.sign(res.data, ALBY_JWT, {
+			if (refreshedToken) {
+				const newToken = jwt.sign(refreshedToken, ALBY_JWT, {
 					expiresIn: '10d'
 				});
 				cookies.set('awt', newToken, {
@@ -45,14 +34,16 @@ export async function GET({ url, cookies }) {
 					secure: !dev,
 					maxAge: 60 * 60 * 24 * 30
 				});
-				console.log('hi');
-				return json({ loggedIn: true });
+
+				const name = await getUserInfo(refreshedToken);
+
+				return json({ loggedIn: true, name });
 			}
 		}
 
 		return json({ loggedIn: false });
 	} catch (err) {
-		console.error('alby err: ', err);
-		throw error(500, { message: err.response?.data?.error_description });
+		console.log('alby err: ', err);
+		throw error(500);
 	}
 }

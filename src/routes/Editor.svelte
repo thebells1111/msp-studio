@@ -3,11 +3,13 @@
 	import SelectBandScreen from './SelectedScreens/SelectBandScreen.svelte';
 	import SelectAlbumScreen from './SelectedScreens/SelectAlbumScreen.svelte';
 	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
-
+	import Modals from './Modals/Modals.svelte';
 	import { selectedScreen } from '$/stores';
+
+	let currentModal = '';
 </script>
 
-<MainMenu />
+<MainMenu bind:currentModal />
 <main>
 	{#if $selectedScreen === 'bands'}
 		<SelectBandScreen />
@@ -17,6 +19,8 @@
 		<SelectTrackScreen />
 	{/if}
 </main>
+
+<Modals bind:currentModal />
 
 <style>
 	main {
