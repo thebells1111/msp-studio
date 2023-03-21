@@ -1,4 +1,5 @@
 <script>
+	import clone from 'just-clone';
 	import ChangeBand from './ChangeBand.svelte';
 	import ChangeAlbum from './ChangeAlbum.svelte';
 	import TrackInput from '../Inputs/TrackInput.svelte';

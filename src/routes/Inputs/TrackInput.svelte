@@ -4,6 +4,7 @@
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
+	import UploadFile from '../icons/UploadFile.svelte';
 	import clone from 'just-clone';
 
 	import {
@@ -12,7 +13,9 @@
 		selectedAlbum,
 		selectedTrack,
 		selectedTrackIndex,
-		MSPValue
+		MSPValue,
+		currentModal,
+		uploadCB
 	} from '$/stores';
 
 	let newTrackName = '';
@@ -57,6 +60,14 @@
 		showEdit = false;
 		saveTrack();
 	}
+
+	function setMP3(url) {
+		newTrackEnclosure = { url: url, enclosureLength: '', type: '' };
+	}
+
+	function setImage(url) {
+		newTrackImage = url;
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -81,11 +92,33 @@
 
 				<label>
 					<h4>Link to Track mp3 File (required)</h4>
-					<input bind:value={newTrackEnclosure.url} />
+					<input bind:value={newTrackEnclosure.url} class="track-mp3" />
+					<upload>
+						<button
+							on:click={() => {
+								$currentModal = 'fileUploader';
+								$uploadCB = setMP3;
+							}}
+						>
+							<UploadFile size="24" />
+							upload
+						</button>
+					</upload>
 				</label>
 				<label>
 					<h4>Link to Track Image (optional)</h4>
-					<input bind:value={newTrackImage} />
+					<input bind:value={newTrackImage} class="track-img" />
+					<upload>
+						<button
+							on:click={() => {
+								$currentModal = 'fileUploader';
+								$uploadCB = setImage;
+							}}
+						>
+							<UploadFile size="24" />
+							upload
+						</button>
+					</upload>
 				</label>
 				<explicit>
 					<h4>Explicit Content (optional)</h4>
@@ -227,5 +260,33 @@
 
 	img {
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+	}
+
+	.track-img,
+	.track-mp3 {
+		margin: 0 8px;
+		width: calc(100% - 84px);
+	}
+
+	upload {
+		display: inline-flex;
+		position: relative;
+		height: 12px;
+		width: 12px;
+	}
+
+	upload button {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.7em;
+		padding: 0;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		position: absolute;
+		top: -25px;
+		right: -50px;
 	}
 </style>

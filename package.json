@@ -15,11 +15,13 @@
 		"@sveltejs/kit": "^1.5.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
+		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^3.54.0",
 		"vite": "^4.0.0"
 	},
 	"type": "module",
 	"dependencies": {
+		"@smui/linear-progress": "^7.0.0-beta.0",
 		"axios": "^1.3.4",
 		"dotenv": "^16.0.3",
 		"fast-xml-parser": "^3.20.3",
@@ -30,6 +32,7 @@
 		"just-clone": "^6.2.0",
 		"localforage": "^1.10.0",
 		"mongodb": "^5.1.0",
+		"svelte-material-ui": "^7.0.0-beta.0",
 		"svelte-sortable-list": "^1.1.0",
 		"uuid": "^9.0.0"
 	}

@@ -3,6 +3,7 @@
 	import { fade } from 'svelte/transition';
 	import Close from '../icons/Close.svelte';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import UploadFile from '../icons/UploadFile.svelte';
 
 	import {
 		selectedBand,
@@ -79,14 +80,17 @@
 				<album-image>
 					<label>
 						<p>Link to Album Image (required)</p>
+						<input bind:value={newAlbumImage} />
 						<upload>
 							<button
 								on:click={() => {
 									$currentModal = 'fileUploader';
 									$uploadCB = setImage;
-								}}>Upload</button
+								}}
 							>
-							<input bind:value={newAlbumImage} />
+								<UploadFile size="24" />
+								upload
+							</button>
 						</upload>
 					</label>
 				</album-image>
@@ -185,15 +189,35 @@
 	}
 
 	album-name input,
-	album-image input,
 	album-link input {
 		margin: 0 8px;
 		width: calc(100% - 40px);
 	}
 
+	album-image input {
+		margin: 0 8px;
+		width: calc(100% - 116px);
+	}
 	upload {
+		display: inline-flex;
+		position: relative;
+		height: 12px;
+		width: 12px;
+	}
+
+	upload button {
 		display: flex;
-		margin-right: 16px;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.7em;
+		padding: 0;
+		width: 60px;
+		height: 60px;
+		border-radius: 50%;
+		position: absolute;
+		top: -25px;
+		right: -50px;
 	}
 
 	explicit {

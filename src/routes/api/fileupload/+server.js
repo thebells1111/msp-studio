@@ -21,7 +21,7 @@ const { WP_SECRET_KEY } = process.env;
 
 // Install WP Extra File Types and enable RSS - Really Simple Syndication	.xml
 
-export async function POST({ request, cookies }) {
+export async function GET({ request, cookies }) {
 	try {
 		const { token, error } = await checkAwtCookie(cookies);
 		if (!token) {
@@ -47,40 +47,7 @@ export async function POST({ request, cookies }) {
 
 		const WP_CREDS = JSON.parse(decryptString(user.wordPressCreds, WP_SECRET_KEY));
 
-		const mediaEndpoint = WP_CREDS.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
-
-		const formData = await request.formData();
-		let filename = '';
-
-		for (const entry of formData.entries()) {
-			if (entry[0] === 'file') {
-				filename = entry[1].name;
-				break;
-			}
-		}
-
-		const response = await fetch(mediaEndpoint, {
-			method: 'POST',
-			body: formData,
-			headers: {
-				Authorization:
-					'Basic ' + Buffer.from(`${WP_CREDS.name}:${WP_CREDS.secret}`).toString('base64'),
-				'Content-Disposition': `form-data; filename="${filename}"`
-			}
-		});
-
-		if (response.ok) {
-			const jsonData = await response.json();
-			jsonData.wpCreds = true;
-			return json(jsonData);
-		} else {
-			console.log(
-				`Failed to upload file to WordPress: ${response.status} ${
-					response.statusText
-				} ${JSON.stringify(response)}`
-			);
-			return json('failedAuth: true');
-		}
+		return json({ ...WP_CREDS, wpCreds: true });
 	} catch (error) {
 		console.error(error);
 		throw error(500);
