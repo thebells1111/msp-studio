@@ -37,8 +37,6 @@
 		$selectedTrackIndex = -1;
 		$catalogDB.removeItem(band.title);
 	}
-
-	// on:click={deleteItem.bind(this, band.title || 'Blank Band', deleteBand.bind(this, i))}
 </script>
 
 <header>
@@ -50,7 +48,10 @@
 <ul>
 	{#each $library as band, i}
 		<li>
-			<button on:click={deleteBand.bind(this, i)} class="delete">
+			<button
+				on:click={deleteItem.bind(this, band.title || 'Blank Band', deleteBand.bind(this, i))}
+				class="delete"
+			>
 				<Delete size="18" />
 			</button>
 			<p on:click={selectBand.bind(this, band, i)}>{band.title || 'Blank Band'}</p>

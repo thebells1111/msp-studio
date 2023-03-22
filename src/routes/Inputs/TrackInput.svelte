@@ -15,7 +15,10 @@
 		selectedTrackIndex,
 		MSPValue,
 		currentModal,
-		uploadCB
+		uploadCB,
+		uploadFileType,
+		uploadFileText,
+		user
 	} from '$/stores';
 
 	let newTrackName = '';
@@ -85,40 +88,52 @@
 				/>
 			</image-pane>
 			<edit-pane>
-				<label>
+				<label class="track-name">
 					<h4>Track Name (required)</h4>
 					<input bind:value={newTrackName} />
 				</label>
 
 				<label>
 					<h4>Link to Track mp3 File (required)</h4>
-					<input bind:value={newTrackEnclosure.url} class="track-mp3" />
-					<upload>
-						<button
-							on:click={() => {
-								$currentModal = 'fileUploader';
-								$uploadCB = setMP3;
-							}}
-						>
-							<UploadFile size="24" />
-							upload
-						</button>
-					</upload>
+					<input
+						bind:value={newTrackEnclosure.url}
+						class="track-mp3"
+						class:uploadable={$user.wpCreds}
+					/>
+					{#if $user.wpCreds}
+						<upload>
+							<button
+								on:click={() => {
+									$currentModal = 'fileUploader';
+									$uploadCB = setMP3;
+									$uploadFileType = 'audio';
+									$uploadFileText = 'Upload Track Audio File';
+								}}
+							>
+								<UploadFile size="22" />
+								upload<br />mp3
+							</button>
+						</upload>
+					{/if}
 				</label>
 				<label>
 					<h4>Link to Track Image (optional)</h4>
-					<input bind:value={newTrackImage} class="track-img" />
-					<upload>
-						<button
-							on:click={() => {
-								$currentModal = 'fileUploader';
-								$uploadCB = setImage;
-							}}
-						>
-							<UploadFile size="24" />
-							upload
-						</button>
-					</upload>
+					<input bind:value={newTrackImage} class="track-img" class:uploadable={$user.wpCreds} />
+					{#if $user.wpCreds}
+						<upload class="img">
+							<button
+								on:click={() => {
+									$currentModal = 'fileUploader';
+									$uploadCB = setImage;
+									$uploadFileType = 'image';
+									$uploadFileText = 'Upload Track Image';
+								}}
+							>
+								<UploadFile size="22" />
+								upload<br /> image
+							</button>
+						</upload>
+					{/if}
 				</label>
 				<explicit>
 					<h4>Explicit Content (optional)</h4>
@@ -183,7 +198,8 @@
 	}
 
 	input {
-		width: 100%;
+		width: calc(100% - 16px);
+		margin: 0 8px;
 	}
 
 	h4 {
@@ -262,8 +278,8 @@
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 	}
 
-	.track-img,
-	.track-mp3 {
+	.track-img.uploadable,
+	.track-mp3.uploadable {
 		margin: 0 8px;
 		width: calc(100% - 84px);
 	}
@@ -288,5 +304,10 @@
 		position: absolute;
 		top: -25px;
 		right: -50px;
+		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
+	}
+
+	upload.img button {
+		background-color: var(--color-bg-button-upload-0);
 	}
 </style>

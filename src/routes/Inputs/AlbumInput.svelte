@@ -13,7 +13,10 @@
 		selectedScreen,
 		MSPValue,
 		currentModal,
-		uploadCB
+		uploadCB,
+		uploadFileType,
+		uploadFileText,
+		user
 	} from '$/stores';
 
 	export let showEdit = false;
@@ -77,21 +80,25 @@
 						<input bind:value={newAlbumName} />
 					</label>
 				</album-name>
-				<album-image>
+				<album-image class:uploadable={$user.wpCreds}>
 					<label>
 						<p>Link to Album Image (required)</p>
 						<input bind:value={newAlbumImage} />
-						<upload>
-							<button
-								on:click={() => {
-									$currentModal = 'fileUploader';
-									$uploadCB = setImage;
-								}}
-							>
-								<UploadFile size="24" />
-								upload
-							</button>
-						</upload>
+						{#if $user.wpCreds}
+							<upload>
+								<button
+									on:click={() => {
+										$currentModal = 'fileUploader';
+										$uploadCB = setImage;
+										$uploadFileType = 'image';
+										$uploadFileText = 'Upload Album Image';
+									}}
+								>
+									<UploadFile size="24" />
+									upload <br /> image
+								</button>
+							</upload>
+						{/if}
 					</label>
 				</album-image>
 				<album-link>
@@ -189,12 +196,13 @@
 	}
 
 	album-name input,
+	album-image input,
 	album-link input {
 		margin: 0 8px;
 		width: calc(100% - 40px);
 	}
 
-	album-image input {
+	album-image.uploadable input {
 		margin: 0 8px;
 		width: calc(100% - 116px);
 	}
@@ -218,6 +226,7 @@
 		position: absolute;
 		top: -25px;
 		right: -50px;
+		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 	}
 
 	explicit {

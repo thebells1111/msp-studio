@@ -6,11 +6,14 @@
 	import ErrorModal from './ErrorModal.svelte';
 
 	import { selectedBand, selectedAlbum, catalogDB } from '$/stores';
+	import PublishModal from './PublishModal.svelte';
 
 	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
 
 	let rssErrors = [];
-	let showModal = false;
+	let showErrorModal = false;
+	let showPublishModal = false;
+	let xmlFile;
 
 	function downloadFeed() {
 		rssErrors = [];
@@ -146,12 +149,12 @@
 
 		let xmlJson = { rss: rss };
 
-		let xml = js2xml.parse(xmlJson);
+		xmlFile = js2xml.parse(xmlJson);
 		if (rssErrors.length) {
-			showModal = true;
+			showErrorModal = true;
 		} else {
 			$catalogDB.setItem($selectedBand.title, $selectedBand);
-			saveFeed($selectedAlbum.title, xml);
+			showPublishModal = true;
 		}
 	}
 
@@ -174,14 +177,6 @@
 		}
 		return str;
 	};
-
-	async function saveFeed(title, xmlFile) {
-		var blob = new Blob([xmlFile], { type: 'text/plain;charset=utf-8' });
-		let date = new Date();
-		let d = date.toLocaleString('en-US', { hour12: false });
-
-		saveAs(blob, `${title} - ${d.replace(/\//g, '-').replace(',', '').replace(/:/g, '.')}.xml`);
-	}
 
 	function buildValue(tag, name) {
 		let splitTotal = tag.reduce((t, v) => {
@@ -257,8 +252,12 @@
 
 <button class="download" on:click={downloadFeed}>Download Album</button>
 
-{#if showModal}
-	<ErrorModal {rssErrors} bind:showModal />
+{#if showErrorModal}
+	<ErrorModal {rssErrors} bind:showErrorModal />
+{/if}
+
+{#if showPublishModal}
+	<PublishModal {xmlFile} bind:showPublishModal />
 {/if}
 
 <style>

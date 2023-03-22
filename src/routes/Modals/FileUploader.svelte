@@ -9,7 +9,14 @@
 	let timerText = '0:00';
 	let startTime = '';
 
-	import { uploadCB, currentModal } from '$/stores';
+	import {
+		uploadCB,
+		currentModal,
+		uploadFileType,
+		uploadFileText,
+		feedFile,
+		selectedAlbum
+	} from '$/stores';
 
 	function msToTime(ms) {
 		// Convert milliseconds to seconds
@@ -37,15 +44,21 @@
 
 	function uploadFile() {
 		const file = files[0];
-		console.log(files[0]);
-		const allowedExtensions = [
-			'image/jpeg',
-			'image/png',
-			'image/gif',
-			'image/webp',
-			'audio/mp3',
-			'audio/mpeg'
-		];
+		console.log(file);
+
+		let allowedExtensions = [];
+
+		if ($uploadFileType === 'audio') {
+			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
+		}
+
+		if ($uploadFileType === 'image') {
+			allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+		}
+
+		if ($uploadFileType === 'feed') {
+			allowedExtensions = ['application/xml', 'text/xml'];
+		}
 
 		if (allowedExtensions.includes(file.type)) {
 			displayText = 'Uploading File';
@@ -53,6 +66,7 @@
 			startTime = new Date().getTime();
 			setTimeout(setTimerText, 1000);
 			warning = false;
+			console.log;
 			const formData = new FormData();
 			formData.append('file', file);
 
@@ -99,7 +113,7 @@
 					displayText = 'Error: ' + error;
 				});
 		} else {
-			displayText = 'Invalid file type. Please upload an image or an mp3 file.';
+			displayText = `Invalid file type. Please upload an ${$uploadFileType} file.`;
 			warning = true;
 		}
 	}
@@ -109,7 +123,18 @@
 		files = e.dataTransfer.files;
 		uploadFile();
 	}
+
+	if ($uploadFileType === 'feed') {
+		const blob = new Blob([$feedFile], { type: 'application/xml' });
+		const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
+		files = [file];
+		uploadFile();
+	}
 </script>
+
+<h1>
+	{$uploadFileText}
+</h1>
 
 {#if isUploading}
 	<uploading>
@@ -120,11 +145,12 @@
 	</uploading>
 {:else}
 	<input
-		id="file-to-upload"
+		id="fileInput"
 		type="file"
 		accept=".png,.jpg, .mp3"
 		bind:files
 		on:change={uploadFile}
+		hidden
 	/>
 	<div
 		class="dropzone"
@@ -134,6 +160,7 @@
 		on:dragover|preventDefault={() => (isHighlighted = true)}
 		on:dragleave|preventDefault={() => (isHighlighted = false)}
 		on:drop|preventDefault={handleDrop}
+		on:click={() => fileInput.click()}
 	>
 		<span class:warning>{displayText}</span>
 	</div>
@@ -145,8 +172,8 @@
 		flex-direction: column;
 		height: 100%;
 		align-items: center;
-		justify-content: center;
 		position: relative;
+		margin-top: 100px;
 	}
 	h2 {
 		text-align: center;
@@ -170,6 +197,7 @@
 		padding: 200px 0;
 		text-align: center;
 		margin: 32px;
+		cursor: pointer;
 	}
 
 	.highlight {
@@ -179,5 +207,9 @@
 	.warning {
 		color: red;
 		font-weight: 600;
+	}
+
+	h1 {
+		margin-top: 0;
 	}
 </style>

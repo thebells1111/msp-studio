@@ -97,10 +97,10 @@
 						<spacer />
 					{/if}
 				</sorter>
-				<p>
-					<EditSquare />
+				<img width="50" height="50" src={track.artwork || './msp-record-300.png'} />
+				<h3>
 					{track.title || 'Blank Track'}
-				</p>
+				</h3>
 				<button
 					on:click|stopPropagation={deleteItem.bind(
 						this,
@@ -131,9 +131,6 @@
 		margin: 0;
 	}
 
-	p {
-		margin: 0;
-	}
 	ul {
 		padding: 0 0 0 16px;
 	}
@@ -148,6 +145,12 @@
 		min-height: 55px;
 		background-color: var(--color-poster-bg-0);
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+	}
+
+	li h3 {
+		margin: 0 8px;
+		padding: 0;
+		width: 100%;
 	}
 
 	sorter {

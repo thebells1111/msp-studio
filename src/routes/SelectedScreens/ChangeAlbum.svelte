@@ -27,7 +27,11 @@
 				showEdit = !showEdit;
 			}}
 		>
-			<EditSquare size={22} />
+			<span class="edit-circle">
+				<span class="edit-circle-inner">
+					<EditSquare size={22} />
+				</span>
+			</span>
 
 			<h2>{$selectedAlbum.title || 'Blank Album'}</h2>
 		</button>
@@ -76,5 +80,16 @@
 		background-color: var(--color-bg-select-album);
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 		margin-left: 16px;
+	}
+
+	.edit-circle {
+		display: flex;
+		height: 42px;
+		width: 42px;
+		background-color: var(--color-bg-edit-album);
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 	}
 </style>

@@ -2,10 +2,10 @@
 	import Close from '../icons/Close.svelte';
 
 	export let rssErrors;
-	export let showModal = false;
+	export let showErrorModal = false;
 
 	function closeModal() {
-		showModal = false;
+		showErrorModal = false;
 	}
 </script>
 
