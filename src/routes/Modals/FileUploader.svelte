@@ -8,6 +8,8 @@
 	let displayText = 'Drag and drop a file here or click to select a file';
 	let timerText = '0:00';
 	let startTime = '';
+	let fileName;
+	let fileInput;
 
 	import {
 		uploadCB,
@@ -15,7 +17,8 @@
 		uploadFileType,
 		uploadFileText,
 		feedFile,
-		selectedAlbum
+		selectedAlbum,
+		selectedTrack
 	} from '$/stores';
 
 	function msToTime(ms) {
@@ -42,22 +45,42 @@
 		setTimeout(setTimerText, 1000);
 	}
 
+	function getFileExtension(filename) {
+		const dotPosition = filename.lastIndexOf('.');
+		if (dotPosition === -1 || dotPosition === 0) {
+			return '';
+		}
+		const extension = filename.substring(dotPosition + 1);
+		return extension;
+	}
+
 	function uploadFile() {
 		const file = files[0];
+		const extension = getFileExtension(file.name);
 		console.log(file);
 
 		let allowedExtensions = [];
+		console.log($uploadFileType);
 
 		if ($uploadFileType === 'audio') {
 			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
+			fileName = `${$selectedAlbum.title}_${selectedTrack.title}.${extension}`;
 		}
 
 		if ($uploadFileType === 'image') {
 			allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+			if ($uploadFileText === 'Upload Album Image') {
+				fileName = `${$selectedAlbum.title}_artwork.${extension}`;
+			}
+			if ($uploadFileText === 'Upload Track Image') {
+				fileName = `${$selectedAlbum.title}_${$selectedTrack.title}_artwork.${extension}`;
+			}
 		}
 
 		if ($uploadFileType === 'feed') {
 			allowedExtensions = ['application/xml', 'text/xml'];
+			fileName = `${$selectedAlbum.title}.xml`;
 		}
 
 		if (allowedExtensions.includes(file.type)) {
@@ -68,35 +91,45 @@
 			warning = false;
 			console.log;
 			const formData = new FormData();
-			formData.append('file', file);
+			formData.append('file', file, fileName);
 
 			fetch('api/fileupload')
 				.then((response) => response.json())
 				.then(async (result) => {
 					const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
-					let filename;
 
-					for (const entry of formData.entries()) {
-						if (entry[0] === 'file') {
-							filename = entry[1].name;
-							break;
-						}
-					}
-
-					const response = await fetch(mediaEndpoint, {
-						method: 'POST',
-						body: formData,
-						headers: {
-							Authorization:
-								'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-							'Content-Disposition': `form-data; filename="${filename}"`
-						}
-					});
-
+					// Check if the file already exists in WordPress
+					return fetch(`${mediaEndpoint}?search=${fileName}`)
+						.then((response) => response.json())
+						.then((data) => {
+							if (data.length > 0) {
+								const mediaId = data[0].id;
+								return fetch(`${mediaEndpoint}/${mediaId}`, {
+									method: 'PUT',
+									body: formData,
+									headers: {
+										Authorization:
+											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
+										'Content-Disposition': `attachment; filename="${fileName}"`
+									}
+								});
+							} else {
+								return fetch(mediaEndpoint, {
+									method: 'POST',
+									body: formData,
+									headers: {
+										Authorization:
+											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
+										'Content-Disposition': `form-data; filename="${fileName}"`
+									}
+								});
+							}
+						});
+				})
+				.then(async (response) => {
 					if (response.ok) {
 						const jsonData = await response.json();
 						$uploadCB(jsonData.source_url);
-						console.log(jsonData);
 						$currentModal = '';
 						isUploading = false;
 					} else {
@@ -145,10 +178,10 @@
 	</uploading>
 {:else}
 	<input
-		id="fileInput"
 		type="file"
 		accept=".png,.jpg, .mp3"
 		bind:files
+		bind:this={fileInput}
 		on:change={uploadFile}
 		hidden
 	/>

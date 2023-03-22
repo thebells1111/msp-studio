@@ -6,7 +6,6 @@
 	import Add from '../icons/Add.svelte';
 	import ExpandMore from '../icons/ExpandMore.svelte';
 	import ExpandLess from '../icons/ExpandLess.svelte';
-	import EditSquare from '../icons/EditSquare.svelte';
 	import Delete from '../icons/Delete.svelte';
 	import deleteItem from '../functions/deleteItem';
 	import Publish from '../Publish/Publish.svelte';

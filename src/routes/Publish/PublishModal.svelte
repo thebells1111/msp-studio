@@ -33,52 +33,14 @@
 		feedUrl = url;
 	}
 
-	function uploadFeed() {
-		const blob = new Blob([$feedFile], { type: 'application/xml' });
-		const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
+	async function podping() {
+		let url = `api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
 
-		// Set the file name and URL
-		const fileName = `${$selectedAlbum.title}.xml`;
+		console.log(url);
 
-		const formData = new FormData();
-		formData.append('file', file, `${$selectedAlbum.title}.xml`);
-
-		// Check if the file already exists in WordPress
-		fetch(`/wp-json/wp/v2/media?search=${fileName}`)
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.length > 0) {
-					// Retrieve the media ID of the first matching file
-					const mediaId = data[0].id;
-
-					// Fetch the binary data of the updated file
-					fetch(`/wp-json/wp/v2/media/${mediaId}`, {
-						method: 'PUT',
-						body: formData,
-						headers: {
-							Authorization:
-								'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-							'Content-Disposition': `attachment; filename="${fileName}"`
-						}
-					});
-				} else {
-					// Fetch the binary data of the new file
-
-					// Send a POST request to the media endpoint with the new file data
-					fetch('/wp-json/wp/v2/media', {
-						method: 'POST',
-						body: formData,
-						headers: {
-							Authorization:
-								'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-							'Content-Disposition': `attachment; filename="${fileName}"`
-						}
-					});
-				}
-			})
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((error) => console.error(error));
+		const res = await fetch(url);
+		const data = await res.text();
+		console.log(data);
 	}
 </script>
 
@@ -108,6 +70,8 @@
 				</button>
 			</upload>
 		{/if}
+
+		<button on:click={podping}>Add to Directory</button>
 	</modal>
 </blurred-background>
 

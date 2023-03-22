@@ -143,7 +143,7 @@
 			return trackJSON;
 		});
 
-		channel.items = items;
+		channel.item = [...items];
 
 		rss.channel = channel;
 
