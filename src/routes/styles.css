@@ -24,6 +24,8 @@
 	--color-bg-select-album: hsl(198, 50%, 52%);
 	--color-bg-edit-album: hsl(257, 50%, 52%);
 	--color-bg-select-track: hsl(198, 50%, 62%);
+	--color-bg-add-directory: hsl(257, 50%, 52%);
+	--color-bg-download-feed: hsl(198, 50%, 52%);
 	--color-bg-delete: hsl(0, 100%, 30%);
 	--color-playbar-text-0: hsl(0, 0%, 84%);
 	--color-text-0: hsl(0, 0%, 100%);

@@ -15,7 +15,7 @@
 	let showPublishModal = false;
 	let xmlFile;
 
-	function downloadFeed() {
+	function publishFeed() {
 		rssErrors = [];
 		let js2xml = new parser.j2xParser({
 			attributeNamePrefix: '@_',
@@ -250,7 +250,7 @@
 	}
 </script>
 
-<button class="download" on:click={downloadFeed}>Download Album</button>
+<button class="publish" on:click={publishFeed}>Publish Album</button>
 
 {#if showErrorModal}
 	<ErrorModal {rssErrors} bind:showErrorModal />
@@ -261,7 +261,7 @@
 {/if}
 
 <style>
-	button.download {
+	button.publish {
 		color: var(--color-text-0);
 		background-color: blueviolet;
 		padding: 8px 16px;

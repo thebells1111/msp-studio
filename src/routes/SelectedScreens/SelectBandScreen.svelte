@@ -47,14 +47,17 @@
 </header>
 <ul>
 	{#each $library as band, i}
-		<li>
+		<li on:click={selectBand.bind(this, band, i)}>
+			<h3>{band.title || 'Blank Band'}</h3>
 			<button
 				on:click={deleteItem.bind(this, band.title || 'Blank Band', deleteBand.bind(this, i))}
 				class="delete"
 			>
-				<Delete size="18" />
+				<Delete
+					size="30
+				"
+				/>
 			</button>
-			<p on:click={selectBand.bind(this, band, i)}>{band.title || 'Blank Band'}</p>
 		</li>
 	{/each}
 </ul>
@@ -70,21 +73,7 @@
 		display: flex;
 		align-items: center;
 	}
-	ul {
-		padding: 0 0 0 16px;
-		margin: 0;
-	}
 
-	li {
-		display: flex;
-		list-style: none;
-		padding: 4px 0;
-	}
-
-	p {
-		padding: 0;
-		margin: 0 8px;
-	}
 	h3 {
 		margin: 8px 0;
 	}
@@ -99,7 +88,32 @@
 		margin-left: 8px;
 	}
 
+	ul {
+		padding: 0 0 0 16px;
+		margin: 16px 0 0 0;
+	}
+	li {
+		list-style: none;
+		display: flex;
+		align-items: center;
+		margin: 0 8px 8px 0;
+		padding: 4px;
+		border-radius: 6px;
+		min-height: 55px;
+		background-color: var(--color-poster-bg-0);
+		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+	}
+
+	li h3 {
+		margin: 0 8px;
+		padding: 0;
+		width: 100%;
+	}
+
 	button.delete {
 		color: var(--color-bg-delete);
+		margin: 0;
+		padding: 8px;
+		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
 	}
 </style>

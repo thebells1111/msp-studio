@@ -15,7 +15,11 @@
 	export let showPublishModal = false;
 	export let xmlFile;
 
-	let feedUrl;
+	let feedUrl = '';
+
+	let displayText = `${
+		$user.wpCreds ? 'Upload your feed to WordPress <br/>or<br/>' : ''
+	}Download your feed to host somewhere else,</br>then enter the link to your feed.<br/><br/>Once that's done, publish your feed to the directory.`;
 
 	function closeModal() {
 		showPublishModal = false;
@@ -31,6 +35,7 @@
 
 	function setFeed(url) {
 		feedUrl = url;
+		displayText = 'Feed Successfully Uploaded to WordPress';
 	}
 
 	async function podping() {
@@ -41,6 +46,12 @@
 		const res = await fetch(url);
 		const data = await res.text();
 		console.log(data);
+		if (data === 'Success!') {
+			displayText =
+				'Feed successfully added to directory. Please wait a few minutes for your changes to appear in the player.';
+		} else {
+			displayText = data;
+		}
 	}
 </script>
 
@@ -49,29 +60,43 @@
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
-		<button on:click={saveFeed.bind(this, $selectedAlbum.title, xmlFile)}> Download Feed </button>
-		<label>
-			<h4>Link to Feed (required)</h4>
-			<input class:uploadable={$user.wpCreds} bind:value={feedUrl} />
-		</label>
-		{#if $user.wpCreds}
-			<upload>
-				<button
-					on:click={() => {
-						$currentModal = 'fileUploader';
-						$uploadCB = setFeed;
-						$uploadFileType = 'feed';
-						$uploadFileText = 'Upload Feed';
-						$feedFile = xmlFile;
-					}}
-				>
-					<UploadFile size="24" />
-					upload<br />feed
-				</button>
-			</upload>
-		{/if}
 
-		<button on:click={podping}>Add to Directory</button>
+		<link-container>
+			<label>
+				<h4>Link to Feed (required)</h4>
+				<input class:uploadable={$user.wpCreds} bind:value={feedUrl} />
+			</label>
+			{#if $user.wpCreds}
+				<upload>
+					<button
+						on:click={() => {
+							$currentModal = 'fileUploader';
+							$uploadCB = setFeed;
+							$uploadFileType = 'feed';
+							$uploadFileText = 'Upload Feed';
+							$feedFile = xmlFile;
+						}}
+					>
+						<UploadFile size="24" />
+						upload<br />feed
+					</button>
+				</upload>
+			{/if}
+		</link-container>
+
+		<button-container>
+			{#if feedUrl?.endsWith('.xml')}
+				<button class="directory" on:click={podping}>Add to Directory</button>
+			{:else}
+				<spacer />
+			{/if}
+			<button class="download" on:click={saveFeed.bind(this, $selectedAlbum.title, xmlFile)}>
+				Download Feed
+			</button>
+		</button-container>
+		<warning>
+			<h3>{@html displayText}</h3>
+		</warning>
 	</modal>
 </blurred-background>
 
@@ -115,6 +140,13 @@
 		background-color: transparent;
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
+		box-shadow: none;
+	}
+	link-container {
+		display: block;
+		margin: 64px 0 48px 0;
+		display: relative;
+		width: 100%;
 	}
 
 	h4 {
@@ -129,7 +161,7 @@
 
 	.uploadable {
 		margin: 0 8px;
-		width: calc(100% - 84px);
+		width: calc(100% - 92px);
 	}
 
 	upload {
@@ -137,6 +169,10 @@
 		position: relative;
 		height: 12px;
 		width: 12px;
+	}
+
+	button {
+		box-shadow: 0 3px 5px 0px var(--color-button-shadow);
 	}
 
 	upload button {
@@ -153,5 +189,31 @@
 		top: -25px;
 		right: -50px;
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
+	}
+
+	.directory {
+		background-color: var(--color-bg-add-directory);
+	}
+
+	.download {
+		background-color: var(--color-bg-download-feed);
+	}
+
+	button-container {
+		display: flex;
+		justify-content: space-between;
+		padding: 0 16px;
+	}
+
+	warning {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	warning h3 {
+		color: red;
+		font-weight: 800;
+		text-align: center;
 	}
 </style>

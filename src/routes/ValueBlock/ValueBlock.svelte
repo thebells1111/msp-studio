@@ -102,7 +102,7 @@
 	value-header,
 	value-footer {
 		display: block;
-		padding: 8px 0 0 36px;
+		padding: 8px 0 0 12px;
 	}
 
 	value-header {

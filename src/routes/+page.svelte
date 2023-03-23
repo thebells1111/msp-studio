@@ -7,7 +7,7 @@
 
 	import { catalogDB, library, user } from '$/stores';
 
-	let isLoading = false;
+	let isLoading = true;
 
 	onMount(() => {
 		fetch('/api/alby/refresh')

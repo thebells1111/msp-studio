@@ -35,7 +35,7 @@ export async function GET({ url }) {
 			if (res.status === 200) {
 				return text(await res.text());
 			} else {
-				return text('Fail');
+				return text(await res.text());
 			}
 		}
 

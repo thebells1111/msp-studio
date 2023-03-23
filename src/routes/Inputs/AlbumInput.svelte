@@ -58,6 +58,16 @@
 	function setImage(url) {
 		newAlbumImage = url;
 	}
+
+	function handleImageUpload() {
+		if (newAlbumName) {
+			$currentModal = 'fileUploader';
+			$uploadCB = setImage;
+			$uploadFileType = 'image';
+			$uploadFileText = 'Upload Album Image';
+			$selectedAlbum.title = newAlbumName;
+		}
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -77,7 +87,10 @@
 				<album-name>
 					<label>
 						<p>Album Name (required)</p>
-						<input bind:value={newAlbumName} />
+						<input
+							bind:value={newAlbumName}
+							placeholder={$user.wpCreds ? 'Add an Album Name before uploading files.' : ''}
+						/>
 					</label>
 				</album-name>
 				<album-image class:uploadable={$user.wpCreds}>
@@ -86,15 +99,7 @@
 						<input bind:value={newAlbumImage} />
 						{#if $user.wpCreds}
 							<upload>
-								<button
-									on:click={() => {
-										$currentModal = 'fileUploader';
-										$uploadCB = setImage;
-										$uploadFileType = 'image';
-										$uploadFileText = 'Upload Album Image';
-										$selectedAlbum.title = newAlbumName;
-									}}
-								>
+								<button on:click={handleImageUpload}>
 									<UploadFile size="24" />
 									upload <br /> image
 								</button>
@@ -284,5 +289,10 @@
 	img {
 		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
 		min-width: 258px;
+	}
+
+	input::placeholder {
+		color: red;
+		font-weight: bold;
 	}
 </style>

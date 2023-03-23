@@ -73,6 +73,26 @@
 	function setImage(url) {
 		newTrackImage = url;
 	}
+
+	function handleImageUpload() {
+		if (newTrackName) {
+			$currentModal = 'fileUploader';
+			$uploadCB = setImage;
+			$uploadFileType = 'image';
+			$uploadFileText = 'Upload Track Image';
+			$selectedTrack.title = newTrackName;
+		}
+	}
+
+	function handleAudioUpload() {
+		if (newTrackName) {
+			$currentModal = 'fileUploader';
+			$uploadCB = setMP3;
+			$uploadFileType = 'audio';
+			$uploadFileText = 'Upload Track Audio File';
+			$selectedTrack.title = newTrackName;
+		}
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -92,7 +112,10 @@
 			<edit-pane>
 				<label class="track-name">
 					<h4>Track Name (required)</h4>
-					<input bind:value={newTrackName} />
+					<input
+						bind:value={newTrackName}
+						placeholder={$user.wpCreds ? 'Add a Track Name before uploading files.' : ''}
+					/>
 				</label>
 
 				<label>
@@ -104,15 +127,7 @@
 					/>
 					{#if $user.wpCreds}
 						<upload>
-							<button
-								on:click={() => {
-									$currentModal = 'fileUploader';
-									$uploadCB = setMP3;
-									$uploadFileType = 'audio';
-									$uploadFileText = 'Upload Track Audio File';
-									$selectedTrack.title = newTrackName;
-								}}
-							>
+							<button on:click={handleAudioUpload}>
 								<UploadFile size="22" />
 								upload<br />mp3
 							</button>
@@ -124,15 +139,7 @@
 					<input bind:value={newTrackImage} class="track-img" class:uploadable={$user.wpCreds} />
 					{#if $user.wpCreds}
 						<upload class="img">
-							<button
-								on:click={() => {
-									$currentModal = 'fileUploader';
-									$uploadCB = setImage;
-									$uploadFileType = 'image';
-									$uploadFileText = 'Upload Track Image';
-									$selectedTrack.title = newTrackName;
-								}}
-							>
+							<button on:click={handleImageUpload}>
 								<UploadFile size="22" />
 								upload<br /> image
 							</button>
@@ -313,5 +320,10 @@
 
 	upload.img button {
 		background-color: var(--color-bg-button-upload-0);
+	}
+
+	input::placeholder {
+		color: red;
+		font-weight: bold;
 	}
 </style>
