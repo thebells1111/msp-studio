@@ -48,14 +48,16 @@
 	});
 
 	async function saveTrack() {
-		console.log(newTrackEnclosure);
 		$selectedTrack.title = newTrackName;
 		$selectedTrack.artwork = newTrackImage;
 		$selectedTrack.enclosure = newTrackEnclosure;
 		$selectedTrack.value = newTrackValue;
 		$selectedTrack.description = newTrackDescription;
 		$selectedTrack.explicit = explicit;
+		console.log($selectedTrack);
+		console.log($selectedTrackIndex);
 		$selectedAlbum.tracks[$selectedTrackIndex] = $selectedTrack;
+		$selectedAlbum = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		showEdit = false;
 	}
@@ -108,6 +110,7 @@
 									$uploadCB = setMP3;
 									$uploadFileType = 'audio';
 									$uploadFileText = 'Upload Track Audio File';
+									$selectedTrack.title = newTrackName;
 								}}
 							>
 								<UploadFile size="22" />
@@ -127,6 +130,7 @@
 									$uploadCB = setImage;
 									$uploadFileType = 'image';
 									$uploadFileText = 'Upload Track Image';
+									$selectedTrack.title = newTrackName;
 								}}
 							>
 								<UploadFile size="22" />

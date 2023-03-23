@@ -42,10 +42,13 @@
 			description: '',
 			explicit: 'no'
 		};
-		$selectedTrack = track;
+		$selectedTrack = clone(track);
 		$selectedAlbum.tracks = $selectedAlbum.tracks.concat(track);
+		$selectedTrackIndex = $selectedAlbum.tracks.length - 1;
 		console.log($selectedAlbum.tracks);
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
+		showEdit = true;
+		console.log($selectedTrack);
+		await $catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 
 	function sortTracks(index, direction) {
@@ -67,12 +70,7 @@
 	<header>
 		<header-top>
 			<h3>Select a Track</h3>
-			<button
-				on:click={() => {
-					addNewTrack();
-					showEdit = true;
-				}}
-			>
+			<button on:click={addNewTrack}>
 				<Add size="30" />
 			</button>
 		</header-top>

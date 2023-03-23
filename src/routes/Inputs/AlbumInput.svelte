@@ -92,6 +92,7 @@
 										$uploadCB = setImage;
 										$uploadFileType = 'image';
 										$uploadFileText = 'Upload Album Image';
+										$selectedAlbum.title = newAlbumName;
 									}}
 								>
 									<UploadFile size="24" />

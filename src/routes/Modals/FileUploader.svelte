@@ -64,7 +64,7 @@
 
 		if ($uploadFileType === 'audio') {
 			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
-			fileName = `${$selectedAlbum.title}_${selectedTrack.title}.${extension}`;
+			fileName = `${$selectedAlbum.title}_${$selectedTrack.title}.${extension}`;
 		}
 
 		if ($uploadFileType === 'image') {
@@ -179,7 +179,7 @@
 {:else}
 	<input
 		type="file"
-		accept=".png,.jpg, .mp3"
+		accept=".png, .jpg, .mp3, .wav, .ogg, .aac, .flac, .gif, .webp"
 		bind:files
 		bind:this={fileInput}
 		on:change={uploadFile}
