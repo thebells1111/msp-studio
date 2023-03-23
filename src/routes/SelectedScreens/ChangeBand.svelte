@@ -53,6 +53,7 @@
 	}
 	h1 {
 		margin: 0 0 0 8px;
+		text-align: left;
 	}
 
 	button.select-band {

@@ -270,4 +270,12 @@
 		margin: 16px 0 8px 16px;
 		width: 203px;
 	}
+
+	@media screen and (max-width: 992px) {
+		button.publish {
+			height: 54px;
+			margin: 0;
+			max-width: 40%;
+		}
+	}
 </style>

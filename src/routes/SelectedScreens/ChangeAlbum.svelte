@@ -38,16 +38,6 @@
 	</album-name>
 </album>
 
-<button
-	on:click={() => {
-		$selectedScreen = 'albums';
-		$selectedAlbum = $newAlbum;
-	}}
-	class="select-album"
->
-	Select Different Album
-</button>
-
 <style>
 	album {
 		display: flex;
@@ -62,6 +52,7 @@
 	}
 	h2 {
 		margin: 0 0 0 8px;
+		text-align: left;
 	}
 
 	img {
@@ -75,13 +66,6 @@
 		padding: 8px;
 	}
 
-	button.select-album {
-		width: 203px;
-		background-color: var(--color-bg-select-album);
-		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-		margin-left: 16px;
-	}
-
 	.edit-circle {
 		display: flex;
 		height: 42px;
@@ -91,5 +75,18 @@
 		justify-content: center;
 		border-radius: 50%;
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
+	}
+
+	@media screen and (max-width: 992px) {
+		album {
+			display: flex;
+			margin: 0 0 8px 16px;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		album-name button {
+			margin-bottom: 0;
+		}
 	}
 </style>

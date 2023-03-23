@@ -16,7 +16,9 @@
 		selectedTrack,
 		selectedTrackIndex,
 		catalogDB,
-		MSPValue
+		MSPValue,
+		selectedScreen,
+		newAlbum
 	} from '$/stores';
 	let showEdit = false;
 
@@ -65,7 +67,18 @@
 
 <ChangeBand />
 <ChangeAlbum />
-<Publish />
+<button-container>
+	<button
+		on:click={() => {
+			$selectedScreen = 'albums';
+			$selectedAlbum = $newAlbum;
+		}}
+		class="select-album"
+	>
+		Select Different Album
+	</button>
+	<Publish />
+</button-container>
 <select-track>
 	<header>
 		<header-top>
@@ -163,10 +176,6 @@
 		height: 26px;
 	}
 
-	li p {
-		width: 100%;
-	}
-
 	select-track {
 		display: block;
 		position: relative;
@@ -190,5 +199,35 @@
 		margin: 0;
 		padding: 8px;
 		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
+	}
+
+	button.select-album {
+		width: 203px;
+		background-color: var(--color-bg-select-album);
+		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
+		margin-left: 16px;
+		padding: 8px;
+		color: var(--color-text-0);
+	}
+
+	@media screen and (max-width: 992px) {
+		select-track {
+			display: block;
+			position: relative;
+			left: 0px;
+			top: 0px;
+			width: calc(100%);
+		}
+
+		button-container {
+			display: flex;
+			align-items: center;
+			justify-content: space-around;
+		}
+
+		button.select-album {
+			height: 54px;
+			max-width: 40%;
+		}
 	}
 </style>
