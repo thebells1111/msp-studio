@@ -217,6 +217,10 @@
 			left: 0px;
 			top: 0px;
 			width: calc(100%);
+			margin-top: 8px;
+		}
+		ul {
+			padding: 0 0 0 8px;
 		}
 
 		button-container {

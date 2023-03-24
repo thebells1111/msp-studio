@@ -1,7 +1,9 @@
 <script>
+	import { fade } from 'svelte/transition';
 	import EditPerson from './EditPerson.svelte';
 	import EditAddress from './EditAddress.svelte';
 	import Add from '../icons/GroupAdd.svelte';
+	import Close from '../icons/Close.svelte';
 
 	import { newPerson } from '$/stores';
 
@@ -19,6 +21,13 @@
 
 	$: if (selectedIndex === -1) {
 		showPersonEdit = false;
+	}
+
+	function closeModal() {
+		console.log(window.innerWidth);
+		if (window.innerWidth < 992) {
+			showPersonEdit = false;
+		}
 	}
 </script>
 
@@ -55,9 +64,18 @@
 			</total>
 		</value-footer>
 	</left-pane>
-	<right-pane>
+	<right-pane
+		class:mobile-modal={showPersonEdit}
+		on:mousedown|self={closeModal}
+		on:touchend|self={closeModal}
+	>
 		{#if showPersonEdit}
-			<EditAddress bind:valueBlock {selectedIndex} />
+			<address-container>
+				<button class="close mobile" on:click={closeModal}>
+					<Close size="24" />
+				</button>
+				<EditAddress bind:valueBlock {selectedIndex} />
+			</address-container>
 		{/if}
 	</right-pane>
 </value-block>
@@ -143,5 +161,71 @@
 		position: absolute;
 		top: -14px;
 		right: 0;
+	}
+
+	.mobile {
+		display: none;
+	}
+
+	@media screen and (max-width: 992px) {
+		value-block {
+			display: flex;
+			flex-direction: column;
+		}
+
+		right-pane,
+		left-pane {
+			width: 100%;
+		}
+		left-pane header,
+		left-pane ul,
+		left-pane,
+		value-header,
+		left-pane value-footer {
+			width: calc(100% - 16px);
+		}
+
+		.mobile-modal {
+			position: fixed;
+			top: 0;
+			margin: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 34;
+
+			backdrop-filter: blur(6px);
+		}
+
+		.mobile-modal address-container {
+			display: block;
+			width: calc(100% - 40px);
+			border-radius: 8px;
+			padding: 8px 16px 8px 8px;
+			background-color: red;
+			box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+			height: 416px;
+			position: relative;
+			background-color: var(--color-poster-bg-0);
+			background-image: linear-gradient(
+				180deg,
+				var(--color-poster-bg-0) 33%,
+				var(--color-poster-bg-1) 66%
+			);
+		}
+
+		.close {
+			position: absolute;
+			top: -6px;
+			right: -12px;
+			background-color: transparent;
+		}
+
+		.mobile {
+			display: initial;
+		}
 	}
 </style>

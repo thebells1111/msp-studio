@@ -116,4 +116,11 @@
 		padding: 8px;
 		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
 	}
+
+	@media screen and (max-width: 992px) {
+		ul {
+			margin-top: 64px;
+			padding: 0 0 0 8px;
+		}
+	}
 </style>

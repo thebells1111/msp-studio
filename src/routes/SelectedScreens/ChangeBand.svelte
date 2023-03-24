@@ -72,4 +72,11 @@
 		justify-content: center;
 		border-radius: 50%;
 	}
+
+	@media screen and (max-width: 992px) {
+		button.select-band {
+			display: block;
+			margin: 8px auto;
+		}
+	}
 </style>

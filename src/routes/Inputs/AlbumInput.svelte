@@ -163,7 +163,6 @@
 		overflow-x: hidden;
 		border-radius: 8px;
 		padding: 8px;
-		overflow: auto;
 		background-color: var(--color-poster-bg-0);
 		background-image: linear-gradient(
 			180deg,
@@ -257,12 +256,14 @@
 		margin: 0;
 	}
 	.close {
-		position: absolute;
-		top: 0;
-		right: 0;
+		position: fixed;
+		top: 16px;
+		right: 16px;
 		background-color: transparent;
 		padding: 8px;
+		margin: 0;
 		color: rgba(255, 255, 255, 0.75);
+		z-index: 33;
 	}
 
 	top-container {
@@ -294,5 +295,54 @@
 	input::placeholder {
 		color: red;
 		font-weight: bold;
+	}
+
+	@media screen and (max-width: 992px) {
+		album-modal {
+			width: calc(100% - 16px);
+			height: calc(100% - 16px);
+			border-radius: 0px;
+			padding: 8px;
+			overflow: auto;
+		}
+		top-container {
+			width: calc(100% - 8px);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			margin: 16px 0 0 8px;
+		}
+		img {
+			width: 100px;
+			min-width: 100px;
+			height: 100px;
+			margin-bottom: 4px;
+		}
+
+		bottom-pane {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			margin: 16px 16px 0 8px;
+		}
+
+		album-inputs {
+			width: calc(100% - 8px);
+			margin: 0 8px;
+		}
+
+		.album-description {
+			width: calc(100% - 16px);
+			margin: 8px 0 8px 8px;
+		}
+
+		value {
+			width: 100%;
+		}
+
+		.close {
+			top: 4px;
+			right: 4px;
+		}
 	}
 </style>

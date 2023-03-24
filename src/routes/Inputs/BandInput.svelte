@@ -126,4 +126,14 @@
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
 	}
+
+	@media screen and (max-width: 992px) {
+		band-modal {
+			width: calc(100% - 16px);
+			height: calc(100% - 16px);
+			border-radius: 0px;
+			padding: 8px;
+			overflow: auto;
+		}
+	}
 </style>
