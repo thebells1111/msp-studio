@@ -24,6 +24,7 @@
 	let newTrackName = '';
 	let newTrackImage = '';
 	let newTrackEnclosure = { url: '', enclosureLength: '', type: '' };
+	let playerEnclosure;
 	let newTrackValue = [];
 	let newTrackDescription = '';
 	let explicit = 'no';
@@ -37,6 +38,7 @@
 			enclosureLength: $selectedTrack?.enclosure?.enclosureLength || '',
 			type: $selectedTrack?.enclosure?.type || ''
 		};
+		playerEnclosure = $selectedTrack?.enclosure?.url;
 		newTrackDescription = $selectedTrack.description || '';
 		explicit = $selectedTrack.explicit || 'no';
 		newTrackValue =
@@ -54,8 +56,6 @@
 		$selectedTrack.value = newTrackValue;
 		$selectedTrack.description = newTrackDescription;
 		$selectedTrack.explicit = explicit;
-		console.log($selectedTrack);
-		console.log($selectedTrackIndex);
 		$selectedAlbum.tracks[$selectedTrackIndex] = $selectedTrack;
 		$selectedAlbum = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
@@ -68,6 +68,10 @@
 
 	function setMP3(url) {
 		newTrackEnclosure = { url: url, enclosureLength: '', type: '' };
+		setTimeout(() => {
+			console.log(url);
+			playerEnclosure = url;
+		}, 2000);
 	}
 
 	function setImage(url) {
@@ -161,7 +165,7 @@
 				</explicit>
 			</edit-pane>
 		</top-pane>
-		<Player bind:newTrackEnclosure />
+		<Player bind:playerEnclosure bind:newTrackEnclosure />
 		<bottom-pane>
 			<label class="track-description">
 				<h4>Track Description</h4>

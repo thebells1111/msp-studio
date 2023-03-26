@@ -11,16 +11,6 @@ if (!process.env.WP_SECRET_KEY) {
 
 const { WP_SECRET_KEY } = process.env;
 
-//You likely changed the Settings -> Permalink
-
-// I had changed it to just post. Once I changed it to custom
-
-// index.php/%postname%
-
-//install Password Protected and enable REST API
-
-// Install WP Extra File Types and enable RSS - Really Simple Syndication	.xml
-
 export async function GET({ request, cookies }) {
 	try {
 		const { token, error } = await checkAwtCookie(cookies);

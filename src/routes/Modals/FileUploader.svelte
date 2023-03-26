@@ -102,6 +102,7 @@
 					return fetch(`${mediaEndpoint}?search=${fileName}`)
 						.then((response) => response.json())
 						.then((data) => {
+							console.log(data)
 							if (data.length > 0) {
 								const mediaId = data[0].id;
 								return fetch(`${mediaEndpoint}/${mediaId}`, {
