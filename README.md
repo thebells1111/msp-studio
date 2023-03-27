@@ -4,6 +4,8 @@ Unlock the full potential of your music career with Music Side Project Studio! H
 
 ## Demonstration Video
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/UOMq-_FsGfM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
