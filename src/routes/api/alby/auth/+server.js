@@ -18,7 +18,11 @@ export async function GET({ url, cookies }) {
 		let code = url.searchParams.get('code') ?? '';
 		var formData = new FormData();
 		formData.append('code', code);
-		formData.append('redirect_uri', 'http://localhost:3000/api/alby/auth');
+		if (dev) {
+			formData.append('redirect_uri', 'http://localhost:3000/api/alby/auth');
+		} else {
+			formData.append('redirect_uri', 'https://studio.musicsideproject.com/api/alby/auth');
+		}
 		formData.append('grant_type', 'authorization_code');
 		let resolve = await axios({
 			method: 'POST',

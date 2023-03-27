@@ -4,6 +4,7 @@
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import convertTime from '../functions/convertTime';
 
+	export let playerEnclosure;
 	export let newTrackEnclosure;
 	import { selectedTrack } from '$/stores';
 	let player;
@@ -11,7 +12,7 @@
 	onMount(setupPlayer);
 
 	function setupPlayer() {
-		player.src = newTrackEnclosure.url;
+		player.src = playerEnclosure;
 		player.ontimeupdate = () => {
 			player.currentTime = player.currentTime;
 		};
@@ -26,7 +27,7 @@
 	}
 </script>
 
-<audio playsinline preload="metadata" bind:this={player} src={newTrackEnclosure.url} />
+<audio playsinline preload="metadata" bind:this={player} src={playerEnclosure} />
 
 <player>
 	<player-a>

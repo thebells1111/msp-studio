@@ -2,15 +2,22 @@
 	import { slide } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
+	import { dev } from '$app/environment';
 
 	import { user, currentModal } from '$/stores';
 
 	let expandMenu = false;
 
 	function gotoAlby() {
-		goto(
-			'https://getalby.com/oauth?client_id=32dVOIuGiA&response_type=code&redirect_uri=http://localhost:3000/api/alby/auth&scope=account:read'
-		);
+		if (dev) {
+			goto(
+				'https://getalby.com/oauth?client_id=32dVOIuGiA&response_type=code&redirect_uri=http://localhost:3000/api/alby/auth&scope=account:read'
+			);
+		} else {
+			goto(
+				'https://getalby.com/oauth?client_id=srl5nfxtlh&response_type=code&redirect_uri=https://studio.musicsideproject.com/api/alby/auth&scope=account:read'
+			);
+		}
 	}
 
 	function logout() {
