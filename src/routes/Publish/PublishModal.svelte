@@ -15,7 +15,8 @@
 	export let showPublishModal = false;
 	export let xmlFile;
 
-	let feedUrl = '';
+	let feedUrl =
+		'https://truefansmusic.com/wp-content/uploads/2023/03/The-Bible-Song-Sing-Along.xml';
 
 	let displayText = `${
 		$user.wpCreds ? 'Upload your feed to WordPress <br/>or<br/>' : ''
@@ -38,6 +39,23 @@
 		displayText = 'Feed Successfully Uploaded to WordPress';
 	}
 
+	async function checkPodcastIndex() {
+		let feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+
+		const res = await fetch(feed);
+		let data = await res.json();
+		let err;
+
+		addFeed();
+		console.log(data);
+
+		// if (data.status === 'true') {
+		// 	podping();
+		// } else if (data.status === 'false') {
+		// 	addFeed();
+		// }
+	}
+
 	async function podping() {
 		let url = `api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
 
@@ -52,6 +70,15 @@
 		} else {
 			displayText = data;
 		}
+	}
+
+	async function addFeed() {
+		let feed = `api/queryindex?q=add/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+
+		const res = await fetch(feed);
+		const data = await res.json();
+		console.log(data);
+		displayText = data.description;
 	}
 </script>
 
@@ -86,7 +113,7 @@
 
 		<button-container>
 			{#if feedUrl?.endsWith('.xml')}
-				<button class="directory" on:click={podping}>Add to Directory</button>
+				<button class="directory" on:click={checkPodcastIndex}>Add to Directory</button>
 			{:else}
 				<spacer />
 			{/if}

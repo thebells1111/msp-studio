@@ -12,7 +12,9 @@ if (!process.env.WP_SECRET_KEY) {
 const { WP_SECRET_KEY } = process.env;
 
 export async function POST({ request, cookies }) {
-	const record = encryptString(JSON.stringify(await request.json()), WP_SECRET_KEY);
+	let creds = await request.json();
+	console.log(creds);
+	const record = encryptString(JSON.stringify(creds), WP_SECRET_KEY);
 
 	try {
 		const { token, error } = await checkAwtCookie(cookies);
@@ -29,14 +31,24 @@ export async function POST({ request, cookies }) {
 		}
 
 		const collection = await getCollection('users');
+		const url = creds.url;
+		const userArray = await collection.find({ name }).toArray();
+		const user = userArray[0] ? { ...userArray[0], _id: undefined } : {};
+
+		let wpCreds = user.wordPressCreds || [];
+
+		wpCreds = updateObject(wpCreds, url, record);
+
 		await collection.updateOne(
 			{ name },
 			{
 				$set: {
-					wordPressCreds: record
+					wordPressCreds: wpCreds
 				}
 			},
-			{ upsert: true }
+			{
+				upsert: true
+			}
 		);
 
 		return json({ wpCreds: true });
@@ -44,4 +56,19 @@ export async function POST({ request, cookies }) {
 		console.error('wpUpdate error:', err);
 		throw error(500);
 	}
+}
+
+function updateObject(arr, key, newValue) {
+	let keyExists = false;
+	for (let obj of arr) {
+		if (key in obj) {
+			keyExists = true;
+			obj[key] = newValue;
+			break;
+		}
+	}
+	if (!keyExists) {
+		arr.push({ [key]: newValue });
+	}
+	return arr;
 }

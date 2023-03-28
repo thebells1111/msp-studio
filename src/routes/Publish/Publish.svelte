@@ -1,7 +1,5 @@
 <script>
 	import parser from 'fast-xml-parser';
-	import { saveAs } from 'file-saver';
-	import { v5 as uuidv5 } from 'uuid';
 
 	import ErrorModal from './ErrorModal.svelte';
 
