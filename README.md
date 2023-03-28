@@ -4,7 +4,7 @@ Unlock the full potential of your music career with Music Side Project Studio! H
 
 ## Demonstration Video
 
-[![Music Side Project Studio Demonstration Video](https://studio.musicsideproject.com/msp-play.png)](https://www.youtube.com/watch?v=UOMq-_FsGfM)
+[![Music Side Project Studio Demonstration Video](https://studio.musicsideproject.com/msp-play.png)](https://www.youtube.com/watch?v=2HDyelkS9Ck)
 
 ## Developing
 
