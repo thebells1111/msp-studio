@@ -9,14 +9,14 @@
 		uploadFileType,
 		uploadFileText,
 		user,
-		feedFile
+		feedFile,
+		wpFeedUrl
 	} from '$/stores';
 
 	export let showPublishModal = false;
 	export let xmlFile;
 
-	let feedUrl =
-		'https://truefansmusic.com/wp-content/uploads/2023/03/The-Bible-Song-Sing-Along.xml';
+	let feedUrl = '';
 
 	let displayText = `${
 		$user.wpCreds ? 'Upload your feed to WordPress <br/>or<br/>' : ''
@@ -88,6 +88,14 @@
 			<Close size="24" />
 		</button>
 
+		<select bind:value={$wpFeedUrl}>
+			{#each $user.urls || [] as url}
+				<option value={url}>
+					{url}
+				</option>
+			{/each}
+		</select>
+
 		<link-container>
 			<label>
 				<h4>Link to Feed (required)</h4>
@@ -113,7 +121,7 @@
 
 		<button-container>
 			{#if feedUrl?.endsWith('.xml')}
-				<button class="directory" on:click={checkPodcastIndex}>Add to Directory</button>
+				<button class="directory" on:click={podping}>Add to Directory</button>
 			{:else}
 				<spacer />
 			{/if}

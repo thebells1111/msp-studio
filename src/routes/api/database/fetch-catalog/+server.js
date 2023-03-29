@@ -20,8 +20,9 @@ export async function GET({ cookies }) {
 		const collection = await getCollection('users');
 		const userArray = await collection.find({ name }).toArray();
 		const user = userArray[0] ? { ...userArray[0], _id: undefined } : {};
-		console.log(user);
+
 		if (user.wordPressCreds) {
+			user.urls = user.wordPressCreds.map((v) => v.url);
 			delete user.wordPressCreds;
 			user.wpCreds = true;
 		}

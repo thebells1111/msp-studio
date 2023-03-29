@@ -22,6 +22,7 @@
 					.then((data) => {
 						console.log(data);
 						$user.wpCreds = data.wpCreds;
+						$user.urls = data.urls || [];
 						console.log($user);
 					});
 			});

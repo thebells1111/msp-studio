@@ -34,6 +34,7 @@
 		"localforage": "^1.10.0",
 		"mongodb": "^5.1.0",
 		"svelte-material-ui": "^7.0.0-beta.0",
+		"svelte-select": "^5.5.2",
 		"svelte-sortable-list": "^1.1.0",
 		"uuid": "^9.0.0"
 	}

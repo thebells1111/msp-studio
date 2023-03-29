@@ -18,7 +18,8 @@
 		uploadFileText,
 		feedFile,
 		selectedAlbum,
-		selectedTrack
+		selectedTrack,
+		wpFeedUrl
 	} from '$/stores';
 
 	function msToTime(ms) {
@@ -89,11 +90,16 @@
 			startTime = new Date().getTime();
 			setTimeout(setTimerText, 1000);
 			warning = false;
-			console.log;
 			const formData = new FormData();
 			formData.append('file', file, fileName);
-
-			fetch('api/fileupload')
+			console.log($wpFeedUrl);
+			fetch('api/fileupload', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ url: $wpFeedUrl })
+			})
 				.then((response) => response.json())
 				.then(async (result) => {
 					const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
@@ -102,7 +108,7 @@
 					return fetch(`${mediaEndpoint}?search=${fileName}`)
 						.then((response) => response.json())
 						.then((data) => {
-							console.log(data)
+							console.log(data);
 							if (data.length > 0) {
 								const mediaId = data[0].id;
 								return fetch(`${mediaEndpoint}/${mediaId}`, {
