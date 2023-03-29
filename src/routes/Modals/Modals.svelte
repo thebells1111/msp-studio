@@ -46,9 +46,10 @@
 	}
 
 	modal {
+		display: block;
 		position: relative;
-		width: calc(100% - 100px);
-		height: calc(100% - 100px);
+		width: calc(100% - 16px);
+		height: calc(100% - 16px);
 		overflow-y: auto;
 		overflow-x: hidden;
 		border-radius: 8px;

@@ -1,6 +1,7 @@
 <script>
 	import Close from '../icons/Close.svelte';
 	import UploadFile from '../icons/UploadFile.svelte';
+	import FeedUrlSelector from '../Modals/FeedUrlSelector.svelte';
 
 	import {
 		selectedAlbum,
@@ -10,7 +11,9 @@
 		uploadFileText,
 		user,
 		feedFile,
-		wpFeedUrl
+		selectedBand,
+		selectedAlbumIndex,
+		catalogDB
 	} from '$/stores';
 
 	export let showPublishModal = false;
@@ -40,20 +43,20 @@
 	}
 
 	async function checkPodcastIndex() {
+		$selectedAlbum.enclosureUrl = feedUrl;
+		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
+
 		let feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
 		const res = await fetch(feed);
 		let data = await res.json();
-		let err;
 
-		addFeed();
-		console.log(data);
-
-		// if (data.status === 'true') {
-		// 	podping();
-		// } else if (data.status === 'false') {
-		// 	addFeed();
-		// }
+		if (data.status === 'true') {
+			podping();
+		} else if (data.status === 'false') {
+			addFeed();
+		}
 	}
 
 	async function podping() {
@@ -88,14 +91,10 @@
 			<Close size="24" />
 		</button>
 
-		<select bind:value={$wpFeedUrl}>
-			{#each $user.urls || [] as url}
-				<option value={url}>
-					{url}
-				</option>
-			{/each}
-		</select>
-
+		<label>
+			<h4>WordPress Link</h4>
+			<FeedUrlSelector />
+		</label>
 		<link-container>
 			<label>
 				<h4>Link to Feed (required)</h4>
@@ -121,7 +120,7 @@
 
 		<button-container>
 			{#if feedUrl?.endsWith('.xml')}
-				<button class="directory" on:click={podping}>Add to Directory</button>
+				<button class="directory" on:click={checkPodcastIndex}>Add to Directory</button>
 			{:else}
 				<spacer />
 			{/if}
