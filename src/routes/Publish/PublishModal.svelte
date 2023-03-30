@@ -12,8 +12,7 @@
 		feedFile,
 		selectedBand,
 		selectedAlbumIndex,
-		catalogDB,
-		wpFeedUrl
+		catalogDB
 	} from '$/stores';
 
 	export let showPublishModal = false;
@@ -66,7 +65,6 @@
 
 		const res = await fetch(url);
 		const data = await res.text();
-		console.log(data);
 		if (data === 'Success!') {
 			displayText =
 				'Feed successfully added to directory. Please wait a few minutes for your changes to appear in the player.';
@@ -80,8 +78,8 @@
 
 		const res = await fetch(feed);
 		const data = await res.json();
-		console.log(data);
 		displayText = data.description;
+		console.log(data);
 	}
 </script>
 

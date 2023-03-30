@@ -32,10 +32,23 @@ export async function GET({ url }) {
 
 		let baseUrl = 'https://api.podcastindex.org/api/1.0/';
 		let q = url.searchParams.get('q') ?? '';
-		var url = baseUrl + q;
+		var url = baseUrl + encodeUrlParameters(q);
+		console.log(url);
 		const res = await fetch(url, options);
+		console.log(res.status);
+		console.log;
 		if (res.status === 404 || res.status === 401) {
-			return json({});
+			return json({
+				description:
+					'Feed was not added. Please visit https://podcastindex.org/add and try adding your feed manually.'
+			});
+		}
+
+		if (res.status === 302) {
+			return json({
+				description:
+					'Feed was not added. Please visit <a href="https://podcastindex.org/add">https://podcastindex.org/add</a> and try adding your feed manually.'
+			});
 		}
 		let data = await res.json();
 
@@ -44,4 +57,18 @@ export async function GET({ url }) {
 		console.error('queryindex err: ', err);
 		throw error(500, { message: err });
 	}
+}
+
+function encodeUrlParameters(inputString) {
+	const strArr = inputString.split('?');
+	const baseUrl = strArr[0];
+	const urlParams = new URLSearchParams(strArr[1]);
+	const encodedParams = [];
+
+	for (const [key, value] of urlParams.entries()) {
+		encodedParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+	}
+
+	const encodedQueryString = encodedParams.join('&');
+	return `${baseUrl}?${encodedQueryString}`;
 }

@@ -25,7 +25,6 @@
 
 				{#if $currentModal === 'fileUploader'}
 					{#if $wpFeedUrl}
-						{$wpFeedUrl}
 						<FileUploader />
 					{:else}
 						<FeedUrlSelector />

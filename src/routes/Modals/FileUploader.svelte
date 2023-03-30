@@ -172,6 +172,14 @@
 	}
 </script>
 
+<p
+	class="feed-url"
+	on:click={() => {
+		$wpFeedUrl = '';
+	}}
+>
+	{$wpFeedUrl}
+</p>
 <h1>
 	{$uploadFileText}
 </h1>
@@ -251,5 +259,9 @@
 
 	h1 {
 		margin-top: 0;
+	}
+
+	.feed-url {
+		cursor: pointer;
 	}
 </style>
