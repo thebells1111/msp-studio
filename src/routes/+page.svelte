@@ -5,7 +5,7 @@
 
 	import Editor from './Editor.svelte';
 
-	import { catalogDB, library, user } from '$/stores';
+	import { catalogDB, library, user, wpFeedUrl } from '$/stores';
 
 	let isLoading = true;
 
@@ -20,10 +20,11 @@
 				fetch('api/database/fetch-catalog')
 					.then((res) => res.json())
 					.then((data) => {
-						console.log(data);
 						$user.wpCreds = data.wpCreds;
 						$user.urls = data.urls || [];
-						console.log($user);
+						if ($user.urls.length === 1) {
+							$wpFeedUrl = $user.urls[0];
+						}
 					});
 			});
 

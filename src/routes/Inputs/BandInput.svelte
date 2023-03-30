@@ -43,7 +43,6 @@
 		$selectedTrack = $newTrack;
 		$selectedTrackIndex = -1;
 		$selectedScreen = 'albums';
-		showAddNewButton = true;
 	}
 
 	async function saveBand() {

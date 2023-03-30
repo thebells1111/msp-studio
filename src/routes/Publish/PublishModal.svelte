@@ -1,7 +1,6 @@
 <script>
 	import Close from '../icons/Close.svelte';
 	import UploadFile from '../icons/UploadFile.svelte';
-	import FeedUrlSelector from '../Modals/FeedUrlSelector.svelte';
 
 	import {
 		selectedAlbum,
@@ -13,7 +12,8 @@
 		feedFile,
 		selectedBand,
 		selectedAlbumIndex,
-		catalogDB
+		catalogDB,
+		wpFeedUrl
 	} from '$/stores';
 
 	export let showPublishModal = false;
@@ -91,10 +91,6 @@
 			<Close size="24" />
 		</button>
 
-		<label>
-			<h4>WordPress Link</h4>
-			<FeedUrlSelector />
-		</label>
 		<link-container>
 			<label>
 				<h4>Link to Feed (required)</h4>

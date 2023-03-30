@@ -3,7 +3,8 @@
 	import FileUploader from './FileUploader.svelte';
 	import Close from '../icons/Close.svelte';
 
-	import { currentModal } from '$/stores';
+	import { currentModal, wpFeedUrl } from '$/stores';
+	import FeedUrlSelector from './FeedUrlSelector.svelte';
 
 	function closeModal() {
 		$currentModal = '';
@@ -23,7 +24,12 @@
 				{/if}
 
 				{#if $currentModal === 'fileUploader'}
-					<FileUploader />
+					{#if $wpFeedUrl}
+						{$wpFeedUrl}
+						<FileUploader />
+					{:else}
+						<FeedUrlSelector />
+					{/if}
 				{/if}
 			</container>
 		</modal>
