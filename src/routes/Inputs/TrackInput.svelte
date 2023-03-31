@@ -28,6 +28,7 @@
 	let newTrackValue = [];
 	let newTrackDescription = '';
 	let explicit = 'no';
+	let uploadWarning = '';
 	export let showEdit = false;
 
 	onMount(() => {
@@ -85,6 +86,8 @@
 			$uploadFileType = 'image';
 			$uploadFileText = 'Upload Track Image';
 			$selectedTrack.title = newTrackName;
+		} else {
+			uploadWarning = 'Dont forget to add an Album Name before uploading files.';
 		}
 	}
 
@@ -95,7 +98,13 @@
 			$uploadFileType = 'audio';
 			$uploadFileText = 'Upload Track Audio File';
 			$selectedTrack.title = newTrackName;
+		} else {
+			uploadWarning = 'Dont forget to add a Track Name before uploading files.';
 		}
+	}
+
+	function closeWarning() {
+		uploadWarning = '';
 	}
 </script>
 
@@ -177,6 +186,14 @@
 		</bottom-pane>
 	</track-modal>
 </blurred-background>
+
+{#if uploadWarning}
+	<blurred-background on:click={closeWarning}>
+		<warning-modal>
+			<h1>{uploadWarning}</h1>
+		</warning-modal>
+	</blurred-background>
+{/if}
 
 <style>
 	top-pane {
@@ -330,6 +347,19 @@
 	input::placeholder {
 		color: red;
 		font-weight: bold;
+	}
+
+	warning-modal {
+		backdrop-filter: blur(50px);
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 8px 16px;
+		border-radius: 8px;
+	}
+
+	warning-modal h1 {
+		color: red;
+		font-weight: 700;
+		text-align: center;
 	}
 
 	@media screen and (max-width: 992px) {

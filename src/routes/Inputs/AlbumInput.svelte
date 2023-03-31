@@ -26,6 +26,7 @@
 	let newAlbumValue = [];
 	let newAlbumDescription = '';
 	let explicit = 'no';
+	let uploadWarning = '';
 
 	onMount(() => {
 		newAlbumName = $selectedAlbum.title || '';
@@ -66,7 +67,13 @@
 			$uploadFileType = 'image';
 			$uploadFileText = 'Upload Album Image';
 			$selectedAlbum.title = newAlbumName;
+		} else {
+			uploadWarning = 'Dont forget to add an Album Name before uploading files.';
 		}
+	}
+
+	function closeWarning() {
+		uploadWarning = '';
 	}
 </script>
 
@@ -140,6 +147,14 @@
 	</album-modal>
 </blurred-background>
 
+{#if uploadWarning}
+	<blurred-background on:click={closeWarning}>
+		<warning-modal>
+			<h1>{uploadWarning}</h1>
+		</warning-modal>
+	</blurred-background>
+{/if}
+
 <style>
 	blurred-background {
 		display: flex;
@@ -170,6 +185,19 @@
 			var(--color-poster-bg-1) 66%
 		);
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+
+	warning-modal {
+		backdrop-filter: blur(50px);
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 8px 16px;
+		border-radius: 8px;
+	}
+
+	warning-modal h1 {
+		color: red;
+		font-weight: 700;
+		text-align: center;
 	}
 
 	bottom-pane {

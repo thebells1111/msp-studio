@@ -25,6 +25,7 @@
 						if ($user.urls.length === 1) {
 							$wpFeedUrl = $user.urls[0];
 						}
+						console.log($user);
 					});
 			});
 
