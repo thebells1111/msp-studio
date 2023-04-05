@@ -24,6 +24,7 @@
 		console.log(data);
 
 		if (data.wpCreds) {
+			$user.wpCreds = true;
 			displayText = 'Credentials Successfully Added';
 			setTimeout(() => {
 				$currentModal = '';
