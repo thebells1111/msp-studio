@@ -1,6 +1,7 @@
 <script>
 	import Close from '../icons/Close.svelte';
 	import UploadFile from '../icons/UploadFile.svelte';
+	import saveAs from 'file-saver';
 
 	import {
 		selectedAlbum,
