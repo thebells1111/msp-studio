@@ -58,7 +58,6 @@
 	function uploadFile() {
 		const file = files[0];
 		const extension = getFileExtension(file.name);
-		console.log(file);
 
 		let allowedExtensions = [];
 		console.log($uploadFileType);
@@ -92,51 +91,16 @@
 			warning = false;
 			const formData = new FormData();
 			formData.append('file', file, fileName);
-			console.log($wpFeedUrl);
-			fetch('api/fileupload', {
+			fetch('/api/savefile', {
 				method: 'POST',
+				body: formData,
 				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ url: $wpFeedUrl })
+					'Content-Disposition': `form-data; filename="${fileName}"`
+				}
 			})
-				.then((response) => response.json())
-				.then(async (result) => {
-					const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
-
-					// Check if the file already exists in WordPress
-					return fetch(`${mediaEndpoint}?search=${fileName}`)
-						.then((response) => response.json())
-						.then((data) => {
-							console.log(data);
-							if (data.length > 0) {
-								const mediaId = data[0].id;
-								return fetch(`${mediaEndpoint}/${mediaId}`, {
-									method: 'PUT',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `attachment; filename="${fileName}"`
-									}
-								});
-							} else {
-								return fetch(mediaEndpoint, {
-									method: 'POST',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `form-data; filename="${fileName}"`
-									}
-								});
-							}
-						});
-				})
 				.then(async (response) => {
 					if (response.ok) {
 						const jsonData = await response.json();
-						$uploadCB(jsonData.source_url);
 						$currentModal = '';
 						isUploading = false;
 					} else {

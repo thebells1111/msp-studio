@@ -149,8 +149,12 @@
 				</label>
 				<label>
 					<h4>Link to Track Image (optional)</h4>
-					<input bind:value={newTrackImage} class="track-img" class:uploadable={$user.wpCreds} />
-					{#if $user.wpCreds}
+					<input
+						bind:value={newTrackImage}
+						class="track-img"
+						class:uploadable={$user.wpCreds || true}
+					/>
+					{#if $user.wpCreds || true}
 						<upload class="img">
 							<button on:click={handleImageUpload}>
 								<UploadFile size="22" />

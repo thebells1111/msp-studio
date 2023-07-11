@@ -46,6 +46,8 @@
 			.catch(function (err) {
 				console.log(err);
 			});
+
+		$wpFeedUrl = 'cool';
 	});
 </script>
 
