@@ -39,6 +39,7 @@
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
 				$library = await Promise.all(_catalog);
 				$library = $library;
+				console.log($library);
 				setTimeout(() => {
 					isLoading = false;
 				}, 2000);
