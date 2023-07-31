@@ -40,7 +40,7 @@
 </script>
 
 <header>
-	<h3>Select a Band</h3>
+	<h3>Add a Band</h3>
 	<button on:click={() => (showEdit = true)}>
 		<Add size="30" />
 	</button>

@@ -265,15 +265,8 @@
 		padding: 8px 16px;
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
 		display: block;
-		margin: 16px 0 8px 16px;
-		width: 203px;
-	}
-
-	@media screen and (max-width: 992px) {
-		button.publish {
-			height: 54px;
-			margin: 0;
-			max-width: 40%;
-		}
+		margin: 16px auto 8px auto;
+		max-width: 600px;
+		width: calc(100% - 16px);
 	}
 </style>

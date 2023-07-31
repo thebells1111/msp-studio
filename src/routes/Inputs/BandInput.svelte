@@ -58,6 +58,10 @@
 		showEdit = false;
 		add ? addNewBand() : saveBand();
 	}
+
+	function handleSubmit() {
+		add ? addNewBand() : saveBand();
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -69,6 +73,7 @@
 			<p>Band Name</p>
 			<input bind:value={newBandName} placeholder="band name" />
 		</label>
+		<button on:click={handleSubmit}>Submit</button>
 	</band-modal>
 </blurred-background>
 
@@ -92,6 +97,7 @@
 		width: calc(100% - 100px);
 		height: calc(100% - 100px);
 		display: flex;
+		flex-direction: column;
 		border-radius: 8px;
 		background-color: var(--color-poster-bg-0);
 		background-image: linear-gradient(
@@ -103,18 +109,24 @@
 	}
 
 	.band-name {
-		width: 100%;
-		margin: 32px 8px;
+		width: calc(100% - 8px);
+		margin: 32px 8px 8px 8px;
 	}
 
 	.band-name input {
 		margin: 0 8px;
-		width: calc(100% - 24px);
+		width: calc(100% - 36px);
 	}
 
 	p {
 		padding: 0;
 		margin: 0;
+	}
+
+	button {
+		width: 96px;
+		align-self: flex-end;
+		margin-right: 20px;
 	}
 
 	.close {
@@ -124,6 +136,8 @@
 		background-color: transparent;
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
+		width: initial;
+		margin-right: initial;
 	}
 
 	@media screen and (max-width: 992px) {

@@ -1,12 +1,14 @@
 <script>
-	import { slide } from 'svelte/transition';
+	import { slide, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
 	import { dev } from '$app/environment';
 
-	import { user, currentModal } from '$/stores';
+	import { user } from '$/stores';
 
 	let expandMenu = false;
+	let showTutorial = false;
+	let tutorialClicked = false;
 
 	function gotoAlby() {
 		if (dev) {
@@ -28,11 +30,17 @@
 
 <button
 	on:click={() => {
+		showTutorial = true;
+		tutorialClicked = true;
+	}}>Tutorial</button
+>
+<!-- <button
+	on:click={() => {
 		expandMenu = true;
 	}}
 >
 	<AccountIcon size="40" />
-</button>
+</button> -->
 
 {#if expandMenu}
 	<container
@@ -45,14 +53,6 @@
 			<ul transition:slide={{ duration: 200 }}>
 				{#if $user.loggedIn}
 					<li on:click={logout}>Log Out</li>
-					<li
-						on:click={() => {
-							$currentModal = 'preferences';
-							expandMenu = false;
-						}}
-					>
-						Preferences
-					</li>
 				{:else}
 					<li on:click={gotoAlby}>Log In</li>
 				{/if}
@@ -60,6 +60,15 @@
 		</menu>
 	</container>
 {/if}
+
+<tutorial class:show={showTutorial} class:hide={!tutorialClicked}>
+	<button
+		on:click={() => {
+			showTutorial = false;
+		}}>x</button
+	>
+	This is a tutorial
+</tutorial>
 
 <style>
 	container {
@@ -73,9 +82,7 @@
 	}
 
 	button {
-		background-color: transparent;
 		color: var(--color-text-0);
-		padding: 0 8px;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -120,5 +127,44 @@
 	}
 	li:hover {
 		background-color: var(--color-poster-bg-1);
+	}
+
+	tutorial {
+		display: block;
+		height: 100%;
+		width: 100%;
+		position: fixed;
+		top: 0;
+		right: 0;
+		background-color: red;
+		z-index: 50;
+		overflow: hidden;
+		animation: slide-out 0.333s forwards;
+	}
+
+	tutorial.show {
+		animation: slide-in 0.333s;
+	}
+
+	tutorial.hide {
+		display: none;
+	}
+
+	@keyframes slide-in {
+		0% {
+			transform: translateX(100%);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes slide-out {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(100%);
+		}
 	}
 </style>

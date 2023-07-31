@@ -18,8 +18,6 @@
 	{/if}
 </main>
 
-<Modals />
-
 <style>
 	main {
 		padding: 8px;

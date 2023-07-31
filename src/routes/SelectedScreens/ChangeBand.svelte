@@ -20,7 +20,7 @@
 			</span>
 		</span>
 
-		<h1>{$selectedBand.title || 'Blank Band'}</h1>
+		<h2>{$selectedBand.title || 'Blank Band'}</h2>
 	</button>
 </band-name>
 <button
@@ -51,7 +51,7 @@
 		background-color: transparent;
 		padding: 0;
 	}
-	h1 {
+	h2 {
 		margin: 0 0 0 8px;
 		text-align: left;
 	}
@@ -60,7 +60,7 @@
 		width: 203px;
 		background-color: var(--color-bg-select-band);
 		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-		margin: 8px 16px;
+		margin: 0 16px 8px 16px;
 	}
 
 	.edit-circle {
@@ -71,12 +71,5 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-	}
-
-	@media screen and (max-width: 992px) {
-		button.select-band {
-			display: block;
-			margin: 8px auto;
-		}
 	}
 </style>

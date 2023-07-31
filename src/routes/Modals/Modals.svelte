@@ -1,39 +1,20 @@
 <script>
-	import Preferences from './Preferences.svelte';
-	import FileUploader from './FileUploader.svelte';
 	import Close from '../icons/Close.svelte';
 
-	import { currentModal, wpFeedUrl } from '$/stores';
-	import FeedUrlSelector from './FeedUrlSelector.svelte';
-
-	function closeModal() {
-		$currentModal = '';
-	}
+	export let closeModal = () => {};
 </script>
 
-{#if $currentModal}
-	<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-		<modal>
-			<button class="close" on:click={closeModal}>
-				<Close size="24" />
-			</button>
+<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
+	<modal>
+		<button class="close" on:click={closeModal}>
+			<Close size="24" />
+		</button>
 
-			<container>
-				{#if $currentModal === 'preferences'}
-					<Preferences />
-				{/if}
-
-				{#if $currentModal === 'fileUploader'}
-					{#if $wpFeedUrl}
-						<FileUploader />
-					{:else}
-						<FeedUrlSelector />
-					{/if}
-				{/if}
-			</container>
-		</modal>
-	</blurred-background>
-{/if}
+		<container>
+			<slot />
+		</container>
+	</modal>
+</blurred-background>
 
 <style>
 	blurred-background {

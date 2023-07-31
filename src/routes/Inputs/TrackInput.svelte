@@ -4,7 +4,6 @@
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
-	import UploadFile from '../icons/UploadFile.svelte';
 	import clone from 'just-clone';
 
 	import {
@@ -13,12 +12,7 @@
 		selectedAlbum,
 		selectedTrack,
 		selectedTrackIndex,
-		MSPValue,
-		currentModal,
-		uploadCB,
-		uploadFileType,
-		uploadFileText,
-		user
+		MSPValue
 	} from '$/stores';
 
 	let newTrackName = '';
@@ -64,43 +58,11 @@
 	}
 	function closeModal() {
 		showEdit = false;
+	}
+
+	function handleSubmit() {
+		showEdit = false;
 		saveTrack();
-	}
-
-	function setMP3(url) {
-		newTrackEnclosure = { url: url, enclosureLength: '', type: '' };
-		setTimeout(() => {
-			console.log(url);
-			playerEnclosure = url;
-		}, 2000);
-	}
-
-	function setImage(url) {
-		newTrackImage = url;
-	}
-
-	function handleImageUpload() {
-		if (newTrackName) {
-			$currentModal = 'fileUploader';
-			$uploadCB = setImage;
-			$uploadFileType = 'image';
-			$uploadFileText = 'Upload Track Image';
-			$selectedTrack.title = newTrackName;
-		} else {
-			uploadWarning = 'Dont forget to add an Album Name before uploading files.';
-		}
-	}
-
-	function handleAudioUpload() {
-		if (newTrackName) {
-			$currentModal = 'fileUploader';
-			$uploadCB = setMP3;
-			$uploadFileType = 'audio';
-			$uploadFileText = 'Upload Track Audio File';
-			$selectedTrack.title = newTrackName;
-		} else {
-			uploadWarning = 'Dont forget to add a Track Name before uploading files.';
-		}
 	}
 
 	function closeWarning() {
@@ -113,77 +75,57 @@
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
-		<top-pane>
-			<image-pane>
-				<img
-					width="238"
-					height="238"
-					alt={newTrackImage ? `${`${newTrackImage} ` || ''}cover art` : 'add Track Image link'}
-					src={newTrackImage}
-				/>
-			</image-pane>
-			<edit-pane>
-				<label class="track-name">
-					<h4>Track Name (required)</h4>
-					<input
-						bind:value={newTrackName}
-						placeholder={$user.wpCreds ? 'Add a Track Name before uploading files.' : ''}
+		<scroll-container>
+			<top-pane>
+				<image-pane>
+					<img
+						width="238"
+						height="238"
+						alt={newTrackImage ? `${`${newTrackImage} ` || ''}cover art` : 'add Track Image link'}
+						src={newTrackImage}
 					/>
-				</label>
+				</image-pane>
+				<edit-pane>
+					<label class="track-name">
+						<h4>Track Name (required)</h4>
+						<input bind:value={newTrackName} />
+					</label>
 
-				<label>
-					<h4>Link to Track mp3 File (required)</h4>
-					<input
-						bind:value={newTrackEnclosure.url}
-						class="track-mp3"
-						class:uploadable={$user.wpCreds}
-					/>
-					{#if $user.wpCreds}
-						<upload>
-							<button on:click={handleAudioUpload}>
-								<UploadFile size="22" />
-								upload<br />mp3
-							</button>
-						</upload>
-					{/if}
+					<label>
+						<h4>Link to Track mp3 File (required)</h4>
+						<input bind:value={newTrackEnclosure.url} class="track-mp3" class:uploadable={false} />
+					</label>
+					<label>
+						<h4>Link to Track Image (optional)</h4>
+						<input bind:value={newTrackImage} class="track-img" class:uploadable={false} />
+					</label>
+					<explicit>
+						<h4>Explicit Content (optional)</h4>
+						<explicit-radio>
+							<label>
+								<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
+								No
+							</label>
+							<label>
+								<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
+								Yes
+							</label>
+						</explicit-radio>
+					</explicit>
+				</edit-pane>
+			</top-pane>
+			<Player bind:playerEnclosure bind:newTrackEnclosure />
+			<bottom-pane>
+				<label class="track-description">
+					<h4>Track Description</h4>
+					<textarea bind:value={newTrackDescription} />
 				</label>
-				<label>
-					<h4>Link to Track Image (optional)</h4>
-					<input bind:value={newTrackImage} class="track-img" class:uploadable={$user.wpCreds} />
-					{#if $user.wpCreds}
-						<upload class="img">
-							<button on:click={handleImageUpload}>
-								<UploadFile size="22" />
-								upload<br /> image
-							</button>
-						</upload>
-					{/if}
-				</label>
-				<explicit>
-					<h4>Explicit Content (optional)</h4>
-					<explicit-radio>
-						<label>
-							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
-							No
-						</label>
-						<label>
-							<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
-							Yes
-						</label>
-					</explicit-radio>
-				</explicit>
-			</edit-pane>
-		</top-pane>
-		<Player bind:playerEnclosure bind:newTrackEnclosure />
-		<bottom-pane>
-			<label class="track-description">
-				<h4>Track Description</h4>
-				<textarea bind:value={newTrackDescription} />
-			</label>
-			<value>
-				<ValueBlock bind:valueBlock={newTrackValue} />
-			</value>
-		</bottom-pane>
+				<value>
+					<ValueBlock bind:valueBlock={newTrackValue} />
+				</value>
+			</bottom-pane>
+		</scroll-container>
+		<button class="submit" on:click={handleSubmit}>Submit</button>
 	</track-modal>
 </blurred-background>
 
@@ -212,6 +154,19 @@
 	bottom-pane {
 		display: flex;
 		align-items: flex-start;
+	}
+
+	scroll-container {
+		display: block;
+		overflow-y: auto;
+		overflow-x: hidden;
+		height: calc(100% - 98px);
+		padding-bottom: 48px;
+	}
+
+	.submit {
+		width: calc(100% - 16px);
+		margin: 8px;
 	}
 
 	.track-description {
