@@ -2,13 +2,14 @@
 	import { slide, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
+	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
 	import { user } from '$/stores';
 
 	let expandMenu = false;
-	let showTutorial = false;
-	let tutorialClicked = false;
+	let showTutorial = true; //change to false
+	let tutorialClicked = true; //change to false
 
 	function gotoAlby() {
 		if (dev) {
@@ -62,12 +63,7 @@
 {/if}
 
 <tutorial class:show={showTutorial} class:hide={!tutorialClicked}>
-	<button
-		on:click={() => {
-			showTutorial = false;
-		}}>x</button
-	>
-	This is a tutorial
+	<Tutorial bind:showTutorial />
 </tutorial>
 
 <style>
@@ -136,7 +132,6 @@
 		position: fixed;
 		top: 0;
 		right: 0;
-		background-color: red;
 		z-index: 50;
 		overflow: hidden;
 		animation: slide-out 0.333s forwards;
