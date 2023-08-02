@@ -1,5 +1,6 @@
 <script>
 	import parser from 'fast-xml-parser';
+	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 
 	import ErrorModal from './ErrorModal.svelte';
 
@@ -13,7 +14,7 @@
 	let showPublishModal = false;
 	let xmlFile;
 
-	function publishFeed() {
+	async function publishFeed() {
 		rssErrors = [];
 		let js2xml = new parser.j2xParser({
 			attributeNamePrefix: '@_',
@@ -93,8 +94,19 @@
 			rssErrors.push('Add some value to the album');
 		}
 
+		let podcastGuid = $selectedAlbum?.guid;
+		if (podcastGuid) {
+			podcastGuid = await checkPodcastGuid(podcastGuid);
+		} else {
+			podcastGuid = await createNewPodcastGuid();
+		}
+
+		$selectedAlbum.guid = podcastGuid;
+		channel['podcast:guid'] = podcastGuid;
+
+		let uniqueTrackGuids = new Set();
+
 		let items = $selectedAlbum.tracks.map((track, index) => {
-			let title = track.title;
 			let trackJSON = {
 				pubDate:
 					track.pubDate ||
@@ -102,6 +114,18 @@
 				'podcast:season': 1,
 				'podcast:episode': index + 1
 			};
+
+			if (!track.guid) {
+				track.guid = generateTrackGuid();
+				uniqueTrackGuids.add(track.guid);
+				trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: track.guid };
+				$selectedAlbum.tracks[index].guid = track.guid;
+			} else {
+				uniqueTrackGuids.add(track.guid);
+				trackJSON.guid = track.guid;
+			}
+
+			let title = track.title;
 
 			if (track.title) {
 				trackJSON.title = track.title;
@@ -148,12 +172,74 @@
 		let xmlJson = { rss: rss };
 
 		xmlFile = js2xml.parse(xmlJson);
+		console.log(xmlJson);
 		if (rssErrors.length) {
 			showErrorModal = true;
 		} else {
 			$catalogDB.setItem($selectedBand.title, $selectedBand);
 			showPublishModal = true;
 		}
+
+		async function checkPodcastGuid(guid) {
+			let isValidGuid = checkValidGuid(guid);
+
+			if (!isValidGuid) {
+				return await createNewPodcastGuid();
+			} else {
+				return guid;
+			}
+		}
+
+		async function createNewPodcastGuid() {
+			let guid = await generateValidGuid();
+			return guid;
+		}
+
+		function checkValidGuid(input) {
+			const regex = new RegExp(
+				'^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$'
+			);
+			return regex.test(input);
+		}
+
+		async function generateValidGuid() {
+			const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
+			const inputString = uuidv4();
+			const uniqueId = uuidv5(inputString, namespace);
+			let url = `/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${uniqueId}`)}`;
+
+			const res = await fetch(url);
+			const data = await res.json();
+			if (data?.feed?.length) {
+				return generateValidGuid();
+			} else {
+				return uniqueId;
+			}
+		}
+
+		function generateTrackGuid() {
+			let trackGuid;
+			do {
+				trackGuid = generateGuid();
+			} while (!isBlockGuidUnique(trackGuid));
+			return trackGuid;
+		}
+
+		function generateGuid() {
+			let uniqueId = uuidv4();
+			return uniqueId;
+		}
+
+		function isBlockGuidUnique(trackGuid) {
+			if (uniqueTrackGuids.has(trackGuid)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		console.log($selectedAlbum);
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 
 	const escapeAttr = (str) =>
