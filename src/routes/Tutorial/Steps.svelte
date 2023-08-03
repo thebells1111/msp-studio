@@ -4,11 +4,11 @@
 
 	let activeIndex = writable(0);
 	let Component;
-	export let folder;
+	export let directory;
 	export let max = 0;
 
 	async function loadComponent(index) {
-		const module = await import(`./${folder}/${index}.svelte`);
+		const module = await import(`${directory}/${index}.svelte`);
 		Component = module.default;
 	}
 

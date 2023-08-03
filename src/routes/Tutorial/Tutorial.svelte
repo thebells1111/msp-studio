@@ -1,10 +1,22 @@
 <script>
-	import Steps from './Steps.svelte';
-
 	export let showTutorial;
-	let folder = '';
-	const maxFileIndex = { WP: 9 };
-	$: max = folder ? maxFileIndex[folder] : 0;
+
+	let folder = 'WP';
+	let chapter = '';
+	let Component;
+
+	async function loadComponent(folder) {
+		console.log(folder);
+		if (folder) {
+			const module = await import(`./${folder}/TOC.svelte`);
+			Component = module.default;
+		}
+	}
+
+	let folderNames = { WP: 'WordPress' };
+	let chapterNames = { WP: { setupFolders: 'Setup Album Folder' } };
+
+	$: loadComponent(folder);
 </script>
 
 <button
@@ -38,8 +50,28 @@
 		>
 			Tutorials
 		</button>
+		{#if folder}
+			<button
+				class="back"
+				on:click={() => {
+					chapter = '';
+				}}
+			>
+				{folderNames[folder]}
+			</button>
+		{/if}
+		{#if folder && chapter}
+			<button
+				class="back"
+				on:click={() => {
+					chapter = '';
+				}}
+			>
+				{chapterNames[folder][chapter]}
+			</button>
+		{/if}
 		<folder-container>
-			<Steps {folder} {max} />
+			<svelte:component this={Component} bind:chapter />
 		</folder-container>
 	{/if}
 </div>
