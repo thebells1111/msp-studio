@@ -119,9 +119,15 @@
 				track.guid = generateTrackGuid();
 				uniqueTrackGuids.add(track.guid);
 				trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: track.guid };
-				$selectedAlbum.tracks[index].guid = track.guid;
+				$selectedAlbum.tracks[index].guid = trackJSON.guid;
 			} else {
-				uniqueTrackGuids.add(track.guid);
+				uniqueTrackGuids.add(track.guid?.['#text'] || track.guid);
+				if (!track.guid?.['!_isPermakLink']) {
+					track.guid = {
+						['@_isPermaLink']: 'false',
+						['#text']: track.guid?.['#text'] || track.guid
+					};
+				}
 				trackJSON.guid = track.guid;
 			}
 
