@@ -6,7 +6,7 @@
 		name: 'catalogDB'
 	});
 
-	let feedUrl = 'https://www.sirtjthewrathful.com/wp-content/uploads/2023/07/Bloodshot-Lies.xml';
+	let feedUrl = '';
 	let feedImported = false;
 	let importing = false;
 	let badUrl = false;
