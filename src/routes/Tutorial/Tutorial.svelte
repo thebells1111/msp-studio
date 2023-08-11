@@ -3,10 +3,10 @@
 
 	let folder = 'WP';
 	let chapter = '';
+	let chapterName = '';
 	let Component;
 
 	async function loadComponent(folder) {
-		console.log(folder);
 		if (folder) {
 			const module = await import(`./${folder}/TOC.svelte`);
 			Component = module.default;
@@ -14,7 +14,6 @@
 	}
 
 	let folderNames = { WP: 'WordPress' };
-	let chapterNames = { WP: { setupFolders: 'Setup Album Folder' } };
 
 	$: loadComponent(folder);
 </script>
@@ -61,17 +60,12 @@
 			</button>
 		{/if}
 		{#if folder && chapter}
-			<button
-				class="back"
-				on:click={() => {
-					chapter = '';
-				}}
-			>
-				{chapterNames[folder][chapter]}
+			<button class="back">
+				{chapterName}
 			</button>
 		{/if}
 		<folder-container>
-			<svelte:component this={Component} bind:chapter />
+			<svelte:component this={Component} bind:chapter bind:chapterName />
 		</folder-container>
 	{/if}
 </div>
