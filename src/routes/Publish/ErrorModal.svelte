@@ -28,9 +28,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;

@@ -1,3 +1,5 @@
+<img src="./tut/msp/album/msp-9.png" alt="adding ln address stuff" />
+
 <p>First, add your name, or the name of the person you're giving a split to.</p>
 
 <p>
@@ -15,6 +17,7 @@
 <style>
 	img {
 		margin: 0 auto;
+		max-width: calc(100vw -  32px);
 	}
 
 	li {

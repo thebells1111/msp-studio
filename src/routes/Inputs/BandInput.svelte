@@ -16,7 +16,8 @@
 		selectedTrackIndex,
 		newTrack,
 		catalogDB,
-		selectedScreen
+		selectedScreen,
+		showTutorial
 	} from '$/stores';
 
 	export let add = false;
@@ -66,6 +67,12 @@
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 	<band-modal transition:fade={{ duration: 25 }}>
+		<button
+			class="tutorial"
+			on:click={() => {
+				$showTutorial = true;
+			}}>Tutorial</button
+		>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
@@ -82,20 +89,20 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 99;
+		z-index: 34;
 		backdrop-filter: blur(5px);
 	}
 
 	band-modal {
 		position: relative;
-		width: calc(100% - 100px);
-		height: calc(100% - 100px);
+		width: calc(100% - 50px);
+		height: calc(100% - 50px);
 		display: flex;
 		flex-direction: column;
 		border-radius: 8px;
@@ -138,6 +145,11 @@
 		color: rgba(255, 255, 255, 0.75);
 		width: initial;
 		margin-right: initial;
+	}
+
+	.tutorial {
+		align-self: flex-start;
+		margin: 8px 8px 0 8px;
 	}
 
 	@media screen and (max-width: 992px) {

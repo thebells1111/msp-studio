@@ -5,10 +5,9 @@
 	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
-	import { user } from '$/stores';
+	import { user, showTutorial } from '$/stores';
 
 	let expandMenu = false;
-	let showTutorial = true; //change to false
 	let tutorialClicked = true; //change to false
 
 	function gotoAlby() {
@@ -31,10 +30,11 @@
 
 <button
 	on:click={() => {
-		showTutorial = true;
+		$showTutorial = true;
 		tutorialClicked = true;
 	}}>Tutorial</button
 >
+
 <!-- <button
 	on:click={() => {
 		expandMenu = true;
@@ -62,8 +62,8 @@
 	</container>
 {/if}
 
-<tutorial class:show={showTutorial} class:hide={!tutorialClicked}>
-	<Tutorial bind:showTutorial />
+<tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
+	<Tutorial />
 </tutorial>
 
 <style>
@@ -82,10 +82,9 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		position: absolute;
-		top: 8px;
-		right: 0;
 		z-index: 33;
+		margin: 10px 8px 0 10px;
+		position: relative;
 	}
 
 	account-button-hover {
@@ -135,6 +134,7 @@
 		z-index: 50;
 		overflow: hidden;
 		animation: slide-out 0.333s forwards;
+		z-index: 40;
 	}
 
 	tutorial.show {

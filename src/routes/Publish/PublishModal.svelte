@@ -7,7 +7,7 @@
 	export let showPublishModal = false;
 	export let xmlFile;
 
-	let feedUrl = '';
+	let feedUrl = 'https://eldingar.com/msp/album-1/album%201.xml';
 
 	let displayText = ``;
 
@@ -20,23 +20,34 @@
 		<br/> <br/>Then replace your old file with the new file.`;
 		var blob = new Blob([xmlFile], { type: 'text/plain;charset=utf-8' });
 
-		saveAs(blob, `${title}.xml`);
+		saveAs(blob, `${title.toLowerCase()}.xml`);
 	}
 
 	async function checkPodcastIndex() {
+		if ($selectedAlbum.enclosureUrl && $selectedAlbum.enclosureUrl !== feedUrl) {
+			displayText = `That link doesn't match your previous link`;
+			return;
+		}
 		$selectedAlbum.enclosureUrl = feedUrl;
 		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
 		$catalogDB.setItem($selectedBand.title, $selectedBand);
 
-		let feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
 		const res = await fetch(feed);
-		let data = await res.json();
+		const data = await res.json();
+
+		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
+			$selectedAlbum.guid
+		)}`;
+		const guidRes = await fetch(guidUrl);
+		const guidData = await guidRes.json();
+		console.log(guidData);
 
 		if (data.status === 'true') {
 			podping();
 		} else if (data.status === 'false') {
-			addFeed();
+			// addFeed();
 		}
 	}
 
@@ -49,7 +60,7 @@
 		const data = await res.text();
 		if (data === 'Success!') {
 			displayText =
-				'Feed successfully added to directory. Please wait a few minutes for your changes to appear in the player.';
+				'Feed successfully updated. Please wait a few minutes for your changes to appear in the player.';
 		} else {
 			displayText = data;
 		}
@@ -102,9 +113,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;

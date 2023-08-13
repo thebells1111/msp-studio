@@ -17,6 +17,7 @@
 			player.currentTime = player.currentTime;
 		};
 		player.onloadedmetadata = async () => {
+			console.log('loaded');
 			player.duration = player.duration;
 			$selectedTrack.duration = player.duration;
 			const response = await fetch('/api/enclosureproxy?url=' + newTrackEnclosure.url);
@@ -28,35 +29,40 @@
 </script>
 
 <audio playsinline preload="metadata" bind:this={player} src={playerEnclosure} />
-
-<player>
-	<player-a>
-		<play-button>
-			<PlayPauseButton {player} size="30" />
-		</play-button>
-		{#if player}
-			<time>
-				{convertTime(player.currentTime, player.duration) || '0:00'} / {convertTime(
-					player.duration
-				) || '0:00'}
-			</time>
-		{/if}
-	</player-a>
-	<player-b>
-		<AudioProgressBar
-			{player}
-			handleColor={'var(--color-progressbar-0)'}
-			elapsedColor={'var(--color-progressbar-0)'}
-			trackerColor={'var(--color-progressbar-1)'}
-		/>
-	</player-b>
-</player>
+{#if player?.duration}
+	<player>
+		<player-a>
+			<play-button>
+				<PlayPauseButton {player} size="30" />
+			</play-button>
+			{#if player}
+				<time>
+					{convertTime(player.currentTime, player.duration) || '0:00'} / {convertTime(
+						player.duration
+					) || '0:00'}
+				</time>
+			{/if}
+		</player-a>
+		<player-b>
+			<AudioProgressBar
+				{player}
+				handleColor={'var(--color-progressbar-0)'}
+				elapsedColor={'var(--color-progressbar-0)'}
+				trackerColor={'var(--color-progressbar-1)'}
+			/>
+		</player-b>
+	</player>
+{:else}
+	<spacer />
+{/if}
 
 <style>
-	player {
+	player,
+	spacer {
 		display: flex;
 		margin: 8px;
 		width: calc(100% - 32px);
+		height: 48px;
 	}
 
 	player-a {

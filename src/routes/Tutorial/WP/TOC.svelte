@@ -10,10 +10,30 @@
 			name: 'Setup WordPress',
 			folder: './WP/SetupWP',
 			max: 5,
-			next: 'msp',
+			next: 'mspAlbum',
 			previous: 'setupFolders'
 		},
-		msp: { name: 'MSP Build', folder: './MSP', max: 5, previous: 'setupWP' }
+		mspAlbum: {
+			name: 'Build Album',
+			folder: './MSP/Album',
+			max: 10,
+			next: 'mspTrack',
+			previous: 'setupWP'
+		},
+		mspTrack: {
+			name: 'Build Track',
+			folder: './MSP/Track',
+			max: 9,
+			next: 'publish',
+			previous: 'mspAlbum'
+		},
+		publish: {
+			name: 'Publish Album',
+			folder: './Publish',
+			max: 10,
+			next: '',
+			previous: 'mspTrack'
+		}
 	};
 </script>
 

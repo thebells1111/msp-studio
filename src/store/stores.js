@@ -6,6 +6,7 @@ export const library = writable([]);
 
 export const user = writable({ loggedIn: false });
 export const currentModal = writable();
+export const showTutorial = writable(false);
 export const uploadCB = writable(() => {});
 export const uploadFileType = writable();
 export const uploadFileText = writable();

@@ -1,5 +1,5 @@
 <script>
-	export let showTutorial;
+	import { showTutorial } from '$/stores';
 
 	let folder = 'WP';
 	let chapter = '';
@@ -21,7 +21,7 @@
 <button
 	class="close"
 	on:click={() => {
-		showTutorial = false;
+		$showTutorial = false;
 	}}>x</button
 >
 

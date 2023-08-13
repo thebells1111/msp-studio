@@ -10,7 +10,8 @@
 		selectedAlbumIndex,
 		catalogDB,
 		selectedScreen,
-		MSPValue
+		MSPValue,
+		showTutorial
 	} from '$/stores';
 
 	export let showEdit = false;
@@ -61,6 +62,11 @@
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 	<album-modal transition:fade={{ duration: 25 }}>
+		<button
+			on:click={() => {
+				$showTutorial = true;
+			}}>Tutorial</button
+		>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
@@ -134,13 +140,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 99;
+		z-index: 34;
 		backdrop-filter: blur(5px);
 	}
 
@@ -164,7 +170,7 @@
 		display: block;
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100% - 98px);
+		height: calc(100% - 132px);
 		padding-bottom: 48px;
 	}
 

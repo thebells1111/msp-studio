@@ -10,6 +10,7 @@
 <style>
 	img {
 		margin: 0 auto;
+		max-width: calc(100vw -  32px);
 	}
 
 	li {

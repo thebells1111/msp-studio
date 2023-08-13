@@ -22,7 +22,7 @@
 	main {
 		padding: 8px;
 		position: relative;
-		height: calc(100% - 16px);
+		height: calc(100% - 106px);
 		overflow: auto;
 	}
 </style>
