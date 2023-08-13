@@ -61,7 +61,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<album-modal transition:fade={{ duration: 25 }}>
+	<album-modal transition:fade|global={{ duration: 25 }}>
 		<button
 			on:click={() => {
 				$showTutorial = true;

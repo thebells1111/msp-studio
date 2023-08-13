@@ -51,7 +51,7 @@
 	>
 		<menu>
 			<account-button-hover />
-			<ul transition:slide={{ duration: 200 }}>
+			<ul transition:slide|global={{ duration: 200 }}>
 				{#if $user.loggedIn}
 					<li on:click={logout}>Log Out</li>
 				{:else}

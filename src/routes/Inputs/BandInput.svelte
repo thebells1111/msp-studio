@@ -66,7 +66,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<band-modal transition:fade={{ duration: 25 }}>
+	<band-modal transition:fade|global={{ duration: 25 }}>
 		<button
 			class="tutorial"
 			on:click={() => {

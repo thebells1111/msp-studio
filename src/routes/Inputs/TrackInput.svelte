@@ -74,7 +74,7 @@
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<track-modal transition:fade={{ duration: 25 }}>
+	<track-modal transition:fade|global={{ duration: 25 }}>
 		<button
 			on:click={() => {
 				$showTutorial = true;
