@@ -43,7 +43,7 @@
 		album.artwork = '';
 		album.tracks = [];
 		album.value = [$MSPValue];
-		album.decription = '';
+		album.description = '';
 		album.explicit = 'no';
 		$selectedAlbum = album;
 		$selectedBand.albums = $selectedBand.albums.concat($selectedAlbum);
