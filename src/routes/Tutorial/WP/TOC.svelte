@@ -5,7 +5,12 @@
 	$: chapterName = directories[chapter]?.name;
 
 	let directories = {
-		setupFolders: { name: 'Setup Album Folder', folder: './SetupFolders', max: 3, next: 'setupWP' },
+		setupFolders: {
+			name: 'Setup Album Folder',
+			folder: '../SetupFolders',
+			max: 3,
+			next: 'setupWP'
+		},
 		setupWP: {
 			name: 'Setup WordPress',
 			folder: './WP/SetupWP',

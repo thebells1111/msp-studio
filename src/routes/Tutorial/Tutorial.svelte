@@ -1,5 +1,6 @@
 <script>
 	import { showTutorial } from '$/stores';
+	import WP from './WP/TOC.svelte';
 
 	let folder = '';
 	let chapter = '';
