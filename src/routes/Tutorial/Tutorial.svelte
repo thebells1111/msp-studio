@@ -1,7 +1,7 @@
 <script>
 	import { showTutorial } from '$/stores';
 
-	let folder = 'WP';
+	let folder = '';
 	let chapter = '';
 	let chapterName = '';
 	let Component;
@@ -50,6 +50,7 @@
 			Tutorials
 		</button>
 		{#if folder}
+			{`>`}
 			<button
 				class="back"
 				on:click={() => {
@@ -60,7 +61,8 @@
 			</button>
 		{/if}
 		{#if folder && chapter}
-			<button class="back">
+			{`>`}
+			<button style={'text-decoration: none; cursor: default'}>
 				{chapterName}
 			</button>
 		{/if}
@@ -75,6 +77,11 @@
 	h4 {
 		text-align: center;
 	}
+	button {
+		background-color: transparent;
+		text-decoration: underline;
+	}
+
 	button.close {
 		color: var(--color-text-0);
 		display: inline-flex;
@@ -85,6 +92,7 @@
 		right: 0;
 		z-index: 33;
 		background-color: transparent;
+		text-decoration: none;
 	}
 
 	div {

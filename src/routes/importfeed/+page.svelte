@@ -2,6 +2,7 @@
 	import { parse } from 'fast-xml-parser';
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
+	import { saveAs } from 'file-saver';
 	const catalogDB = localforage.createInstance({
 		name: 'catalogDB'
 	});
@@ -104,10 +105,77 @@
 			guid: data['podcast:guid']
 		};
 	}
+
+	async function exportFeeds() {
+		let jsonVariable = {};
+
+		try {
+			const keys = await catalogDB.keys();
+			for (const key of keys) {
+				const value = await catalogDB.getItem(key);
+				jsonVariable[key] = value;
+			}
+		} catch (err) {
+			console.log(err);
+		}
+
+		const blob = new Blob([JSON.stringify(jsonVariable)], {
+			type: 'application/json;charset=utf-8'
+		});
+		saveAs(blob, 'catalog.json');
+	}
+
+	async function importFeeds(file) {
+		const reader = new FileReader();
+		reader.onload = async (event) => {
+			const jsonVariable = JSON.parse(event.target.result);
+			try {
+				for (const [key, value] of Object.entries(jsonVariable)) {
+					await catalogDB.setItem(key, value);
+				}
+				console.log('Data imported successfully.');
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		reader.readAsText(file);
+	}
+
+	function handleDrop(event) {
+		event.preventDefault();
+		dragOver = false;
+		const file = event.dataTransfer.files[0]; // Correctly retrieve the dropped file
+		importFeeds(file);
+	}
+
+	let dragOver = false;
+
+	function handleDragOver(event) {
+		event.preventDefault();
+		dragOver = true;
+	}
+
+	function handleDragLeave() {
+		dragOver = false;
+	}
+
+	let files;
 </script>
 
 <div>
 	<input bind:value={feedUrl} /> <button on:click={getFeed.bind(this, feedUrl)}>Find Feed</button>
+</div>
+<button on:click={exportFeeds}>Export Feeds</button>
+<div
+	id="dropBox"
+	on:dragover={handleDragOver}
+	on:dragleave={handleDragLeave}
+	on:drop={handleDrop}
+	class:dragOver
+	style="width: 300px; height: 150px; border: 2px dashed #aaa; text-align: center; padding: 50px;"
+>
+	Drag & Drop your JSON file here
+	<input type="file" hidden bind:files on:change={importFeeds} />
 </div>
 
 {#if feedImported}
@@ -130,5 +198,9 @@
 	}
 	h2 {
 		text-align: center;
+	}
+
+	.dragOver {
+		border-color: #000;
 	}
 </style>

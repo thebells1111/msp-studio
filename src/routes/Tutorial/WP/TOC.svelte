@@ -30,7 +30,7 @@
 		publish: {
 			name: 'Publish Album',
 			folder: './Publish',
-			max: 10,
+			max: 5,
 			next: '',
 			previous: 'mspTrack'
 		}
@@ -38,9 +38,22 @@
 </script>
 
 {#if !chapter}
-	{#each Object.keys(directories) as chap}
-		<button on:click={() => (chapter = chap)}> {directories[chap].name}</button>
-	{/each}
+	<div>
+		{#each Object.keys(directories) as chap}
+			<button on:click={() => (chapter = chap)}> {directories[chap].name}</button>
+		{/each}
+	</div>
 {:else}
 	<Steps {directories} bind:chapter />
 {/if}
+
+<style>
+	div {
+		margin-top: 16px;
+	}
+	button {
+		display: block;
+		background-color: transparent;
+		text-decoration: underline;
+	}
+</style>

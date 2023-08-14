@@ -8,7 +8,8 @@
 	import { user, showTutorial } from '$/stores';
 
 	let expandMenu = false;
-	let tutorialClicked = true; //change to false
+	$showTutorial = false;
+	let tutorialClicked = false; //change to false
 
 	function gotoAlby() {
 		if (dev) {
@@ -26,12 +27,15 @@
 		$user = { loggedIn: false };
 		fetch('/api/alby/logout');
 	}
+
+	$: if ($showTutorial) {
+		tutorialClicked = true;
+	}
 </script>
 
 <button
 	on:click={() => {
 		$showTutorial = true;
-		tutorialClicked = true;
 	}}>Tutorial</button
 >
 

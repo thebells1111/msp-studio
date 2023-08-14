@@ -28,14 +28,12 @@
 			displayText = `That link doesn't match your previous link`;
 			return;
 		}
-		$selectedAlbum.enclosureUrl = feedUrl;
-		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
 
 		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
 		const res = await fetch(feed);
 		const data = await res.json();
+		console.log(data);
 
 		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
 			$selectedAlbum.guid
@@ -44,11 +42,20 @@
 		const guidData = await guidRes.json();
 		console.log(guidData);
 
-		if (data.status === 'true') {
+		if (guidData.status === 'true' && guidData.feed.length) {
+		}
+
+		if (data?.status === 'true') {
+			console.log('podping');
 			podping();
-		} else if (data.status === 'false') {
+		} else if (data?.status === 'false' && !guidData?.feed?.length) {
+			console.log('addFeed');
+			$selectedAlbum.enclosureUrl = feedUrl;
 			// addFeed();
 		}
+
+		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
+		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 
 	async function podping() {
