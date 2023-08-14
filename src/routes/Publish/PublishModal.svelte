@@ -7,7 +7,7 @@
 	export let showPublishModal = false;
 	export let xmlFile;
 
-	let feedUrl = 'https://eldingar.com/msp/album-1/album%201.xml';
+	let feedUrl = '';
 
 	let displayText = ``;
 
@@ -51,7 +51,7 @@
 		} else if (data?.status === 'false' && !guidData?.feed?.length) {
 			console.log('addFeed');
 			$selectedAlbum.enclosureUrl = feedUrl;
-			// addFeed();
+			addFeed();
 		}
 
 		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
