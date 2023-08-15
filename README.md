@@ -6,7 +6,6 @@ Listen to [Halfway To Somewhere by Late Night Special](https://musicsideproject.
 
 [Music Side Project Studio](https://studio.musicsideproject.com/) is a versatile tool designed to help you create RSS feeds with ease, streamlining the process of uploading content to a WordPress site that you maintain ownership of. Take control of your music distribution and monetization, and embark on a thriving, independent career with Music Side Project Studio. Explore our GitHub repository to get started on revolutionizing your music journey!
 
-
 ## Demonstration Video
 
 [![Music Side Project Studio Demonstration Video](https://studio.musicsideproject.com/msp-play.png)](https://www.youtube.com/watch?v=2HDyelkS9Ck)
