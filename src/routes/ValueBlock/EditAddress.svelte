@@ -42,7 +42,7 @@
 				info = undefined;
 			}
 		} else if (provider === 'Fountain') {
-			let res = await fetch(` https://fountain.fm/.well-known/keysend/${name[0]}`);
+			let res = await fetch(`https://fountain.fm/.well-known/keysend/${name[0]}`);
 			let info;
 			try {
 				info = await res.json();
