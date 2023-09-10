@@ -10,6 +10,7 @@
 	let feedUrl = '';
 
 	let displayText = ``;
+	let duplicateEnclosure = false;
 
 	function closeModal() {
 		showPublishModal = false;
@@ -23,12 +24,17 @@
 		saveAs(blob, `${title.toLowerCase()}.xml`);
 	}
 
-	async function checkPodcastIndex() {
+	function checkEnclosure() {
 		if ($selectedAlbum.enclosureUrl && $selectedAlbum.enclosureUrl !== feedUrl) {
-			displayText = `That link doesn't match your previous link`;
+			duplicateEnclosure = true;
 			return;
+		} else {
+			checkPodcastIndex();
 		}
+	}
 
+	async function checkPodcastIndex() {
+		$selectedAlbum.enclosureUrl = feedUrl;
 		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
 		const res = await fetch(feed);
@@ -50,7 +56,6 @@
 			podping();
 		} else if (data?.status === 'false' && !guidData?.feed?.length) {
 			console.log('addFeed');
-			$selectedAlbum.enclosureUrl = feedUrl;
 			addFeed();
 		}
 
@@ -103,10 +108,21 @@
 					<input bind:value={feedUrl} />
 				</label>
 			</link-container>
-			{#if feedUrl?.endsWith('.xml')}
-				<h3>Add your feed to the Podcast Index<br />or<br />Podping an existing feed.</h3>
 
-				<button class="directory" on:click={checkPodcastIndex}>Update Podcast Index</button>
+			{#if feedUrl?.endsWith('.xml')}
+				{#if duplicateEnclosure}
+					<h3>That link doesn't match your previous link</h3>
+					<h3>Here's your previous link:</h3>
+					<h3>{$selectedAlbum.enclosureUrl}</h3>
+
+					<button class="directory" on:click={checkEnclosure}
+						>I'm positive my feed is not in the Podcast Index.<br />Add my feed.</button
+					>
+				{:else}
+					<h3>Add your feed to the Podcast Index<br />or<br />Podping an existing feed.</h3>
+
+					<button class="directory" on:click={checkEnclosure}>Update Podcast Index</button>
+				{/if}
 			{/if}
 		</button-container>
 		<warning>
@@ -191,6 +207,7 @@
 
 	.directory {
 		background-color: var(--color-bg-add-directory);
+		border-radius: 100px;
 	}
 
 	.download {
