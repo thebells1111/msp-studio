@@ -33,19 +33,23 @@
 	}
 </script>
 
-<button
-	on:click={() => {
-		$showTutorial = true;
-	}}>Tutorial</button
->
+<nav>
+	<button
+		on:click={() => {
+			$showTutorial = true;
+		}}>Tutorial</button
+	>
 
-<!-- <button
-	on:click={() => {
-		expandMenu = true;
-	}}
->
-	<AccountIcon size="40" />
-</button> -->
+	<a href="https://t.me/self_hosters">Help</a>
+
+	<!-- <button
+		on:click={() => {
+			expandMenu = true;
+		}}
+	>
+		<AccountIcon size="40" />
+	</button> -->
+</nav>
 
 {#if expandMenu}
 	<container
@@ -71,6 +75,11 @@
 </tutorial>
 
 <style>
+	nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 	container {
 		width: 100vw;
 		height: 100vh;
@@ -89,6 +98,13 @@
 		z-index: 33;
 		margin: 10px 8px 0 10px;
 		position: relative;
+	}
+
+	a {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0 16px;
 	}
 
 	account-button-hover {
