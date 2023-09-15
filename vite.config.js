@@ -8,7 +8,8 @@ const config = {
 			// these are the aliases and paths to them
 			$functions: path.resolve('src', 'functions'),
 			$: path.resolve('src', 'store'),
-			$icons: path.resolve('src', 'routes', 'icons')
+			$icons: path.resolve('src', 'routes', 'icons'),
+			$routes: path.resolve('src', 'routes')
 		}
 	}
 };

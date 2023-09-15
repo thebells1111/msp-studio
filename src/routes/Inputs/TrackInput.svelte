@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
+	import ChaptersTranscripts from './ChaptersTranscripts.svelte';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
@@ -125,12 +126,15 @@
 			<Player bind:playerEnclosure bind:newTrackEnclosure />
 			<bottom-pane>
 				<label class="track-description">
-					<h4>Track Description</h4>
+					<h4>Track Liner Notes (optional - but recommended)</h4>
 					<textarea bind:value={newTrackDescription} />
 				</label>
-				<value>
-					<ValueBlock bind:valueBlock={newTrackValue} />
-				</value>
+				<pane-2>
+					<ChaptersTranscripts />
+					<value>
+						<ValueBlock bind:valueBlock={newTrackValue} />
+					</value>
+				</pane-2>
 			</bottom-pane>
 		</scroll-container>
 		<button class="submit" on:click={handleSubmit}>Submit</button>
@@ -202,10 +206,18 @@
 		padding: 0;
 		margin: 0;
 	}
+	pane-2 {
+		display: flex;
+		flex-grow: 1;
+		flex-direction: column;
+		width: 100%;
+		align-items: center;
+	}
 
 	value {
 		margin-left: 8px;
-		flex-grow: 1;
+
+		width: 100%;
 	}
 
 	explicit {
@@ -279,33 +291,6 @@
 	.track-mp3.uploadable {
 		margin: 0 8px;
 		width: calc(100% - 84px);
-	}
-
-	upload {
-		display: inline-flex;
-		position: relative;
-		height: 12px;
-		width: 12px;
-	}
-
-	upload button {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		font-size: 0.7em;
-		padding: 0;
-		width: 56px;
-		height: 56px;
-		border-radius: 50%;
-		position: absolute;
-		top: -25px;
-		right: -50px;
-		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-	}
-
-	upload.img button {
-		background-color: var(--color-bg-button-upload-0);
 	}
 
 	input::placeholder {

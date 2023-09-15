@@ -168,6 +168,19 @@
 				trackJSON['podcast:value'] = buildValue(track.value, title);
 			}
 
+			if (track.chapters) {
+				trackJSON['podcast:chapters'] = { '@_url': track.chapters, '@_type': 'application/json' };
+			}
+
+			if (track.transcripts) {
+				trackJSON['podcast:transcript'] = [
+					{
+						'@_url': track.transcripts,
+						'@_type': 'application/srt'
+					}
+				];
+			}
+
 			return trackJSON;
 		});
 

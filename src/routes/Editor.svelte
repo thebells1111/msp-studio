@@ -3,7 +3,7 @@
 	import SelectBandScreen from './SelectedScreens/SelectBandScreen.svelte';
 	import SelectAlbumScreen from './SelectedScreens/SelectAlbumScreen.svelte';
 	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
-	import Modals from './Modals/Modals.svelte';
+
 	import { selectedScreen } from '$/stores';
 </script>
 

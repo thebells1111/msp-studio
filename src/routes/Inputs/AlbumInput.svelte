@@ -115,7 +115,7 @@
 			</top-container>
 			<bottom-pane>
 				<label class="album-description">
-					<h4>Album Description (required)</h4>
+					<h4>Album Liner Notes (required)<br /> Tell the audience the story of this album</h4>
 					<textarea bind:value={newAlbumDescription} />
 				</label>
 				<value>
@@ -170,7 +170,7 @@
 		display: block;
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100% - 132px);
+		height: calc(100% - 140px);
 		padding-bottom: 48px;
 	}
 
