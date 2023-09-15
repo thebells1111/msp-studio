@@ -36,7 +36,7 @@
 <button
 	on:click={() => {
 		showChaptersUpload = true;
-	}}>Add Chapters and Transcripts</button
+	}}>Add Chapters and Lyrics</button
 >
 
 {#if showChaptersUpload}
