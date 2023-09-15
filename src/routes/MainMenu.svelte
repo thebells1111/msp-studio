@@ -40,7 +40,7 @@
 		}}>Tutorial</button
 	>
 
-	<a href="https://t.me/self_hosters">Help</a>
+	<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
 
 	<!-- <button
 		on:click={() => {
