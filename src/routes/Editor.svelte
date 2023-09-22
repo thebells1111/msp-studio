@@ -5,9 +5,13 @@
 	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
 
 	import { selectedScreen } from '$/stores';
+
+	import Action from './Action.svelte';
 </script>
 
 <MainMenu />
+<Action />
+
 <main>
 	{#if $selectedScreen === 'bands'}
 		<SelectBandScreen />
