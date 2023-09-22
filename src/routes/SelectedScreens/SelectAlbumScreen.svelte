@@ -43,7 +43,7 @@
 		album.artwork = '';
 		album.tracks = [];
 		album.value = [$MSPValue];
-		album.decription = '';
+		album.description = '';
 		album.explicit = 'no';
 		$selectedAlbum = album;
 		$selectedBand.albums = $selectedBand.albums.concat($selectedAlbum);
@@ -54,7 +54,7 @@
 
 <ChangeBand />
 <header>
-	<h3>Select an Album</h3>
+	<h3>Add an Album</h3>
 	<button
 		on:click={() => {
 			addNewAlbum();
@@ -68,15 +68,10 @@
 	{#each $selectedBand?.albums || [] as album, i}
 		<li>
 			<img width="50" height="50" src={album.artwork || './msp-record-300.png'} />
-			<h3 on:click={selectAlbum.bind(this, album, i)}>{album.title || 'Blank Album'}</h3>
-			<button
-				on:click|stopPropagation={deleteItem.bind(
-					this,
-					album.title || 'Blank Album',
-					deleteAlbum.bind(this, i)
-				)}
-				class="delete"
-			>
+			<h3 on:click={selectAlbum.bind(this, album, i)}>
+				{album.title || 'Blank Album'}
+			</h3>
+			<button on:click|stopPropagation={deleteAlbum.bind(this, i)} class="delete">
 				<Delete size="30" />
 			</button>
 		</li>
@@ -84,7 +79,7 @@
 </ul>
 
 {#if showEdit}
-	<div transition:slide={{ duration: 25 }}>
+	<div transition:slide|global={{ duration: 25 }}>
 		<AlbumInput bind:showEdit />
 	</div>
 {/if}

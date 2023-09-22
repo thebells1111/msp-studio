@@ -3,7 +3,6 @@
 	import { fade } from 'svelte/transition';
 	import Close from '../icons/Close.svelte';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
-	import UploadFile from '../icons/UploadFile.svelte';
 
 	import {
 		selectedBand,
@@ -12,11 +11,7 @@
 		catalogDB,
 		selectedScreen,
 		MSPValue,
-		currentModal,
-		uploadCB,
-		uploadFileType,
-		uploadFileText,
-		user
+		showTutorial
 	} from '$/stores';
 
 	export let showEdit = false;
@@ -53,97 +48,82 @@
 
 	function closeModal() {
 		showEdit = false;
-		saveAlbum();
-	}
-
-	function setImage(url) {
-		newAlbumImage = url;
-	}
-
-	function handleImageUpload() {
-		if (newAlbumName) {
-			$currentModal = 'fileUploader';
-			$uploadCB = setImage;
-			$uploadFileType = 'image';
-			$uploadFileText = 'Upload Album Image';
-			$selectedAlbum.title = newAlbumName;
-		} else {
-			uploadWarning = 'Dont forget to add an Album Name before uploading files.';
-		}
 	}
 
 	function closeWarning() {
 		uploadWarning = '';
 	}
+
+	function handleSubmit() {
+		showEdit = false;
+		saveAlbum();
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<album-modal transition:fade={{ duration: 25 }}>
+	<album-modal transition:fade|global={{ duration: 25 }}>
+		<button
+			on:click={() => {
+				$showTutorial = true;
+			}}>Tutorial</button
+		>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
+		<scroll-container>
+			<top-container>
+				<img
+					width="258"
+					height="258"
+					alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
+					src={newAlbumImage}
+				/>
 
-		<top-container>
-			<img
-				width="258"
-				height="258"
-				alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
-				src={newAlbumImage}
-			/>
-			<album-inputs>
-				<album-name>
-					<label>
-						<p>Album Name (required)</p>
-						<input
-							bind:value={newAlbumName}
-							placeholder={$user.wpCreds ? 'Add an Album Name before uploading files.' : ''}
-						/>
-					</label>
-				</album-name>
-				<album-image class:uploadable={$user.wpCreds}>
-					<label>
-						<p>Link to Album Image (required)</p>
-						<input bind:value={newAlbumImage} />
-						{#if $user.wpCreds}
-							<upload>
-								<button on:click={handleImageUpload}>
-									<UploadFile size="24" />
-									upload <br /> image
-								</button>
-							</upload>
-						{/if}
-					</label>
-				</album-image>
-				<album-link>
-					<label>
-						<p>Link to Album Website (optional)</p>
-						<input bind:value={newAlbumLink} />
-					</label>
-				</album-link>
-				<explicit>
-					<p>Explicit Content (required)</p>
-					<explicit-radio>
+				<album-inputs>
+					<album-name>
 						<label>
-							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
-							No
+							<p>Album Name (required)</p>
+							<input bind:value={newAlbumName} />
 						</label>
+					</album-name>
+					<album-image class:uploadable={false}>
 						<label>
-							<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
-							Yes
+							<p>Link to Album Image (required)</p>
+							<input bind:value={newAlbumImage} />
 						</label>
-					</explicit-radio>
-				</explicit>
-			</album-inputs>
-		</top-container>
-		<bottom-pane>
-			<label class="album-description">
-				<h4>Album Description (required)</h4>
-				<textarea bind:value={newAlbumDescription} />
-			</label>
-			<value>
-				<ValueBlock bind:valueBlock={newAlbumValue} />
-			</value>
-		</bottom-pane>
+					</album-image>
+					<album-link>
+						<label>
+							<p>Link to Album Website (optional)</p>
+							<input bind:value={newAlbumLink} />
+						</label>
+					</album-link>
+					<explicit>
+						<p>Explicit Content (required)</p>
+						<explicit-radio>
+							<label>
+								<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
+								No
+							</label>
+							<label>
+								<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
+								Yes
+							</label>
+						</explicit-radio>
+					</explicit>
+				</album-inputs>
+			</top-container>
+			<bottom-pane>
+				<label class="album-description">
+					<h4>Album Liner Notes (required)<br /> Tell the audience the story of this album</h4>
+					<textarea bind:value={newAlbumDescription} />
+				</label>
+				<value>
+					<ValueBlock bind:valueBlock={newAlbumValue} />
+				</value>
+			</bottom-pane>
+		</scroll-container>
+		<button class="submit" on:click={handleSubmit}>Submit</button>
 	</album-modal>
 </blurred-background>
 
@@ -160,13 +140,13 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 99;
+		z-index: 34;
 		backdrop-filter: blur(5px);
 	}
 
@@ -174,8 +154,7 @@
 		position: relative;
 		width: calc(100% - 50px);
 		height: calc(100% - 50px);
-		overflow-y: auto;
-		overflow-x: hidden;
+		overflow: hidden;
 		border-radius: 8px;
 		padding: 8px;
 		background-color: var(--color-poster-bg-0);
@@ -185,6 +164,19 @@
 			var(--color-poster-bg-1) 66%
 		);
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+
+	scroll-container {
+		display: block;
+		overflow-y: auto;
+		overflow-x: hidden;
+		height: calc(100% - 140px);
+		padding-bottom: 48px;
+	}
+
+	.submit {
+		width: calc(100% - 16px);
+		margin: 8px;
 	}
 
 	warning-modal {

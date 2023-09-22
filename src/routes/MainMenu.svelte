@@ -1,12 +1,15 @@
 <script>
-	import { slide } from 'svelte/transition';
+	import { slide, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import AccountIcon from './icons/Account.svelte';
+	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
-	import { user, currentModal } from '$/stores';
+	import { user, showTutorial } from '$/stores';
 
 	let expandMenu = false;
+	$showTutorial = false;
+	let tutorialClicked = false; //change to false
 
 	function gotoAlby() {
 		if (dev) {
@@ -24,15 +27,29 @@
 		$user = { loggedIn: false };
 		fetch('/api/alby/logout');
 	}
+
+	$: if ($showTutorial) {
+		tutorialClicked = true;
+	}
 </script>
 
-<button
-	on:click={() => {
-		expandMenu = true;
-	}}
->
-	<AccountIcon size="40" />
-</button>
+<nav>
+	<button
+		on:click={() => {
+			$showTutorial = true;
+		}}>Tutorial</button
+	>
+
+	<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
+
+	<!-- <button
+		on:click={() => {
+			expandMenu = true;
+		}}
+	>
+		<AccountIcon size="40" />
+	</button> -->
+</nav>
 
 {#if expandMenu}
 	<container
@@ -42,17 +59,9 @@
 	>
 		<menu>
 			<account-button-hover />
-			<ul transition:slide={{ duration: 200 }}>
+			<ul transition:slide|global={{ duration: 200 }}>
 				{#if $user.loggedIn}
 					<li on:click={logout}>Log Out</li>
-					<li
-						on:click={() => {
-							$currentModal = 'preferences';
-							expandMenu = false;
-						}}
-					>
-						Preferences
-					</li>
 				{:else}
 					<li on:click={gotoAlby}>Log In</li>
 				{/if}
@@ -61,7 +70,16 @@
 	</container>
 {/if}
 
+<tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
+	<Tutorial />
+</tutorial>
+
 <style>
+	nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 	container {
 		width: 100vw;
 		height: 100vh;
@@ -73,16 +91,20 @@
 	}
 
 	button {
-		background-color: transparent;
 		color: var(--color-text-0);
-		padding: 0 8px;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		position: absolute;
-		top: 8px;
-		right: 0;
 		z-index: 33;
+		margin: 10px 8px 0 10px;
+		position: relative;
+	}
+
+	a {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0 16px;
 	}
 
 	account-button-hover {
@@ -120,5 +142,44 @@
 	}
 	li:hover {
 		background-color: var(--color-poster-bg-1);
+	}
+
+	tutorial {
+		display: block;
+		height: 100%;
+		width: 100%;
+		position: fixed;
+		top: 0;
+		right: 0;
+		z-index: 50;
+		overflow: hidden;
+		animation: slide-out 0.333s forwards;
+		z-index: 40;
+	}
+
+	tutorial.show {
+		animation: slide-in 0.333s;
+	}
+
+	tutorial.hide {
+		display: none;
+	}
+
+	@keyframes slide-in {
+		0% {
+			transform: translateX(100%);
+		}
+		100% {
+			transform: translateX(0);
+		}
+	}
+
+	@keyframes slide-out {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(100%);
+		}
 	}
 </style>

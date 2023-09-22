@@ -65,66 +65,52 @@
 	}
 </script>
 
-<ChangeBand />
-<ChangeAlbum />
-<button-container>
-	<button
-		on:click={() => {
-			$selectedScreen = 'albums';
-			$selectedAlbum = $newAlbum;
-		}}
-		class="select-album"
-	>
-		Select Different Album
-	</button>
-	<Publish />
-</button-container>
-<select-track>
-	<header>
-		<header-top>
-			<h3>Select a Track</h3>
-			<button on:click={addNewTrack}>
-				<Add size="30" />
-			</button>
-		</header-top>
-	</header>
-	<ul>
-		{#each $selectedAlbum?.tracks || [] as track, i}
-			<li on:click={selectTrack.bind(this, track, i)}>
-				<sorter>
-					{#if i !== 0}
-						<button on:click|stopPropagation={sortTracks.bind(this, i, -1)}>
-							<ExpandLess size="30" />
-						</button>
-					{:else}
-						<spacer />
-					{/if}
-					{#if i !== ($selectedAlbum?.tracks || []).length - 1}
-						<button on:click|stopPropagation={sortTracks.bind(this, i, 1)}>
-							<ExpandMore size="30" />
-						</button>
-					{:else}
-						<spacer />
-					{/if}
-				</sorter>
-				<img width="50" height="50" src={track.artwork || './msp-record-300.png'} />
-				<h3>
-					{track.title || 'Blank Track'}
-				</h3>
-				<button
-					on:click|stopPropagation={deleteItem.bind(
-						this,
-						track.title || 'Blank Track',
-						deleteTrack.bind(this, i)
-					)}
-					class="delete"
-				>
-					<Delete size="30" />
+<select-track-container>
+	<ChangeBand />
+	<ChangeAlbum />
+
+	<select-track>
+		<header>
+			<header-top>
+				<h3>Add a Track</h3>
+				<button on:click={addNewTrack}>
+					<Add size="30" />
 				</button>
-			</li>
-		{/each}
-	</ul>
-</select-track>
+			</header-top>
+		</header>
+		<ul>
+			{#each $selectedAlbum?.tracks || [] as track, i}
+				<li on:click={selectTrack.bind(this, track, i)}>
+					<sorter>
+						{#if i !== 0}
+							<button on:click|stopPropagation={sortTracks.bind(this, i, -1)}>
+								<ExpandLess size="30" />
+							</button>
+						{:else}
+							<spacer />
+						{/if}
+						{#if i !== ($selectedAlbum?.tracks || []).length - 1}
+							<button on:click|stopPropagation={sortTracks.bind(this, i, 1)}>
+								<ExpandMore size="30" />
+							</button>
+						{:else}
+							<spacer />
+						{/if}
+					</sorter>
+					<img width="50" height="50" src={track.artwork || './msp-record-300.png'} />
+					<h3>
+						{track.title || 'Blank Track'}
+					</h3>
+					<button on:click|stopPropagation={deleteTrack.bind(this, i)} class="delete">
+						<Delete size="30" />
+					</button>
+				</li>
+			{/each}
+		</ul>
+	</select-track>
+
+	<Publish />
+</select-track-container>
 
 {#if showEdit}
 	<div>
@@ -133,6 +119,11 @@
 {/if}
 
 <style>
+	select-track-container {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
 	header-top {
 		display: flex;
 		align-items: center;
@@ -141,8 +132,17 @@
 		margin: 0;
 	}
 
+	select-track {
+		display: block;
+		width: calc(100%);
+		margin-top: 8px;
+		flex-grow: 1;
+		overflow: hidden;
+	}
 	ul {
-		padding: 0 0 0 16px;
+		padding: 0 0 0 8px;
+		height: calc(100% - 34px);
+		overflow: auto;
 	}
 
 	li {
@@ -176,14 +176,6 @@
 		height: 26px;
 	}
 
-	select-track {
-		display: block;
-		position: relative;
-		left: 232px;
-		top: -225px;
-		width: calc(100% - 232px);
-	}
-
 	button {
 		color: var(--color-bg-select-track);
 		background-color: transparent;
@@ -199,39 +191,5 @@
 		margin: 0;
 		padding: 8px;
 		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
-	}
-
-	button.select-album {
-		width: 203px;
-		background-color: var(--color-bg-select-album);
-		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-		margin-left: 16px;
-		padding: 8px;
-		color: var(--color-text-0);
-	}
-
-	@media screen and (max-width: 992px) {
-		select-track {
-			display: block;
-			position: relative;
-			left: 0px;
-			top: 0px;
-			width: calc(100%);
-			margin-top: 8px;
-		}
-		ul {
-			padding: 0 0 0 8px;
-		}
-
-		button-container {
-			display: flex;
-			align-items: center;
-			justify-content: space-around;
-		}
-
-		button.select-album {
-			height: 54px;
-			max-width: 40%;
-		}
 	}
 </style>

@@ -3,7 +3,7 @@
 	import SelectBandScreen from './SelectedScreens/SelectBandScreen.svelte';
 	import SelectAlbumScreen from './SelectedScreens/SelectAlbumScreen.svelte';
 	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
-	import Modals from './Modals/Modals.svelte';
+
 	import { selectedScreen } from '$/stores';
 </script>
 
@@ -18,13 +18,11 @@
 	{/if}
 </main>
 
-<Modals />
-
 <style>
 	main {
 		padding: 8px;
 		position: relative;
-		height: calc(100% - 16px);
+		height: calc(100% - 106px);
 		overflow: auto;
 	}
 </style>

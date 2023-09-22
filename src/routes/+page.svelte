@@ -10,24 +10,14 @@
 	let isLoading = true;
 
 	onMount(() => {
-		fetch('/api/alby/refresh')
-			.then((res) => {
-				return res.json();
-			})
-			.then((data) => {
-				$user.loggedIn = data.loggedIn;
-				$user.name = data.name;
-				fetch('api/database/fetch-catalog')
-					.then((res) => res.json())
-					.then((data) => {
-						$user.wpCreds = data.wpCreds;
-						$user.urls = data.urls || [];
-						if ($user.urls.length === 1) {
-							$wpFeedUrl = $user.urls[0];
-						}
-						console.log($user);
-					});
-			});
+		// fetch('/api/alby/refresh')
+		// 	.then((res) => {
+		// 		return res.json();
+		// 	})
+		// 	.then((data) => {
+		// 		$user.loggedIn = data.loggedIn;
+		// 		$user.name = data.name;
+		// 	});
 
 		$catalogDB = localforage.createInstance({
 			name: 'catalogDB'
@@ -39,6 +29,7 @@
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
 				$library = await Promise.all(_catalog);
 				$library = $library;
+				console.log($library);
 				setTimeout(() => {
 					isLoading = false;
 				}, 2000);

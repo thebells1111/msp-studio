@@ -16,7 +16,8 @@
 		selectedTrackIndex,
 		newTrack,
 		catalogDB,
-		selectedScreen
+		selectedScreen,
+		showTutorial
 	} from '$/stores';
 
 	export let add = false;
@@ -58,10 +59,20 @@
 		showEdit = false;
 		add ? addNewBand() : saveBand();
 	}
+
+	function handleSubmit() {
+		add ? addNewBand() : saveBand();
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<band-modal transition:fade={{ duration: 25 }}>
+	<band-modal transition:fade|global={{ duration: 25 }}>
+		<button
+			class="tutorial"
+			on:click={() => {
+				$showTutorial = true;
+			}}>Tutorial</button
+		>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
@@ -69,6 +80,7 @@
 			<p>Band Name</p>
 			<input bind:value={newBandName} placeholder="band name" />
 		</label>
+		<button on:click={handleSubmit}>Submit</button>
 	</band-modal>
 </blurred-background>
 
@@ -77,21 +89,22 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 100%;
-		height: 100%;
-		position: absolute;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 99;
+		z-index: 34;
 		backdrop-filter: blur(5px);
 	}
 
 	band-modal {
 		position: relative;
-		width: calc(100% - 100px);
-		height: calc(100% - 100px);
+		width: calc(100% - 50px);
+		height: calc(100% - 50px);
 		display: flex;
+		flex-direction: column;
 		border-radius: 8px;
 		background-color: var(--color-poster-bg-0);
 		background-image: linear-gradient(
@@ -103,18 +116,24 @@
 	}
 
 	.band-name {
-		width: 100%;
-		margin: 32px 8px;
+		width: calc(100% - 8px);
+		margin: 32px 8px 8px 8px;
 	}
 
 	.band-name input {
 		margin: 0 8px;
-		width: calc(100% - 24px);
+		width: calc(100% - 36px);
 	}
 
 	p {
 		padding: 0;
 		margin: 0;
+	}
+
+	button {
+		width: 96px;
+		align-self: flex-end;
+		margin-right: 20px;
 	}
 
 	.close {
@@ -124,6 +143,13 @@
 		background-color: transparent;
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
+		width: initial;
+		margin-right: initial;
+	}
+
+	.tutorial {
+		align-self: flex-start;
+		margin: 8px 8px 0 8px;
 	}
 
 	@media screen and (max-width: 992px) {
