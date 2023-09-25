@@ -16,7 +16,7 @@
 </script>
 
 <person>
-	<input class="split" type="text" bind:value={person.split} /><span>%</span>
+	<input class="split" type="text" bind:value={person['@_split']} /><span>%</span>
 	<person-name
 		on:click={() => {
 			if (selectedIndex === index) {
@@ -30,7 +30,7 @@
 		<edit>
 			<EditSquare />
 		</edit>
-		<p>{person.name || 'Blank Person'}</p>
+		<p>{person['@_name'] || 'Blank Person'}</p>
 	</person-name>
 	<button class="delete" on:click={deletePerson}>
 		<Delete size="26" />

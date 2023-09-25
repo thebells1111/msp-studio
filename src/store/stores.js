@@ -1,5 +1,9 @@
 import { writable } from 'svelte/store';
+import localforage from 'localforage';
 
+export const feedDB = localforage.createInstance({
+	name: 'feedDB'
+});
 export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
@@ -7,11 +11,10 @@ export const library = writable([]);
 export const user = writable({ loggedIn: false });
 export const currentModal = writable();
 export const showTutorial = writable(false);
-export const uploadCB = writable(() => {});
-export const uploadFileType = writable();
-export const uploadFileText = writable();
 export const feedFile = writable();
-export const wpFeedUrl = writable();
+
+export const feeds = writable({});
+export const editingFeed = writable();
 
 export const selectedBand = writable({ title: '', artwork: '', albums: [] });
 export const selectedBandIndex = writable(-1);
@@ -60,19 +63,21 @@ export const newTrack = writable({
 });
 
 export const MSPValue = writable({
-	name: 'Music Side Project',
-	address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-	key: '696969',
-	value: 'UzrnTK2oEHR55gw7Djmb',
-	split: 5
+	'@_name': 'Music Side Project',
+	'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+	'@_customKey': '696969',
+	'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+	'@_split': '5',
+	'@_type': 'node'
 });
 
 export const newPerson = writable({
-	name: '',
-	address: '',
-	key: '',
-	value: '',
-	split: 0
+	'@_name': '',
+	'@_address': '',
+	'@_customKey': '',
+	'@_customValue': '',
+	'@_split': '',
+	'@_type': 'node'
 });
 
 export const selectedScreen = writable('bands');

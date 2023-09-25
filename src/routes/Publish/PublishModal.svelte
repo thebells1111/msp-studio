@@ -6,13 +6,17 @@
 
 	export let showPublishModal = false;
 	export let xmlFile;
+	export let feed;
 
 	let feedUrl = '';
 
 	let displayText = ``;
 	let duplicateEnclosure = false;
 
+	export let onClose = () => {};
+
 	function closeModal() {
+		onClose();
 		showPublishModal = false;
 	}
 
@@ -34,33 +38,17 @@
 	}
 
 	async function checkPodcastIndex() {
-		$selectedAlbum.enclosureUrl = feedUrl;
-		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
-
-		const res = await fetch(feed);
-		const data = await res.json();
-		console.log(data);
-
 		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
-			$selectedAlbum.guid
+			feed['podcast:guid']
 		)}`;
 		const guidRes = await fetch(guidUrl);
 		const guidData = await guidRes.json();
-		console.log(guidData);
 
 		if (guidData.status === 'true' && guidData.feed.length) {
-		}
-
-		if (data?.status === 'true') {
-			console.log('podping');
 			podping();
 		} else if (data?.status === 'false' && !guidData?.feed?.length) {
-			console.log('addFeed');
-			addFeed();
+			// addFeed();
 		}
-
-		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 
 	async function podping() {
@@ -99,7 +87,7 @@
 				<br />upload the file to your server folder,
 				<br />then enter the link to your feed.
 			</h3>
-			<button class="download" on:click={saveFeed.bind(this, $selectedAlbum.title, xmlFile)}>
+			<button class="download" on:click={saveFeed.bind(this, feed.title, xmlFile)}>
 				Download Feed
 			</button>
 			<link-container>

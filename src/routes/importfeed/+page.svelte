@@ -28,6 +28,7 @@
 			};
 			let xmlJson = parse(feed, parserOptions);
 			let channel = xmlJson.rss.channel;
+			console.log(channel);
 			if (channel) {
 				importing = true;
 				console.log(channel);

@@ -1,0 +1,128 @@
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md">
+  <channel>
+    <generator>Music Side Project Studio</generator>
+    <itunes:category text="Music"/>
+    <itunes:keywords>music</itunes:keywords>
+    <podcast:medium>music</podcast:medium>
+    <itunes:author>b1</itunes:author>
+    <itunes:owner itunes:name="b1" itunes:email=""/>
+    <title>a1</title>
+    <description>d1</description>
+    <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/artwork.png"/>
+    <itunes:explicit>no</itunes:explicit>
+    <link>https://podcastindex.social/home</link>
+    <podcast:value type="lightning" method="keysend">
+      <podcast:valueRecipient type="node" name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="5"/>
+      <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="95" type="node"/>
+      <item>
+        <guid isPermaLink="false">73533e31-2804-43c9-ad05-52ae29365547</guid>
+        <title>t1</title>
+        <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/artwork.png"/>
+        <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/audio.mp3" type="audio/mpeg" length="64036736"/>
+        <description>d1</description>
+        <itunes:explicit>no</itunes:explicit>
+        <podcast:chapters url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/chapters.json" type="application/json"/>
+        <podcast:transcript url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/lyrics.srt" type="application/srt"/>
+        <podcast:value type="lightning" method="keysend">
+          <podcast:valueRecipient name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="100" type="node"/>
+        </podcast:value>
+        <duration>2001.12</duration>
+        <pubDate>Sun, 24 Sep 2023 20:22:42 +0000</pubDate>
+        <podcast:season>1</podcast:season>
+        <podcast:episode>1</podcast:episode>
+        <itunes:duration>00:33:21</itunes:duration>
+      </item>
+      <item>
+        <podcast:value type="lightning" method="keysend">
+          <podcast:valueRecipient type="node" name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="5"/>
+          <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="95" type="node"/>
+        </podcast:value>
+        <duration>2001.12</duration>
+        <guid isPermaLink="false">8253e50c-bb14-4009-b9b8-4a33df60f613</guid>
+        <title>tw</title>
+        <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/artwork.png"/>
+        <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/audio.mp3" type="audio/mpeg" length="64036736"/>
+        <description>t3</description>
+        <itunes:explicit>no</itunes:explicit>
+        <podcast:chapters url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/chapters.json" type="application/json"/>
+        <podcast:transcript url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/lyrics.srt" type="application/srt"/>
+        <pubDate>Sun, 24 Sep 2023 20:21:42 +0000</pubDate>
+        <podcast:season>1</podcast:season>
+        <podcast:episode>2</podcast:episode>
+        <itunes:duration>00:33:21</itunes:duration>
+      </item>
+      <item>
+        <podcast:value type="lightning" method="keysend">
+          <podcast:valueRecipient type="node" name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="5"/>
+          <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="95" type="node"/>
+        </podcast:value>
+        <guid isPermaLink="false">2a405535-652a-4801-a909-3a083691dbfe</guid>
+        <title>t2</title>
+        <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/2a405535-652a-4801-a909-3a083691dbfe/artwork.png"/>
+        <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/2a405535-652a-4801-a909-3a083691dbfe/audio.mp3" type="audio/mpeg" length="64036736"/>
+        <description>t12</description>
+        <itunes:explicit>no</itunes:explicit>
+        <duration>2001.12</duration>
+        <pubDate>Sun, 24 Sep 2023 20:20:42 +0000</pubDate>
+        <podcast:season>1</podcast:season>
+        <podcast:episode>3</podcast:episode>
+        <itunes:duration>00:33:21</itunes:duration>
+      </item>
+    </podcast:value>
+    <podcast:guid>8da7fb1a-42e9-56c0-b995-2c3f430f3a93</podcast:guid>
+    <item>
+      <guid isPermaLink="false">73533e31-2804-43c9-ad05-52ae29365547</guid>
+      <title>t1</title>
+      <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/artwork.png"/>
+      <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/audio.mp3" type="audio/mpeg" length="64036736"/>
+      <description>d1</description>
+      <itunes:explicit>no</itunes:explicit>
+      <podcast:chapters url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/chapters.json" type="application/json"/>
+      <podcast:transcript url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/73533e31-2804-43c9-ad05-52ae29365547/lyrics.srt" type="application/srt"/>
+      <podcast:value type="lightning" method="keysend">
+        <podcast:valueRecipient name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="100" type="node"/>
+      </podcast:value>
+      <duration>2001.12</duration>
+      <pubDate>Sun, 24 Sep 2023 20:22:42 +0000</pubDate>
+      <podcast:season>1</podcast:season>
+      <podcast:episode>1</podcast:episode>
+      <itunes:duration>00:33:21</itunes:duration>
+    </item>
+    <item>
+      <podcast:value type="lightning" method="keysend">
+        <podcast:valueRecipient type="node" name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="5"/>
+        <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="95" type="node"/>
+      </podcast:value>
+      <duration>2001.12</duration>
+      <guid isPermaLink="false">8253e50c-bb14-4009-b9b8-4a33df60f613</guid>
+      <title>tw</title>
+      <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/artwork.png"/>
+      <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/audio.mp3" type="audio/mpeg" length="64036736"/>
+      <description>t3</description>
+      <itunes:explicit>no</itunes:explicit>
+      <podcast:chapters url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/chapters.json" type="application/json"/>
+      <podcast:transcript url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/8253e50c-bb14-4009-b9b8-4a33df60f613/lyrics.srt" type="application/srt"/>
+      <pubDate>Sun, 24 Sep 2023 20:21:42 +0000</pubDate>
+      <podcast:season>1</podcast:season>
+      <podcast:episode>2</podcast:episode>
+      <itunes:duration>00:33:21</itunes:duration>
+    </item>
+    <item>
+      <podcast:value type="lightning" method="keysend">
+        <podcast:valueRecipient type="node" name="Music Side Project" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="UzrnTK2oEHR55gw7Djmb" split="5"/>
+        <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="95" type="node"/>
+      </podcast:value>
+      <guid isPermaLink="false">2a405535-652a-4801-a909-3a083691dbfe</guid>
+      <title>t2</title>
+      <itunes:image href="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/2a405535-652a-4801-a909-3a083691dbfe/artwork.png"/>
+      <enclosure url="http://localhost:3333/albums/8da7fb1a-42e9-56c0-b995-2c3f430f3a93/2a405535-652a-4801-a909-3a083691dbfe/audio.mp3" type="audio/mpeg" length="64036736"/>
+      <description>t12</description>
+      <itunes:explicit>no</itunes:explicit>
+      <duration>2001.12</duration>
+      <pubDate>Sun, 24 Sep 2023 20:20:42 +0000</pubDate>
+      <podcast:season>1</podcast:season>
+      <podcast:episode>3</podcast:episode>
+      <itunes:duration>00:33:21</itunes:duration>
+    </item>
+  </channel>
+</rss>

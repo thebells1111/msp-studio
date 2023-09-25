@@ -28,9 +28,9 @@
 				info = await res.json();
 				console.log(info);
 				if (info.status === 'OK') {
-					selectedPerson.address = info.pubkey;
-					selectedPerson.value = info.customData[0].customValue;
-					selectedPerson.key = info.customData[0].customKey;
+					selectedPerson['@_address'] = info.pubkey;
+					selectedPerson['@_customValue'] = info.customData[0].customValue;
+					selectedPerson['@_customKey'] = info.customData[0].customKey;
 					userFound = name + '@getalby.com';
 				} else {
 					throw new Error();
@@ -47,9 +47,9 @@
 			try {
 				info = await res.json();
 				if (info.status === 'OK') {
-					selectedPerson.address = info.pubkey;
-					selectedPerson.value = info.customData[0].customValue;
-					selectedPerson.key = info.customData[0].customKey;
+					selectedPerson['@_address'] = info.pubkey;
+					selectedPerson['@_customValue'] = info.customData[0].customValue;
+					selectedPerson['@_customKey'] = info.customData[0].customKey;
 					userFound = name + '@fountain.fm';
 				} else {
 					throw new Error();
@@ -61,10 +61,10 @@
 			}
 		} else if (provider === 'v4v.app') {
 			if (name[0]) {
-				selectedPerson.address =
+				selectedPerson['@_address'] =
 					'0266ad2656c7a19a219d37e82b280046660f4d7f3ae0c00b64a1629de4ea567668';
-				selectedPerson.value = name[0];
-				selectedPerson.key = 818818;
+				selectedPerson['@_customValue'] = name[0];
+				selectedPerson['@_customKey'] = 818818;
 				userFound = name;
 
 				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
@@ -107,7 +107,7 @@
 		<h4>Name</h4>
 		<input
 			type="text"
-			bind:value={valueBlock[selectedIndex].name}
+			bind:value={valueBlock[selectedIndex]['@_name']}
 			placeholder="Choose a name so people can send Boostagrams"
 		/>
 	</label>
@@ -142,7 +142,7 @@
 				<h4>Lightning Network Address</h4>
 				<input
 					type="text"
-					bind:value={selectedPerson.address}
+					bind:value={selectedPerson['@_address']}
 					placeholder="Lightning Network Address"
 				/>
 			</label>
@@ -150,7 +150,7 @@
 				<h4>Custom Key</h4>
 				<input
 					type="text"
-					bind:value={selectedPerson.key}
+					bind:value={selectedPerson['@_customKey']}
 					placeholder="(optional) Leave blank unless required by your wallet"
 				/>
 			</label>
@@ -158,7 +158,7 @@
 				<h4>Custom Value</h4>
 				<input
 					type="text"
-					bind:value={selectedPerson.value}
+					bind:value={selectedPerson['@_customValue']}
 					placeholder="(optional) Leave blank unless required by your wallet"
 				/>
 			</label>

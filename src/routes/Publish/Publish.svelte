@@ -1,18 +1,24 @@
 <script>
+	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
 	import parser from 'fast-xml-parser';
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
+	import { v4 as uuidv4 } from 'uuid';
 
 	import ErrorModal from './ErrorModal.svelte';
-
-	import { selectedBand, selectedAlbum, catalogDB } from '$/stores';
 	import PublishModal from './PublishModal.svelte';
+	import ShowXmlPathModal from './ShowXMLPathModal.svelte';
 
-	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
+	import { feeds, feedDB } from '$/stores';
 
 	let rssErrors = [];
 	let showErrorModal = false;
 	let showPublishModal = false;
+	let showXMLModal = false;
 	let xmlFile;
+	export let feed;
+	export let onClose = () => {};
+
+	onMount(publishFeed);
 
 	async function publishFeed() {
 		rssErrors = [];
@@ -36,204 +42,114 @@
 				'https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md'
 		};
 
-		let channel = {
-			generator: 'Music Side Project Studio',
-			'itunes:category': { '@_text': 'Music' },
-			'itunes:keywords': 'music',
-			'podcast:medium': 'music'
-		};
-
-		if ($selectedBand.title) {
-			channel['itunes:author'] = $selectedBand.title;
-			channel['itunes:owner'] = { '@_itunes:name': $selectedBand.title, '@_itunes:email': '' };
-		} else {
+		if (!feed['itunes:author']) {
 			rssErrors.push('Band needs a name');
 		}
 
-		if ($selectedAlbum.title) {
-			channel.title = $selectedAlbum.title;
-		} else {
+		if (!feed.title) {
 			rssErrors.push('Album needs a name');
 		}
 
-		if ($selectedAlbum.description) {
-			channel['description'] = $selectedAlbum.description;
-		} else {
+		if (!feed.description) {
 			rssErrors.push('Album needs a description');
 		}
 
-		if ($selectedAlbum.artwork) {
-			channel['itunes:image'] = { '@_href': $selectedAlbum.artwork };
-		} else {
+		if (!feed['itunes:image']['@_href']) {
 			rssErrors.push('Album needs some artwork');
+		} else if (!feed['itunes:image']['@_href'].includes($page.url.origin)) {
+			feed['itunes:image']['@_href'] = $page.url.origin + feed['itunes:image']['@_href'];
 		}
 
-		if ($selectedAlbum.explicit) {
-			channel['itunes:explicit'] = $selectedAlbum.explicit;
-		} else {
+		if (!feed['itunes:explicit']) {
 			rssErrors.push('Is the album explicit?');
 		}
 
-		if ($selectedAlbum.link) {
-			console.log(isValidUrl($selectedAlbum.link));
-			if (isValidUrl($selectedAlbum.link)) {
-				channel['link'] = $selectedAlbum.link;
-			} else {
-				rssErrors.push('Link to Album Website is an invalid link');
-			}
-		}
-		if ($selectedAlbum.explicit) {
-			channel['itunes:explicit'] = $selectedAlbum.explicit;
-		} else {
-			rssErrors.push('Is the album explicit?');
+		if (!feed.link && !isValidUrl(feed.link)) {
+			rssErrors.push(
+				`Link to Album Website is an invalid link <br/> Use https://musicsideproject.com/ if you don't have your own site.`
+			);
 		}
 
-		if ($selectedAlbum.value) {
-			channel['podcast:value'] = buildValue($selectedAlbum.value, 'Album');
+		if (feed['podcast:value']) {
+			buildValue(feed['podcast:value']['podcast:valueRecipient'], 'Album');
 		} else {
 			rssErrors.push('Add some value to the album');
 		}
 
-		let podcastGuid = $selectedAlbum?.guid;
-		if (podcastGuid) {
-			podcastGuid = await checkPodcastGuid(podcastGuid);
-		} else {
-			podcastGuid = await createNewPodcastGuid();
-		}
-
-		$selectedAlbum.guid = podcastGuid;
-		channel['podcast:guid'] = podcastGuid;
-
 		let uniqueTrackGuids = new Set();
 
-		let items = $selectedAlbum.tracks.map((track, index) => {
-			let trackJSON = {
-				pubDate:
-					track.pubDate ||
-					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
-				'podcast:season': 1,
-				'podcast:episode': index + 1
-			};
+		feed.item.forEach((track, index) => {
+			(track.pubDate =
+				track.pubDate ||
+				new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000'),
+				(track['podcast:season'] = 1),
+				(track['podcast:episode'] = index + 1);
 
-			if (!track.guid) {
-				track.guid = generateTrackGuid();
-				uniqueTrackGuids.add(track.guid);
-				trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: track.guid };
-				$selectedAlbum.tracks[index].guid = trackJSON.guid;
+			if (!track?.guid?.['#text']) {
+				console.log('no text');
+				let guid = generateTrackGuid();
+				uniqueTrackGuids.add(guid);
+				track.guid = { '@_isPermaLink': 'false', '#text': track.guid };
 			} else {
 				uniqueTrackGuids.add(track.guid?.['#text'] || track.guid);
-				if (!track.guid?.['!_isPermakLink']) {
+				if (!track.guid?.['@_isPermakLink']) {
 					track.guid = {
 						['@_isPermaLink']: 'false',
 						['#text']: track.guid?.['#text'] || track.guid
 					};
 				}
-				trackJSON.guid = track.guid;
 			}
 
-			let title = track.title;
-
-			if (track.title) {
-				trackJSON.title = track.title;
-			} else {
+			let title = track?.title;
+			if (!track?.title) {
 				title = `Track ${index + 1}`;
 				rssErrors.push(title + ' needs a name');
 			}
 
-			if (track?.enclosure?.url) {
-				trackJSON.enclosure = {
-					'@_url': track?.enclosure?.url,
-					'@_type': track?.enclosure?.type,
-					'@_length': track?.enclosure?.enclosureLength
-				};
-
-				trackJSON['itunes:duration'] = convertDurationToITunesFormat(track.duration);
-			} else {
+			if (!track?.enclosure?.['@_url']) {
 				rssErrors.push(title + ' needs a link to the mp3 file');
+			} else if (!track.enclosure['@_url'].includes($page.url.origin)) {
+				track.enclosure['@_url'] = $page.url.origin + track.enclosure['@_url'];
+				track['itunes:duration'] = convertDurationToITunesFormat(track.duration);
 			}
 
-			if (track.description) {
-				trackJSON.description = track.description;
+			if (track['podcast:value']) {
+				buildValue(track['podcast:value']['podcast:valueRecipient'], track.title);
 			}
 
-			if (track.explicit) {
-				trackJSON['itunes:explicit'] = track.explicit;
+			if (!track?.['itunes:image']?.['@_href']) {
+				delete track['itunes:image'];
+			} else if (!track?.['itunes:image']?.['@_href'].includes($page.url.origin)) {
+				track['itunes:image']['@_href'] = $page.url.origin + track['itunes:image']['@_href'];
 			}
 
-			if (track.artwork) {
-				trackJSON['itunes:image'] = { '@_href': track.artwork };
+			if (!track?.['podcast:chapters']?.['@_url']) {
+				delete track['podcast:chapters'];
+			} else if (!track?.['podcast:chapters']?.['@_url'].includes($page.url.origin)) {
+				track['podcast:chapters']['@_url'] = $page.url.origin + track['podcast:chapters']['@_url'];
 			}
 
-			if (track.value) {
-				trackJSON['podcast:value'] = buildValue(track.value, title);
+			if (!track?.['podcast:transcript']?.['@_url']) {
+				delete track['podcast:transcript'];
+			} else if (!track?.['podcast:transcript']?.['@_url'].includes($page.url.origin)) {
+				track['podcast:transcript']['@_url'] =
+					$page.url.origin + track['podcast:transcript']['@_url'];
 			}
-
-			if (track.chapters) {
-				trackJSON['podcast:chapters'] = { '@_url': track.chapters, '@_type': 'application/json' };
-			}
-
-			if (track.transcripts) {
-				trackJSON['podcast:transcript'] = [
-					{
-						'@_url': track.transcripts,
-						'@_type': 'application/srt'
-					}
-				];
-			}
-
-			return trackJSON;
 		});
 
-		channel.item = [...items];
-
-		rss.channel = channel;
+		rss.channel = feed;
 
 		let xmlJson = { rss: rss };
 
 		xmlFile = js2xml.parse(xmlJson);
-		console.log(xmlJson);
+		console.log(xmlJson.rss.channel.item[0]);
+
 		if (rssErrors.length) {
 			showErrorModal = true;
 		} else {
-			$catalogDB.setItem($selectedBand.title, $selectedBand);
-			showPublishModal = true;
-		}
-
-		async function checkPodcastGuid(guid) {
-			let isValidGuid = checkValidGuid(guid);
-
-			if (!isValidGuid) {
-				return await createNewPodcastGuid();
-			} else {
-				return guid;
-			}
-		}
-
-		async function createNewPodcastGuid() {
-			let guid = await generateValidGuid();
-			return guid;
-		}
-
-		function checkValidGuid(input) {
-			const regex = new RegExp(
-				'^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$'
-			);
-			return regex.test(input);
-		}
-
-		async function generateValidGuid() {
-			const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-			const inputString = uuidv4();
-			const uniqueId = uuidv5(inputString, namespace);
-			let url = `/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${uniqueId}`)}`;
-
-			const res = await fetch(url);
-			const data = await res.json();
-			if (data?.feed?.length) {
-				return generateValidGuid();
-			} else {
-				return uniqueId;
-			}
+			$feeds[feed['podcast:guid']] = feed;
+			feedDB.setItem('feeds', $feeds);
+			showXMLModal = true;
 		}
 
 		function generateTrackGuid() {
@@ -256,9 +172,6 @@
 
 			return true;
 		}
-
-		console.log($selectedAlbum);
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
 	}
 
 	const escapeAttr = (str) =>
@@ -282,9 +195,12 @@
 	};
 
 	function buildValue(tag, name) {
+		console.log(tag);
 		let splitTotal = tag.reduce((t, v) => {
-			return t + Number(v.split);
+			return t + Number(v['@_split']);
 		}, 0);
+
+		console.log(splitTotal);
 
 		if (splitTotal !== 100) {
 			rssErrors.push(
@@ -293,42 +209,21 @@
 				} don't add up to 100%`
 			);
 		}
-		let value = {
-			'@_type': 'lightning',
-			'@_method': 'keysend',
-			'podcast:valueRecipient': tag.map((v, i) => {
-				let rec = { '@_type': 'node' };
-				let person = v.name;
-				if (v.name) {
-					rec['@_name'] = v.name;
-				} else {
-					person = `Recepient #${i + 1}`;
-					rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
-				}
-				if (v.address) {
-					rec['@_address'] = v.address;
-				} else {
-					rssErrors.push(
-						`Person "${person}" in the "${name}" value tag block needs an lightning address`
-					);
-				}
-
-				if (v.key) {
-					rec['@_customKey'] = v.key;
-				}
-				if (v.value) {
-					rec['@_customValue'] = v.value;
-				}
-				if (Number(v.split)) {
-					rec['@_split'] = v.split;
-				} else {
-					rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
-				}
-				return rec;
-			})
-		};
-
-		return value;
+		tag.forEach((v, i) => {
+			let person = v['@_name'];
+			if (!v['@_name']) {
+				person = `Recepient #${i + 1}`;
+				rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
+			}
+			if (!v['@_address']) {
+				rssErrors.push(
+					`Person "${person}" in the "${name}" value tag block needs an lightning address`
+				);
+			}
+			if (!Number(v['@_split'])) {
+				rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
+			}
+		});
 	}
 
 	function convertDurationToITunesFormat(durationInSeconds) {
@@ -353,25 +248,14 @@
 	}
 </script>
 
-<button class="publish" on:click={publishFeed}>Publish Album</button>
-
 {#if showErrorModal}
-	<ErrorModal {rssErrors} bind:showErrorModal />
+	<ErrorModal {rssErrors} {onClose} bind:showErrorModal />
 {/if}
 
 {#if showPublishModal}
-	<PublishModal {xmlFile} bind:showPublishModal />
+	<PublishModal {xmlFile} {feed} {onClose} bind:showPublishModal />
 {/if}
 
-<style>
-	button.publish {
-		color: var(--color-text-0);
-		background-color: blueviolet;
-		padding: 8px 16px;
-		box-shadow: 0 2px 5px 2px var(--color-button-shadow);
-		display: block;
-		margin: 16px auto 8px auto;
-		max-width: 600px;
-		width: calc(100% - 16px);
-	}
-</style>
+{#if showXMLModal}
+	<ShowXmlPathModal {xmlFile} {feed} {onClose} bind:showXMLModal />
+{/if}

@@ -5,7 +5,6 @@
 	import convertTime from '../functions/convertTime';
 
 	export let playerEnclosure;
-	export let newTrackEnclosure;
 	import { selectedTrack } from '$/stores';
 	let player;
 
@@ -20,10 +19,6 @@
 			console.log('loaded');
 			player.duration = player.duration;
 			$selectedTrack.duration = player.duration;
-			const response = await fetch('/api/enclosureproxy?url=' + newTrackEnclosure.url);
-			let { enclosureLength, enclosureType } = await response.json();
-			newTrackEnclosure.enclosureLength = enclosureLength;
-			newTrackEnclosure.type = enclosureType;
 		};
 	}
 </script>

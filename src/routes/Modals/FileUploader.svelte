@@ -1,267 +1,187 @@
 <script>
-	import LinearProgress from '@smui/linear-progress';
-	import 'svelte-material-ui/bare.css';
-	let files;
-	let isHighlighted = false;
-	let warning = false;
-	let isUploading = false;
-	let displayText = 'Drag and drop a file here or click to select a file';
-	let timerText = '0:00';
-	let startTime = '';
-	let fileName;
-	let fileInput;
+	import Close from '../icons/Close.svelte';
+	import { deserialize } from '$app/forms';
 
-	import {
-		uploadCB,
-		currentModal,
-		uploadFileType,
-		uploadFileText,
-		feedFile,
-		selectedAlbum,
-		selectedTrack,
-		wpFeedUrl
-	} from '$/stores';
+	export let filePath;
+	export let fileName = '';
+	export let folderName = '';
+	export let type = '';
+	export let showModal;
+	export let fileReload;
+	let warning = '';
 
-	function msToTime(ms) {
-		// Convert milliseconds to seconds
-		let seconds = Math.floor(ms / 1000);
+	function getEndpoint(fileType) {
+		if (fileType.startsWith('image/') && type === 'image') return '?/image';
+		if (fileType.startsWith('audio/') && type === 'audio') return '?/audio';
+		if ((fileType === 'application/xml' || fileType === 'text/xml') && type === 'xml')
+			return '?/xml';
 
-		// Calculate minutes and remaining seconds
-		let minutes = Math.floor(seconds / 60);
-		let remainingSeconds = seconds % 60;
+		if (
+			(fileType === 'application/x-subrip' || fileType === 'application/srt') &&
+			type === 'lyrics'
+		)
+			return '?/lyrics';
 
-		// Format the minutes section
-		let formattedMinutes = minutes === 0 ? '0' : minutes.toString().replace(/^0+/, '');
+		if (fileType === 'application/json' && type === 'chapters') return '?/chapters';
 
-		// Pad the remaining seconds with a leading zero if necessary
-		let formattedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+		if (type === 'image') warning = 'Please upload an image.';
+		if (type === 'audio') warning = 'Please upload an mp3.';
+		if (type === 'lyrics') warning = 'Please upload an srt file.';
+		if (type === 'chapters') warning = 'Please upload a chapters json file.';
 
-		// Combine minutes and seconds in mm:ss format
-		return `${formattedMinutes}:${formattedSeconds}`;
+		return null;
 	}
 
-	function setTimerText() {
-		let timeNow = new Date().getTime();
-		timerText = msToTime(timeNow - startTime);
-		setTimeout(setTimerText, 1000);
-	}
-
-	function getFileExtension(filename) {
-		const dotPosition = filename.lastIndexOf('.');
-		if (dotPosition === -1 || dotPosition === 0) {
-			return '';
-		}
-		const extension = filename.substring(dotPosition + 1);
-		return extension;
-	}
-
-	function uploadFile() {
-		const file = files[0];
-		const extension = getFileExtension(file.name);
-		console.log(file);
-
-		let allowedExtensions = [];
-		console.log($uploadFileType);
-
-		if ($uploadFileType === 'audio') {
-			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
-			fileName = `${$selectedAlbum.title}_${$selectedTrack.title}.${extension}`;
-		}
-
-		if ($uploadFileType === 'image') {
-			allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-			if ($uploadFileText === 'Upload Album Image') {
-				fileName = `${$selectedAlbum.title}_artwork.${extension}`;
-			}
-			if ($uploadFileText === 'Upload Track Image') {
-				fileName = `${$selectedAlbum.title}_${$selectedTrack.title}_artwork.${extension}`;
-			}
-		}
-
-		if ($uploadFileType === 'feed') {
-			allowedExtensions = ['application/xml', 'text/xml'];
-			fileName = `${$selectedAlbum.title}.xml`;
-		}
-
-		if (allowedExtensions.includes(file.type)) {
-			displayText = 'Uploading File';
-			isUploading = true;
-			startTime = new Date().getTime();
-			setTimeout(setTimerText, 1000);
-			warning = false;
-			const formData = new FormData();
-			formData.append('file', file, fileName);
-			console.log($wpFeedUrl);
-			fetch('api/fileupload', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ url: $wpFeedUrl })
-			})
-				.then((response) => response.json())
-				.then(async (result) => {
-					const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
-
-					// Check if the file already exists in WordPress
-					return fetch(`${mediaEndpoint}?search=${fileName}`)
-						.then((response) => response.json())
-						.then((data) => {
-							console.log(data);
-							if (data.length > 0) {
-								const mediaId = data[0].id;
-								return fetch(`${mediaEndpoint}/${mediaId}`, {
-									method: 'PUT',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `attachment; filename="${fileName}"`
-									}
-								});
-							} else {
-								return fetch(mediaEndpoint, {
-									method: 'POST',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `form-data; filename="${fileName}"`
-									}
-								});
-							}
-						});
-				})
-				.then(async (response) => {
-					if (response.ok) {
-						const jsonData = await response.json();
-						$uploadCB(jsonData.source_url);
-						$currentModal = '';
-						isUploading = false;
-					} else {
-						isUploading = false;
-						displayText = `Failed to upload file to WordPress: ${response.status} ${
-							response.statusText
-						} ${JSON.stringify(response)}`;
-						warning = true;
-					}
-				})
-				.catch((error) => {
-					isUploading = false;
-					console.error('Error:', error);
-					displayText = 'Error: ' + error;
-				});
+	async function uploadFile(file) {
+		const data = new FormData();
+		data.append('file', file);
+		data.append('fileName', fileName);
+		data.append('folderName', folderName);
+		const fileExtension = file.name.split('.').pop();
+		let endpoint;
+		if (fileExtension === 'srt' && !file.type) {
+			endpoint = getEndpoint('application/x-subrip');
 		} else {
-			displayText = `Invalid file type. Please upload an ${$uploadFileType} file.`;
-			warning = true;
+			endpoint = getEndpoint(file.type);
+		}
+
+		if (!endpoint) return;
+		const requestOptions = {
+			method: 'POST',
+			body: data,
+			headers: new Headers()
+		};
+		const response = await fetch(endpoint, requestOptions);
+		const result = deserialize(await response.text());
+
+		if (type === 'audio') {
+			filePath = {
+				'@_url': result.data.path,
+				'@_type': file.type,
+				'@_length': file.size
+			};
+		} else {
+			filePath = result.data.path;
+		}
+		fileReload = Date.now();
+		showModal = false;
+		console.log(filePath);
+	}
+
+	async function handleDrop(event) {
+		console.log('drop');
+		event.preventDefault();
+		const files = event.dataTransfer.files;
+		for (const file of files) {
+			await uploadFile(file);
 		}
 	}
 
-	function handleDrop(e) {
-		isHighlighted = false;
-		files = e.dataTransfer.files;
-		uploadFile();
+	function handleDragOver(event) {
+		event.preventDefault();
 	}
 
-	if ($uploadFileType === 'feed') {
-		const blob = new Blob([$feedFile], { type: 'application/xml' });
-		const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
-		files = [file];
-		uploadFile();
+	async function handleFileInput(event) {
+		const files = event.target.files;
+		for (const file of files) {
+			await uploadFile(file);
+		}
 	}
 </script>
 
-<p
-	class="feed-url"
+<blurred-background
 	on:click={() => {
-		$wpFeedUrl = '';
+		showModal = false;
 	}}
 >
-	{$wpFeedUrl}
-</p>
-<h1>
-	{$uploadFileText}
-</h1>
-
-{#if isUploading}
-	<uploading>
-		<LinearProgress indeterminate class="upload-progress-bar" />
-		<h2>Uploading File</h2>
-		<h3>upload time: {timerText}</h3>
-		<p>depending on the size of the file, this can take a few minutes</p>
-	</uploading>
-{:else}
-	<input
-		type="file"
-		accept=".png, .jpg, .mp3, .wav, .ogg, .aac, .flac, .gif, .webp"
-		bind:files
-		bind:this={fileInput}
-		on:change={uploadFile}
-		hidden
-	/>
-	<div
-		class="dropzone"
-		id="dropzone"
-		class:highlight={isHighlighted}
-		on:dragenter|preventDefault={() => (isHighlighted = true)}
-		on:dragover|preventDefault={() => (isHighlighted = true)}
-		on:dragleave|preventDefault={() => (isHighlighted = false)}
-		on:drop|preventDefault={handleDrop}
-		on:click={() => fileInput.click()}
+	<button
+		class="close upload-modal"
+		on:click={() => {
+			showModal = false;
+		}}
 	>
-		<span class:warning>{displayText}</span>
-	</div>
-{/if}
+		<Close size="24" />
+	</button>
+	<warning-modal>
+		<div on:drop={handleDrop} on:dragover={handleDragOver}>
+			<h3>{warning}</h3>
+			<p>Drop file here</p>
+			<p>-or-</p>
+			<input type="file" on:change={handleFileInput} multiple />
+		</div>
+	</warning-modal>
+</blurred-background>
 
 <style>
-	uploading {
+	h3 {
+		color: red;
+		position: absolute;
+		top: 40px;
+	}
+	blurred-background {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100vw;
+		height: 100vh;
+		position: fixed;
+		background: transparent;
+		top: 0;
+		right: 0;
+		z-index: 34;
+		backdrop-filter: blur(5px);
+	}
+
+	warning-modal {
+		backdrop-filter: blur(50px);
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 8px;
+		width: calc(100% - 100px);
+		height: calc(100% - 100px);
+	}
+
+	div {
+		border: 2px dashed #ccc;
+		width: calc(100% - 32px);
+		height: calc(100% - 32px);
 		display: flex;
 		flex-direction: column;
-		height: 100%;
+		justify-content: center;
 		align-items: center;
 		position: relative;
-		margin-top: 100px;
 	}
-	h2 {
-		text-align: center;
+
+	p:first-of-type {
+		font-size: 1.2em;
 		font-weight: 600;
 	}
 
-	h3,
-	p {
-		font-weight: 500;
+	.close {
+		position: fixed;
 		margin: 0;
+		background-color: var(--color-bg-select-band);
+		color: rgba(255, 255, 255, 0.75);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px;
+		top: 32px;
+		right: 32px;
+		z-index: 33;
 	}
 
-	input {
-		width: calc(100% - 16px);
-		border-radius: 5px;
-		cursor: pointer;
-	}
-	.dropzone {
-		border: 2px dashed #0087f7;
-		border-radius: 5px;
-		padding: 200px 0;
-		text-align: center;
-		margin: 32px;
-		cursor: pointer;
-	}
+	@media screen and (max-width: 992px) {
+		.close {
+			top: 4px;
+			right: 4px;
+		}
 
-	.highlight {
-		background-color: rgba(0, 135, 247, 0.1);
-	}
-
-	.warning {
-		color: red;
-		font-weight: 600;
-	}
-
-	h1 {
-		margin-top: 0;
-	}
-
-	.feed-url {
-		cursor: pointer;
+		warning-modal {
+			width: calc(100%);
+			height: calc(100%);
+		}
 	}
 </style>

@@ -3,38 +3,19 @@
 	import localforage from 'localforage';
 	import Editor from './Editor.svelte';
 
-	import { catalogDB, library, user, wpFeedUrl } from '$/stores';
+	import { catalogDB, feedDB, library, feeds } from '$/stores';
 
 	let isLoading = true;
 
 	onMount(() => {
-		// fetch('/api/alby/refresh')
-		// 	.then((res) => {
-		// 		return res.json();
-		// 	})
-		// 	.then((data) => {
-		// 		$user.loggedIn = data.loggedIn;
-		// 		$user.name = data.name;
-		// 	});
-
-		$catalogDB = localforage.createInstance({
-			name: 'catalogDB'
+		feedDB.getItem('feeds').then((data) => {
+			$feeds = data || {};
 		});
 
-		$catalogDB
-			.keys()
-			.then(async function (keys) {
-				let _catalog = keys.map((v) => $catalogDB.getItem(v));
-				$library = await Promise.all(_catalog);
-				$library = $library;
-				console.log($library);
-				setTimeout(() => {
+		setTimeout(() => {
 					isLoading = false;
 				}, 2000);
-			})
-			.catch(function (err) {
-				console.log(err);
-			});
+		
 	});
 </script>
 

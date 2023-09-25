@@ -13,10 +13,12 @@
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/adapter-vercel": "^2.0.4",
 		"@sveltejs/kit": "^1.20.4",
+		"archiver": "^6.0.1",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"smui-theme": "^7.0.0-beta.0",
 		"svelte": "^4.0.0",
+		"svelte-copy": "^1.4.1",
 		"vite": "^4.0.0"
 	},
 	"type": "module",

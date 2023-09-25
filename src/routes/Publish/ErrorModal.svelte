@@ -3,8 +3,10 @@
 
 	export let rssErrors;
 	export let showErrorModal = false;
+	export let onClose = () => {};
 
 	function closeModal() {
+		onClose();
 		showErrorModal = false;
 	}
 </script>
@@ -17,7 +19,7 @@
 		<h2>Correct these errors and try downloading again.</h2>
 		<ol>
 			{#each rssErrors as err}
-				<li>{err}</li>
+				<li>{@html err}</li>
 			{/each}
 		</ol>
 	</error-modal>

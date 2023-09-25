@@ -16,9 +16,16 @@
 	--color-bg-button: hsl(234, 100%, 62%);
 	--color-bg-button-upload-0: hsl(234, 100%, 72%);
 	--color-bg-support-button: hsl(234, 100%, 62%);
+	
 	--color-bg-add-band: hsl(198, 100%, 42%);
 	--color-bg-add-album: hsl(198, 100%, 52%);
 	--color-bg-add-track: hsl(198, 100%, 62%);
+
+	--color-bg-add-shade-1: hsl(198, 100%, 50%);
+	--color-bg-add-shade-2: hsl(198, 100%, 40%);
+	--color-bg-add-shade-3: hsl(198, 100%, 30%);
+	--color-bg-add-shade-4: hsl(198, 100%, 20%);
+
 	--color-bg-select-band: hsl(198, 50%, 42%);
 	--color-bg-edit-band: hsl(257, 50%, 42%);
 	--color-bg-select-album: hsl(198, 50%, 52%);
