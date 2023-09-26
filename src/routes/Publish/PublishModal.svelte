@@ -2,7 +2,7 @@
 	import Close from '../icons/Close.svelte';
 	import saveAs from 'file-saver';
 
-	import { selectedAlbum } from '$/stores';
+	import { selectedAlbum, remoteServer } from '$/stores';
 
 	export let showPublishModal = false;
 	export let xmlFile;
@@ -38,9 +38,9 @@
 	}
 
 	async function checkPodcastIndex() {
-		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
-			feed['podcast:guid']
-		)}`;
+		const guidUrl =
+			remoteServer +
+			`/api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(feed['podcast:guid'])}`;
 		const guidRes = await fetch(guidUrl);
 		const guidData = await guidRes.json();
 
@@ -67,7 +67,7 @@
 	}
 
 	async function addFeed() {
-		let feed = `api/queryindex?q=add/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+		let feed = remoteServer + `/api/queryindex?q=add/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
 		const res = await fetch(feed);
 		const data = await res.json();

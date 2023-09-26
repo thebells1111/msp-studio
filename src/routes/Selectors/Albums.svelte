@@ -6,7 +6,7 @@
 	import Publish from '../Publish/Publish.svelte';
 	import postFeeds from '$routes/functions/postFeeds.js';
 
-	import { feeds, editingFeed } from '$/stores';
+	import { feeds, editingFeed, remoteServer } from '$/stores';
 	import CloudUpload from '$icons/CloudUpload.svelte';
 	import DownloadIcon from '$icons/Download.svelte';
 
@@ -36,7 +36,7 @@
 	}
 
 	async function downloadZip(guid) {
-		const response = await fetch(`/api/download?guid=${guid}`);
+		const response = await fetch(remoteServer + `/api/download?guid=${guid}`);
 
 		if (response.status !== 200) {
 			throw new Error(
@@ -80,7 +80,7 @@
 						<DownloadIcon size="27" />
 						<p>Download</p>
 					</button> -->
-					<h3>{feed.title || 'Blank Album'} by {feed.author || 'Unknown Artist'}</h3>
+					<h3>{feed.title || 'Blank Album'} by {feed['itunes:author'] || 'Unknown Artist'}</h3>
 					<button on:click|stopPropagation={deleteFeed.bind(this, feed)} class="delete">
 						<Delete
 							size="30

@@ -7,18 +7,10 @@
 	import { feeds } from '$/stores';
 
 	let isLoading = true;
-	$: console.log($feeds);
 
 	onMount(async () => {
 		getFeeds().then((data) => {
-			$feeds = {};
-
-			try {
-				$feeds = JSON.parse(data);
-			} catch (error) {}
-
-			console.log($feeds);
-			// postFeeds($feeds);
+			$feeds = JSON.parse(data);
 		});
 
 		setTimeout(() => {

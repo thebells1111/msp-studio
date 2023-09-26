@@ -10,7 +10,8 @@ import router from './routes/index.js'; // Assuming routes folder is at same lev
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
-const port = process.env.NODE_ENV === 'development' ? 8000 : 3000;
+let dev = true;
+const port = dev ? 8000 : 3000;
 
 // Middleware
 app.use(helmet());
@@ -19,8 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS
-if (process.env.NODE_ENV === 'development') {
-	app.use(cors({ origin: 'http://localhost:3000' }));
+if (dev) {
+	app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3333'] }));
 }
 
 app.use((req, res, next) => {

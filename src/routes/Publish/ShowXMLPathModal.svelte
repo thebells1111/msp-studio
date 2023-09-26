@@ -3,7 +3,8 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Close from '../icons/Close.svelte';
-	import { copyText  } from 'svelte-copy';
+	import { copyText } from 'svelte-copy';
+	import { remoteServer } from '$/stores';
 
 	export let showXMLModal = false;
 
@@ -12,8 +13,8 @@
 	export let feed;
 	export let xmlFile;
 	let filePath;
-	let displayText
-	let showAdd=false
+	let displayText;
+	let showAdd = false;
 
 	export let onClose = () => {};
 
@@ -49,28 +50,20 @@
 
 		filePath = $page.url.origin + result.data.path;
 
-		
 		checkPodcastIndex();
-
-
 	}
 
-	
-
-
-
-
 	async function checkPodcastIndex() {
-		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
-			feed['podcast:guid']
-		)}`;		
+		const guidUrl =
+			remoteServer +
+			`/api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(feed['podcast:guid'])}`;
 		const guidRes = await fetch(guidUrl);
-		const guidData = await guidRes.json();	
+		const guidData = await guidRes.json();
 
 		if (guidData.status === 'true' && guidData.feed.length) {
 			podping();
 		} else {
-			showAdd = true
+			showAdd = true;
 		}
 	}
 
@@ -82,11 +75,10 @@
 		if (data === 'Success!') {
 			displayText =
 				'Feed successfully updated. Please wait a few minutes for your changes to appear in the apps.';
-		} else {		
+		} else {
 			displayText = data;
 		}
 	}
-
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -97,21 +89,21 @@
 		{#if filePath}
 			<adder>
 				<input type="text" value={filePath} readonly />
-				<button on:click={(e) => {
-					e.target.innerText = 'Copied!'
-					setTimeout(()=>e.target.innerText = 'Copy to paste into Podcast Index', 500)
-					copyText(filePath)}}
+				<button
+					on:click={(e) => {
+						e.target.innerText = 'Copied!';
+						setTimeout(() => (e.target.innerText = 'Copy to paste into Podcast Index'), 500);
+						copyText(filePath);
+					}}
 				>
 					{showAdd ? 'Copy to paste into Podcast Index' : 'Copy Feed Address'}
 				</button>
 
-			
 				{#if showAdd}
-				  <iframe src="https://podcastindex.org/add" />
+					<iframe src="https://podcastindex.org/add" />
 				{:else if displayText}
-				  <p>{displayText}</p>
+					<p>{displayText}</p>
 				{/if}
-
 			</adder>
 		{/if}
 	</modal>
@@ -150,10 +142,10 @@
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 	}
 
-	iframe{
-		flex:1;
+	iframe {
+		flex: 1;
 		width: 100%;
-		height: calc(100% - 102px)
+		height: calc(100% - 102px);
 	}
 
 	.close {
@@ -168,44 +160,39 @@
 		z-index: 33;
 	}
 
-
-
 	input {
 		width: calc(100% - 24px);
-		
 	}
 
 	button {
 		box-shadow: 0 3px 5px 0px var(--color-button-shadow);
 		max-width: 320px;
 		width: calc(100% - 16px);
-		margin: 8px auto
+		margin: 8px auto;
 	}
 
-	adder{
-		margin-top:40px;
+	adder {
+		margin-top: 40px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		height: calc(100% - 40px)
-
+		height: calc(100% - 40px);
 	}
 
-	input{
+	input {
 		max-width: 600px;
 		text-align: center;
 	}
 
-	a{
-		color:var(--color-bg-add-album) ;
-		font-weight: 550
+	a {
+		color: var(--color-bg-add-album);
+		font-weight: 550;
 	}
 
-	p{
+	p {
 		font-size: 1.1em;
 		text-align: center;
 	}
-
 
 	@media screen and (max-width: 992px) {
 		modal {

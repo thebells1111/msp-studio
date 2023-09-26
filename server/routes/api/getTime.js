@@ -1,7 +1,7 @@
 import express from 'express';
 const router = express.Router();
 
-router.get('/gettime', (req, res) => {
+router.get('/', (req, res) => {
 	res.json({ time: Date.now() });
 });
 

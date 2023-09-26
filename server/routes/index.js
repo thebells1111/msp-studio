@@ -1,12 +1,8 @@
 import express from 'express';
-import gettime from './gettime.js';
-import queryindex from './queryindex.js';
+import api from './api/index.js';
 
 const router = express.Router();
 
-router.use(gettime);
-router.use(queryindex);
-
-// other routes
+router.use('/api', api);
 
 export default router;

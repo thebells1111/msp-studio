@@ -1,10 +1,18 @@
-export default async function getFeeds() {
-	const response = await fetch('/api/database');
+import { remoteServer } from '$/stores';
 
-	if (response.ok) {
+export default async function getFeeds() {
+	try {
+		const response = await fetch(remoteServer + '/api/database');
+
 		const data = await response.json();
-		return data;
-	} else {
+
+		if (Object.keys(data).length === 0) {
+			return {};
+		} else {
+			return data;
+		}
+	} catch (err) {
+		console.error('Error:', err);
 		return {};
 	}
 }
