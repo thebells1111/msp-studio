@@ -5,20 +5,9 @@
 	import ExpandLess from '$icons/ExpandLess.svelte';
 	import Delete from '$icons/Delete.svelte';
 	import TrackInput from './Inputs/TrackInput.svelte';
+	import postFeeds from '$routes/functions/postFeeds.js';
 
-	import {
-		feeds,
-		editingFeed,
-		feedDB,
-		selectedBand,
-		selectedAlbum,
-		selectedTrack,
-		selectedTrackIndex,
-		catalogDB,
-		MSPValue,
-		selectedScreen,
-		newAlbum
-	} from '$/stores';
+	import { feeds, editingFeed, selectedTrack, selectedTrackIndex } from '$/stores';
 
 	let showEdit = false;
 
@@ -33,25 +22,15 @@
 		$editingFeed.item.splice(index, 1);
 		$editingFeed.item = $editingFeed.item;
 		$feeds[$editingFeed['podcast:guid']] = $editingFeed;
-		feedDB.setItem('feeds', $feeds);
+		postFeeds($feeds);
 	}
 
 	async function addNewTrack() {
-		console.log(clone($editingFeed?.['podcast:value']));
 		let track = {
 			'podcast:value': clone($editingFeed?.['podcast:value']) || {
 				'@_type': 'lightning',
 				'@_method': 'keysend',
-				'podcast:valueRecipient': [
-					{
-						'@_type': 'node',
-						'@_name': 'Music Side Project',
-						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-						'@_customKey': '696969',
-						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-						'@_split': '5'
-					}
-				]
+				'podcast:valueRecipient': []
 			}
 		};
 
@@ -70,7 +49,7 @@
 
 		$editingFeed.item = newArray;
 		$feeds[$editingFeed['podcast:guid']] = $editingFeed;
-		feedDB.setItem('feeds', $feeds);
+		postFeeds($feeds);
 	}
 </script>
 
@@ -206,7 +185,7 @@
 		color: red;
 		position: absolute;
 		top: 16px;
-		right: 16px;
+		left: 152px;
 	}
 
 	.click-help > span {

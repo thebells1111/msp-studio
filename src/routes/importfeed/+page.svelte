@@ -3,9 +3,6 @@
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
 	import { saveAs } from 'file-saver';
-	const catalogDB = localforage.createInstance({
-		name: 'catalogDB'
-	});
 
 	let feedUrl = '';
 	let feedImported = false;
@@ -34,16 +31,7 @@
 				console.log(channel);
 				const transformedData = transformPodcastData(channel);
 				console.log(transformedData);
-				let dbData = await catalogDB.getItem(channel['itunes:author']);
-				if (!dbData) {
-					dbData = { title: channel['itunes:author'], artwork: '', albums: [] };
-				}
 
-				dbData.albums = [].concat(dbData.albums);
-
-				dbData.albums.push(transformedData);
-				console.log(dbData);
-				await catalogDB.setItem(channel['itunes:author'], dbData);
 				importing = false;
 				feedImported = true;
 				setTimeout(() => {
@@ -111,11 +99,6 @@
 		let jsonVariable = {};
 
 		try {
-			const keys = await catalogDB.keys();
-			for (const key of keys) {
-				const value = await catalogDB.getItem(key);
-				jsonVariable[key] = value;
-			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -132,7 +115,6 @@
 			const jsonVariable = JSON.parse(event.target.result);
 			try {
 				for (const [key, value] of Object.entries(jsonVariable)) {
-					await catalogDB.setItem(key, value);
 				}
 				console.log('Data imported successfully.');
 			} catch (err) {

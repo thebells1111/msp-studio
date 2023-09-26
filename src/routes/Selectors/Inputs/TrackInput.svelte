@@ -8,16 +8,9 @@
 	import FileUploader from '$routes/Modals/FileUploader.svelte';
 	import SmallModal from '$routes/Modals/SmallModal.svelte';
 	import CheckCircleFilled from '$icons/CheckCircleFilled.svelte';
+	import postFeeds from '$routes/functions/postFeeds.js';
 
-	import {
-		selectedTrack,
-		selectedTrackIndex,
-		MSPValue,
-		editingFeed,
-		feeds,
-		feedDB,
-		showTutorial
-	} from '$/stores';
+	import { selectedTrack, selectedTrackIndex, editingFeed, feeds } from '$/stores';
 
 	export let showEdit;
 
@@ -36,16 +29,7 @@
 		'podcast:value': {
 			'@_type': 'lightning',
 			'@_method': 'keysend',
-			'podcast:valueRecipient': [
-				{
-					'@_type': 'node',
-					'@_name': 'Music Side Project',
-					'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-					'@_customKey': '696969',
-					'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-					'@_split': '5'
-				}
-			]
+			'podcast:valueRecipient': []
 		}
 	};
 
@@ -89,7 +73,7 @@
 				'@_method': 'keysend',
 				'podcast:valueRecipient': value?.['podcast:valueRecipient']?.length
 					? value['podcast:valueRecipient']
-					: [$MSPValue]
+					: []
 			}
 		};
 	});
@@ -103,7 +87,7 @@
 		Object.assign($selectedTrack, trackState);
 		$editingFeed.item[$selectedTrackIndex] = $selectedTrack;
 		$feeds[$editingFeed['podcast:guid']] = $editingFeed;
-		feedDB.setItem('feeds', $feeds);
+		postFeeds($feeds);
 		showEdit = false;
 	}
 
@@ -167,56 +151,47 @@
 					</explicit>
 					<button-group>
 						<button-container>
-							<button class="add audio" on:click={() => toggleShow('audio', 'upload')}
-								>
+							<button class="add audio" on:click={() => toggleShow('audio', 'upload')}>
 								Add mp3 (required)
 								{#if trackState?.enclosure?.['@_url']}
-								<span>
-									<CheckCircleFilled size=27/>
-								</span>
+									<span>
+										<CheckCircleFilled size="27" />
+									</span>
 								{/if}
-								</button
-							>
+							</button>
 							<button class="question" on:click={() => toggleShow('audio', 'hints')}>?</button>
 						</button-container>
 						<button-container>
-							<button class="add art" on:click={() => toggleShow('art', 'upload')}
-								>
-								
+							<button class="add art" on:click={() => toggleShow('art', 'upload')}>
 								Add Artwork (optional)
 								{#if trackState?.['itunes:image']['@_href']}
-								<span>
-									<CheckCircleFilled size=27/>
-								</span>
+									<span>
+										<CheckCircleFilled size="27" />
+									</span>
 								{/if}
-								</button
-							>
+							</button>
 							<button class="question" on:click={() => toggleShow('art', 'hints')}>?</button>
 						</button-container>
 						<button-container>
-							<button class="add lyrics" on:click={() => toggleShow('lyrics', 'upload')}
-								>
+							<button class="add lyrics" on:click={() => toggleShow('lyrics', 'upload')}>
 								Add Lyrics (optional)
 								{#if trackState?.['podcast:transcript']['@_url']}
-								<span>
-									<CheckCircleFilled size=27/>
-								</span>
+									<span>
+										<CheckCircleFilled size="27" />
+									</span>
 								{/if}
-								</button
-							>
+							</button>
 							<button class="question" on:click={() => toggleShow('lyrics', 'hints')}>?</button>
 						</button-container>
 						<button-container>
-							<button class="add chapters" on:click={() => toggleShow('chapters', 'upload')}
-								>
+							<button class="add chapters" on:click={() => toggleShow('chapters', 'upload')}>
 								Add Chapters (optional)
 								{#if trackState?.['podcast:chapters']['@_url']}
-								<span>
-									<CheckCircleFilled size=27/>
-								</span>
+									<span>
+										<CheckCircleFilled size="27" />
+									</span>
 								{/if}
-								</button
-							>
+							</button>
 							<button class="question" on:click={() => toggleShow('chapters', 'hints')}>?</button>
 						</button-container>
 					</button-group>
@@ -546,17 +521,17 @@
 		min-height: 258px;
 		background-color: transparent;
 	}
-	button-container > button{
+	button-container > button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		position: relative
+		position: relative;
 	}
-	button-container > button > span{
+	button-container > button > span {
 		position: absolute;
 		right: 3px;
-		top:4px;
-		color: hsla(198, 100%, 80%, 0.75)
+		top: 4px;
+		color: hsla(198, 100%, 80%, 0.75);
 	}
 
 	@media screen and (max-width: 992px) {

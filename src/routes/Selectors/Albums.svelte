@@ -4,10 +4,11 @@
 	import Add from '$icons/Add.svelte';
 	import Delete from '$icons/Delete.svelte';
 	import Publish from '../Publish/Publish.svelte';
+	import postFeeds from '$routes/functions/postFeeds.js';
 
-	import { feeds, editingFeed, feedDB } from '$/stores';
+	import { feeds, editingFeed } from '$/stores';
 	import CloudUpload from '$icons/CloudUpload.svelte';
-	import DownloadIcon from '$icons/Download.svelte'
+	import DownloadIcon from '$icons/Download.svelte';
 
 	let showEdit = false;
 	let publishingFeed;
@@ -19,11 +20,10 @@
 	}
 
 	async function deleteFeed(feed) {
-		console.log(feed);
-		delete $feeds[feed['podcast:guid']];
 		console.log($feeds);
+		delete $feeds[feed['podcast:guid']];
 		$feeds = $feeds;
-		feedDB.setItem('feeds', $feeds);
+		postFeeds($feeds);
 	}
 
 	function addFeed() {
@@ -36,26 +36,24 @@
 	}
 
 	async function downloadZip(guid) {
-  const response = await fetch(`/api/download?guid=${guid}`);
-  
-  if (response.status !== 200) {
-    throw new Error(`Failed to download zip. Server responded with status code ${response.status}`);
-  }
-  
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.style.display = 'none';
-  a.href = url;
-  a.download = `${guid}.zip`;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-}
+		const response = await fetch(`/api/download?guid=${guid}`);
 
+		if (response.status !== 200) {
+			throw new Error(
+				`Failed to download zip. Server responded with status code ${response.status}`
+			);
+		}
 
-
-
+		const blob = await response.blob();
+		const url = window.URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.href = url;
+		a.download = `${guid}.zip`;
+		document.body.appendChild(a);
+		a.click();
+		window.URL.revokeObjectURL(url);
+	}
 </script>
 
 <div>
@@ -73,16 +71,15 @@
 		<ul>
 			{#each Object.entries($feeds || {}) as [key, feed]}
 				<li on:click={selectBand.bind(this, feed)}>
-					<button class='publish' on:click|stopPropagation={publishFeed.bind(this, feed)}>
-					<CloudUpload size=27/>	
+					<button class="publish" on:click|stopPropagation={publishFeed.bind(this, feed)}>
+						<CloudUpload size="27" />
 						<p>Publish</p>
-					
 					</button>
 
-					<button class='download' on:click={downloadZip.bind(this, feed['podcast:guid'])}>
-						<DownloadIcon size=27/>
+					<!-- <button class="download" on:click={downloadZip.bind(this, feed['podcast:guid'])}>
+						<DownloadIcon size="27" />
 						<p>Download</p>
-					</button>
+					</button> -->
 					<h3>{feed.title || 'Blank Album'} by {feed.author || 'Unknown Artist'}</h3>
 					<button on:click|stopPropagation={deleteFeed.bind(this, feed)} class="delete">
 						<Delete
@@ -183,7 +180,8 @@
 		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
 	}
 
-	button.publish, button.download{
+	button.publish,
+	button.download {
 		display: flex;
 		flex-direction: column;
 		position: relative;
@@ -192,24 +190,23 @@
 		min-width: 50px;
 		min-height: 50px;
 		border-radius: 50px;
-		color: var(--color-text-0)
-
+		color: var(--color-text-0);
 	}
 
-	button.download{
+	button.download {
 		background-color: var(--color-bg-edit-band);
-		
 	}
 
-	.publish > p, .download >p{
+	.publish > p,
+	.download > p {
 		margin: 0;
-		font-size: .7em;
+		font-size: 0.7em;
 		position: relative;
 		bottom: 4px;
 	}
 
-	.download >p{
-		font-size: .6em;
+	.download > p {
+		font-size: 0.6em;
 	}
 
 	@media screen and (max-width: 992px) {

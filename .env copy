@@ -1,10 +1,3 @@
 PI_API_KEY = #https://api.podcastindex.org/signup
 PI_API_SECRET = #https://api.podcastindex.org/signup
-MONGO_URI = 
-MONGO_DB = 
-JWT = #random string
-ALBY_ID = #contact hello@getalby.com to request keys  https://blog.getalby.com/introducing-the-alby-wallet-api/
-ALBY_SECRET = #contact hello@getalby.com to request keys  https://blog.getalby.com/introducing-the-alby-wallet-api/
-ALBY_JWT =  #random string
-WP_SECRET_KEY = #random 32-character string of hex digits 
 PODPING = #podping auth code

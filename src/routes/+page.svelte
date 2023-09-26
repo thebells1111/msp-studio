@@ -1,21 +1,29 @@
 <script>
 	import { onMount } from 'svelte';
-	import localforage from 'localforage';
+	import getFeeds from '$routes/functions/getFeeds.js';
+	import postFeeds from '$routes/functions/postFeeds.js';
 	import Editor from './Editor.svelte';
 
-	import { catalogDB, feedDB, library, feeds } from '$/stores';
+	import { feeds } from '$/stores';
 
 	let isLoading = true;
+	$: console.log($feeds);
 
-	onMount(() => {
-		feedDB.getItem('feeds').then((data) => {
-			$feeds = data || {};
+	onMount(async () => {
+		getFeeds().then((data) => {
+			$feeds = {};
+
+			try {
+				$feeds = JSON.parse(data);
+			} catch (error) {}
+
+			console.log($feeds);
+			// postFeeds($feeds);
 		});
 
 		setTimeout(() => {
-					isLoading = false;
-				}, 2000);
-		
+			isLoading = false;
+		}, 2000);
 	});
 </script>
 

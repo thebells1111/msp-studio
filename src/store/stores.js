@@ -1,10 +1,5 @@
 import { writable } from 'svelte/store';
-import localforage from 'localforage';
 
-export const feedDB = localforage.createInstance({
-	name: 'feedDB'
-});
-export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 

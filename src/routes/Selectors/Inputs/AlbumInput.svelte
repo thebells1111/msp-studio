@@ -7,8 +7,9 @@
 	import Tracks from '../Tracks.svelte';
 	import ValueBlock from '$routes/ValueBlock/ValueBlock.svelte';
 	import FileUploader from '$routes/Modals/FileUploader.svelte';
+	import postFeeds from '$routes/functions/postFeeds.js';
 
-	import { MSPValue, showTutorial, editingFeed, feedDB, feeds } from '$/stores';
+	import { MSPValue, editingFeed, feeds } from '$/stores';
 
 	export let add;
 
@@ -32,16 +33,7 @@
 		'podcast:value': {
 			'@_type': 'lightning',
 			'@_method': 'keysend',
-			'podcast:valueRecipient': [
-				{
-					'@_type': 'node',
-					'@_name': 'Music Side Project',
-					'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-					'@_customKey': '696969',
-					'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-					'@_split': '5'
-				}
-			]
+			'podcast:valueRecipient': []
 		},
 		item: []
 	};
@@ -89,7 +81,7 @@
 				'@_method': 'keysend',
 				'podcast:valueRecipient': value?.['podcast:valueRecipient']?.length
 					? value['podcast:valueRecipient']
-					: [$MSPValue],
+					: [],
 				item: item || []
 			}
 		};
@@ -98,7 +90,7 @@
 	async function saveAlbum() {
 		Object.assign($editingFeed, albumState);
 		$feeds[albumState['podcast:guid']] = $editingFeed;
-		await feedDB.setItem('feeds', $feeds);
+		await postFeeds($feeds);
 	}
 
 	function closeModal() {

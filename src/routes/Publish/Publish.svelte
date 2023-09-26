@@ -8,7 +8,7 @@
 	import PublishModal from './PublishModal.svelte';
 	import ShowXmlPathModal from './ShowXMLPathModal.svelte';
 
-	import { feeds, feedDB } from '$/stores';
+	import { feeds } from '$/stores';
 
 	let rssErrors = [];
 	let showErrorModal = false;
@@ -148,7 +148,7 @@
 			showErrorModal = true;
 		} else {
 			$feeds[feed['podcast:guid']] = feed;
-			feedDB.setItem('feeds', $feeds);
+			postFeeds($feeds);
 			showXMLModal = true;
 		}
 

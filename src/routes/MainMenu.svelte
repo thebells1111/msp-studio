@@ -1,29 +1,9 @@
 <script>
-	import Tutorial from './Tutorial/Tutorial.svelte';
-
-	import { showTutorial } from '$/stores';
-
-	$showTutorial = false;
-	let tutorialClicked = false; //change to false
-
-	$: if ($showTutorial) {
-		tutorialClicked = true;
-	}
 </script>
 
 <nav>
-	<!-- <button
-		on:click={() => {
-			$showTutorial = true;
-		}}>Tutorial</button
-	> -->
-
 	<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
 </nav>
-
-<tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
-	<Tutorial />
-</tutorial>
 
 <style>
 	nav {
@@ -47,30 +27,6 @@
 		justify-content: center;
 		align-items: center;
 		padding: 8px 16px;
-	}
-
-
-
-
-	tutorial {
-		display: block;
-		height: 100%;
-		width: 100%;
-		position: fixed;
-		top: 0;
-		right: 0;
-		z-index: 50;
-		overflow: hidden;
-		animation: slide-out 0.333s forwards;
-		z-index: 40;
-	}
-
-	tutorial.show {
-		animation: slide-in 0.333s;
-	}
-
-	tutorial.hide {
-		display: none;
 	}
 
 	@keyframes slide-in {

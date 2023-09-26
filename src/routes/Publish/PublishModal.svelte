@@ -2,7 +2,7 @@
 	import Close from '../icons/Close.svelte';
 	import saveAs from 'file-saver';
 
-	import { selectedAlbum, selectedBand, selectedAlbumIndex, catalogDB } from '$/stores';
+	import { selectedAlbum } from '$/stores';
 
 	export let showPublishModal = false;
 	export let xmlFile;
