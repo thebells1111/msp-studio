@@ -1,36 +1,39 @@
 import express from 'express';
-import fs from 'fs';
 import path from 'path';
-import { pipeline } from 'stream/promises';
-import multer from 'multer';
 import { promises as fsPromises } from 'fs';
+import multer from 'multer';
 
 const router = express.Router();
-const writeFolder = path.resolve(process.cwd(), './public');
+// const writeFolder = path.resolve(process.cwd(), './public');
+const writeFolder = path.resolve(process.cwd(), '../static');
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-router.post('/', upload.single('file'), async (req, res) => {
-	try {
-		const { file } = req;
-		const { fileName, folderName } = req.body;
-
+const storage = multer.diskStorage({
+	destination: function (req, file, cb) {
+		const dir = `${writeFolder}/albums/${req.query.folderName}/${req.query.fileType}`;
+		cb(null, dir);
+	},
+	filename: function (req, file, cb) {
 		const ext = path.extname(file.originalname);
-		const newFileName = `${fileName}${ext}`;
-		const dir = `${writeFolder}/albums/${folderName}`;
+		cb(null, `${req.query.fileName}${ext}`);
+	}
+});
 
-		// Ensure directory exists
-		await fsPromises.mkdir(dir, { recursive: true });
+const upload = multer({ storage: storage }).single('file');
 
-		const filePath = `${dir}/${newFileName}`;
+// Middleware to create directory
+async function createDir(req, res, next) {
+	const dir = `${writeFolder}/albums/${req.query.folderName}/${req.query.fileType}`;
+	await fsPromises.mkdir(dir, { recursive: true });
+	next();
+}
 
-		// Write file
-		await pipeline(file.stream, fs.createWriteStream(filePath));
-
+// Apply the middleware before invoking multer
+router.post('/', createDir, upload, async (req, res) => {
+	if (req.file && req.file.filename) {
+		const dir = `${writeFolder}/albums/${req.query.folderName}/${req.query.fileType}`;
+		const filePath = `${dir}/${req.file.filename}`;
 		res.json({ success: true, path: filePath.split(writeFolder)[1] });
-	} catch (error) {
-		console.error(error);
+	} else {
 		res.status(500).json({ success: false });
 	}
 });

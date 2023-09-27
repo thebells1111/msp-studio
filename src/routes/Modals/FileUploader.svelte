@@ -1,4 +1,5 @@
 <script>
+	import { remoteServer } from '$/stores';
 	import Close from '../icons/Close.svelte';
 	import { deserialize } from '$app/forms';
 
@@ -10,19 +11,18 @@
 	export let fileReload;
 	let warning = '';
 
-	function getEndpoint(fileType) {
-		if (fileType.startsWith('image/') && type === 'image') return '?/image';
-		if (fileType.startsWith('audio/') && type === 'audio') return '?/audio';
-		if ((fileType === 'application/xml' || fileType === 'text/xml') && type === 'xml')
-			return '?/xml';
+	function getFileType(fileType) {
+		if (fileType.startsWith('image/') && type === 'image') return 'image';
+		if (fileType.startsWith('audio/') && type === 'audio') return 'audio';
+		if ((fileType === 'application/xml' || fileType === 'text/xml') && type === 'xml') return 'xml';
 
 		if (
 			(fileType === 'application/x-subrip' || fileType === 'application/srt') &&
 			type === 'lyrics'
 		)
-			return '?/lyrics';
+			return 'lyrics';
 
-		if (fileType === 'application/json' && type === 'chapters') return '?/chapters';
+		if (fileType === 'application/json' && type === 'chapters') return 'chapters';
 
 		if (type === 'image') warning = 'Please upload an image.';
 		if (type === 'audio') warning = 'Please upload an mp3.';
@@ -33,35 +33,39 @@
 	}
 
 	async function uploadFile(file) {
-		const data = new FormData();
-		data.append('file', file);
-		data.append('fileName', fileName);
-		data.append('folderName', folderName);
+		console.log(file);
 		const fileExtension = file.name.split('.').pop();
-		let endpoint;
+		let fileType;
 		if (fileExtension === 'srt' && !file.type) {
-			endpoint = getEndpoint('application/x-subrip');
+			fileType = getFileType('application/x-subrip');
 		} else {
-			endpoint = getEndpoint(file.type);
+			fileType = getFileType(file.type);
 		}
 
-		if (!endpoint) return;
-		const requestOptions = {
-			method: 'POST',
-			body: data,
-			headers: new Headers()
-		};
-		const response = await fetch(endpoint, requestOptions);
-		const result = deserialize(await response.text());
+		const data = new FormData();
+		data.append('file', file);
 
+		if (!fileType) return;
+		console.log(data);
+		const url = new URL(remoteServer + '/api/upload');
+
+		url.searchParams.append('fileName', fileName);
+		url.searchParams.append('folderName', folderName);
+		url.searchParams.append('fileType', fileType);
+		const response = await fetch(url, {
+			method: 'POST',
+			body: data
+		});
+		const result = await response.json();
 		if (type === 'audio') {
 			filePath = {
-				'@_url': result.data.path,
+				'@_url': result.path,
 				'@_type': file.type,
 				'@_length': file.size
 			};
 		} else {
-			filePath = result.data.path;
+			console.log(result);
+			filePath = result.path;
 		}
 		fileReload = Date.now();
 		showModal = false;
