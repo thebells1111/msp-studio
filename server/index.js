@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import fs from 'fs';
@@ -14,7 +13,7 @@ let dev = true;
 const port = dev ? 8000 : 3000;
 
 // Middleware
-app.use(helmet());
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
