@@ -7,10 +7,11 @@ import fs from 'fs';
 import router from './routes/index.js'; // Assuming routes folder is at same level as index.js
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+console.log(__dirname);
 
 const app = express();
 let dev = true;
-const port = dev ? 8000 : 3000;
+const port = 8000;
 
 // Middleware
 
@@ -23,13 +24,19 @@ if (dev) {
 	app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3333'] }));
 }
 
+// Static Files
+app.use(express.static('public'));
+
 app.use((req, res, next) => {
-	const filePath = path.join(
-		__dirname,
-		'public',
-		req.path === '/' ? '/index.html' : `${req.path}.html`
-	);
-	const folderPath = path.join(__dirname, 'public', req.path, 'index.html');
+	let filePath;
+	let folderPath;
+	if (req.path.endsWith('.html') || req.path === '/') {
+		filePath = path.join(__dirname, 'public', req.path === '/' ? 'index.html' : req.path);
+		folderPath = path.join(__dirname, 'public', req.path, 'index.html');
+	} else {
+		filePath = path.join(__dirname, 'public', req.path);
+		folderPath = null; // Don't look for folder if not an HTML request
+	}
 
 	if (fs.existsSync(filePath)) {
 		return res.sendFile(filePath);
@@ -41,9 +48,6 @@ app.use((req, res, next) => {
 
 	next();
 });
-
-// Static Files
-app.use(express.static('public'));
 
 // Routes
 app.use('/', router);

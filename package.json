@@ -11,7 +11,7 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"start": "nodemon server/index.js",
 		"docker:build": "docker build -t msp .",
-		"docker:start": "docker run -p 3333:8000 msp",
+		"docker:start": "docker run -v /usr/src/app/server/mspDB:/usr/src/app/mspDB -p 3333:8000 msp",
 		"docker:all": "npm run docker:build && npm run docker:start"
 	},
 	"devDependencies": {
