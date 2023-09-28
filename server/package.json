@@ -4,8 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node index.js",
-		"dev": "set NODE_ENV=development node index.js"
+		"start": "node index.js"
 	},
 	"keywords": [],
 	"author": "",

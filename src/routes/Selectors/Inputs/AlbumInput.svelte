@@ -167,7 +167,7 @@
 					</album-name>
 					<album-link>
 						<label>
-							<h4>Link to Album Website (optional)</h4>
+							<h4>Link to Album Website (required)</h4>
 							<input bind:value={albumState.link} />
 						</label>
 					</album-link>

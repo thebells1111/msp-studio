@@ -25,7 +25,6 @@ router.get('/', async (req, res) => {
 		const baseUrl = 'https://api.podcastindex.org/api/1.0/';
 		const q = req.query.q ?? '';
 		const finalUrl = baseUrl + encodeUrlParameters(q);
-		console.log(finalUrl);
 		const apiRes = await fetch(finalUrl, options);
 
 		if (apiRes.status === 404 || apiRes.status === 401) {

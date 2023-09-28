@@ -7,10 +7,9 @@ import fs from 'fs';
 import router from './routes/index.js'; // Assuming routes folder is at same level as index.js
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-console.log(__dirname);
 
 const app = express();
-let dev = true;
+const DEV = process.env.DEV === 'true';
 const port = 8000;
 
 // Middleware
@@ -20,7 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // CORS
-if (dev) {
+if (DEV) {
 	app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:3333'] }));
 }
 

@@ -47,12 +47,17 @@
 
 		if (!fileType) return;
 		console.log(data);
-		const url = new URL(remoteServer + '/api/upload');
+		console.log(remoteServer + '/api/upload');
+		const baseUrl = remoteServer ? remoteServer + '/api/upload' : '/api/upload';
+		const queryParams = new URLSearchParams({
+			fileName: fileName,
+			folderName: folderName,
+			fileType: fileType
+		}).toString();
 
-		url.searchParams.append('fileName', fileName);
-		url.searchParams.append('folderName', folderName);
-		url.searchParams.append('fileType', fileType);
-		const response = await fetch(url, {
+		const fullUrl = `${baseUrl}?${queryParams}`;
+
+		const response = await fetch(fullUrl, {
 			method: 'POST',
 			body: data
 		});

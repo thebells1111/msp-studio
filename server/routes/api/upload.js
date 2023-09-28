@@ -4,8 +4,15 @@ import { promises as fsPromises } from 'fs';
 import multer from 'multer';
 
 const router = express.Router();
-// const writeFolder = path.resolve(process.cwd(), './public');
-const writeFolder = path.resolve(process.cwd(), '../static');
+let writeFolder;
+
+const DEV = process.env.DEV === 'true';
+
+if (DEV) {
+	writeFolder = path.resolve(process.cwd(), './static');
+} else {
+	writeFolder = path.resolve(process.cwd(), './public');
+}
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
