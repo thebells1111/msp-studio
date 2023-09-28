@@ -55,31 +55,30 @@
 			body: data
 		});
 		const result = await response.json();
-		console.log(result.path);
-		console.log($page.url.origin);
 
 		filePath = $page.url.origin + result.path;
-		console.log(filePath);
 
 		checkPodcastIndex();
 	}
 
 	async function checkPodcastIndex() {
-		const guidUrl =
+		let guidUrl =
 			remoteServer +
 			`/api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(feed['podcast:guid'])}`;
+
 		const guidRes = await fetch(guidUrl);
 		const guidData = await guidRes.json();
 
-		if (guidData.status === 'true' && guidData.feed.length) {
-			podping();
+		if (guidData.status === 'true' && guidData.feed) {
+			podping(guidData.feed.url);
 		} else {
 			showAdd = true;
 		}
 	}
 
-	async function podping() {
-		let url = `api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
+	async function podping(feedUrl) {
+		let url =
+			remoteServer + `/api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
 
 		const res = await fetch(url);
 		const data = await res.text();
