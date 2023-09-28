@@ -35,7 +35,7 @@
 				} else {
 					throw new Error();
 				}
-				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
+				setTimeout(cancelProviderSubmit.bind(this, true), 1000);
 			} catch (error) {
 				console.log(error);
 				noUserFound = true;
@@ -54,7 +54,7 @@
 				} else {
 					throw new Error();
 				}
-				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
+				setTimeout(cancelProviderSubmit.bind(this, true), 1000);
 			} catch (error) {
 				noUserFound = true;
 				info = undefined;
@@ -67,7 +67,7 @@
 				selectedPerson['@_customKey'] = 818818;
 				userFound = name;
 
-				setTimeout(cancelProviderSubmit.bind(this, true), 3500);
+				setTimeout(cancelProviderSubmit.bind(this, true), 1000);
 			} else {
 				noUserFound = true;
 			}

@@ -1,7 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
 	import getFeeds from '$routes/functions/getFeeds.js';
-	import postFeeds from '$routes/functions/postFeeds.js';
 	import Editor from './Editor.svelte';
 
 	import { feeds } from '$/stores';

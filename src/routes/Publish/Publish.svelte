@@ -148,7 +148,6 @@
 			showErrorModal = true;
 		} else {
 			$feeds[feed['podcast:guid']] = feed;
-			postFeeds($feeds);
 			showXMLModal = true;
 		}
 

@@ -29,7 +29,9 @@ const upload = multer({ storage: storage }).single('file');
 
 // Middleware to create directory
 async function createDir(req, res, next) {
-	const dir = `${writeFolder}/albums/${req.query.folderName}/${req.query.fileType}`;
+	const dir = `${writeFolder}/albums/${req.query.folderName}${
+		req.query.fileType ? `/${req.query.fileType}` : ''
+	}`;
 	await fsPromises.mkdir(dir, { recursive: true });
 	next();
 }
@@ -37,7 +39,9 @@ async function createDir(req, res, next) {
 // Apply the middleware before invoking multer
 router.post('/', createDir, upload, async (req, res) => {
 	if (req.file && req.file.filename) {
-		const dir = `${writeFolder}/albums/${req.query.folderName}/${req.query.fileType}`;
+		const dir = `${writeFolder}/albums/${req.query.folderName}${
+			req.query.fileType ? `/${req.query.fileType}` : ''
+		}`;
 		const filePath = `${dir}/${req.file.filename}`;
 		res.json({ success: true, path: filePath.split(writeFolder)[1] });
 	} else {

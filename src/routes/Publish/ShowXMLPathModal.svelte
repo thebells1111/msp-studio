@@ -4,7 +4,7 @@
 	import { page } from '$app/stores';
 	import Close from '../icons/Close.svelte';
 	import { copyText } from 'svelte-copy';
-	import { remoteServer } from '$/stores';
+	import { remoteServer, editingFeed } from '$/stores';
 
 	export let showXMLModal = false;
 
@@ -34,21 +34,32 @@
 		return new File([new Blob([str], { type: mimeType })], fileName, { type: mimeType });
 	}
 	async function uploadFile(file) {
+		let fileType = '';
+		let fileName = 'feed';
+		let folderName = '';
+
 		const data = new FormData();
 		data.append('file', file);
-		data.append('fileName', 'feed');
-		data.append('folderName', feed['podcast:guid']);
-		let endpoint = '?/xml';
 
-		const requestOptions = {
+		const baseUrl = remoteServer ? remoteServer + '/api/upload' : '/api/upload';
+		const queryParams = new URLSearchParams({
+			fileName: fileName,
+			folderName: feed['podcast:guid'],
+			fileType: fileType
+		}).toString();
+
+		const fullUrl = `${baseUrl}?${queryParams}`;
+
+		const response = await fetch(fullUrl, {
 			method: 'POST',
-			body: data,
-			headers: new Headers()
-		};
-		const response = await fetch(endpoint, requestOptions);
-		const result = deserialize(await response.text());
+			body: data
+		});
+		const result = await response.json();
+		console.log(result.path);
+		console.log($page.url.origin);
 
-		filePath = $page.url.origin + result.data.path;
+		filePath = $page.url.origin + result.path;
+		console.log(filePath);
 
 		checkPodcastIndex();
 	}

@@ -65,15 +65,6 @@
 			displayText = data;
 		}
 	}
-
-	async function addFeed() {
-		let feed = remoteServer + `/api/queryindex?q=add/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
-
-		const res = await fetch(feed);
-		const data = await res.json();
-		displayText = data.description;
-		console.log(data);
-	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
