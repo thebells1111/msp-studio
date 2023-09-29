@@ -33,7 +33,6 @@
 	}
 
 	async function uploadFile(file) {
-		console.log(file);
 		const fileExtension = file.name.split('.').pop();
 		let fileType;
 		if (fileExtension === 'srt' && !file.type) {
@@ -46,8 +45,6 @@
 		data.append('file', file);
 
 		if (!fileType) return;
-		console.log(data);
-		console.log(remoteServer + '/api/upload');
 		const baseUrl = remoteServer ? remoteServer + '/api/upload' : '/api/upload';
 		const queryParams = new URLSearchParams({
 			fileName: fileName,
@@ -69,16 +66,13 @@
 				'@_length': file.size
 			};
 		} else {
-			console.log(result);
 			filePath = result.path;
 		}
 		fileReload = Date.now();
 		showModal = false;
-		console.log(filePath);
 	}
 
 	async function handleDrop(event) {
-		console.log('drop');
 		event.preventDefault();
 		const files = event.dataTransfer.files;
 		for (const file of files) {
