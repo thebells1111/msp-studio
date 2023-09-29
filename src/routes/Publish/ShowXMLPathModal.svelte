@@ -69,7 +69,7 @@
 		const guidRes = await fetch(guidUrl);
 		const guidData = await guidRes.json();
 
-		if (guidData.status === 'true' && guidData.feed) {
+		if (guidData.status === 'true' && guidData.feed?.url) {
 			podping(guidData.feed.url);
 		} else {
 			showAdd = true;
