@@ -20,11 +20,11 @@ RUN cd server && npm install
 # Copy the rest of your app's source code
 COPY . .
 
-# Build the SvelteKit app
-RUN npm run build
+# Copy dockerStart script into the container
+COPY dockerStart.sh /dockerStart.sh
 
-# Expose the port the app runs on
-EXPOSE 3000
+# Make dockerStart script executable
+RUN chmod +x /dockerStart.sh
 
-# Command to run the app using PM2
-CMD ["pm2-runtime", "server/index.js"]
+# Use dockerStart script as the entry point
+ENTRYPOINT ["/dockerStart.sh"]
