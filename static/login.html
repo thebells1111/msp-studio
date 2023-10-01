@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./fav.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<title>MSP Studio Log In</title>
+		<style>
+			html,
+			body {
+				height: 100vh;
+				height: calc(var(--vh, 1vh) * 100);
+			}
+
+			body {
+				margin: 0;
+				background-attachment: fixed;
+				background-color: hsl(0, 0%, 15%);
+				-webkit-tap-highlight-color: transparent !important;
+				outline: none !important;
+				margin: 0 auto;
+			}
+
+			img {
+				display: block;
+				margin: 40px auto;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;
+				padding: 0 16px;
+				max-width: 480px;
+				margin: 0 auto;
+			}
+
+			input {
+				margin: 8px 0;
+				padding: 8px;
+				line-height: 1.2em;
+				font-size: 1.2em;
+				color: hsl(0, 0%, 95%);
+				background-color: hsla(208, 14%, 49%, 0.5);
+				border-radius: 4px;
+				outline: 0;
+				border: 1px solid transparent;
+			}
+
+			input:focus,
+			textarea:focus {
+				border-color: #66afe9;
+				border: 1px solid #66afe9;
+				outline: 0;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.8);
+			}
+
+			input::placeholder {
+				color: hsl(0, 0%, 95%);
+			}
+
+			::selection {
+				background: #66afe9;
+			}
+
+			button {
+				cursor: pointer;
+				border: none;
+				margin: 8px 0;
+				color: hsl(0, 0%, 97%);
+				background-color: hsl(234, 100%, 62%);
+				padding: 8px 16px;
+				border-radius: 50px;
+				font-weight: 500;
+				height: 50px;
+				font-size: 1.2em;
+			}
+
+			button:focus:not(:focus-visible) {
+				outline: none;
+			}
+
+			background {
+				position: absolute;
+				top: 0;
+				height: 100%;
+				width: 100%;
+				z-index: -1;
+				background-attachment: fixed;
+				background-color: hsl(0, 0%, 11%);
+			}
+
+			.header-background {
+				position: absolute;
+				top: 0;
+				height: 100px;
+				width: 100%;
+				background-color: var(--color-bg-2);
+				background-image: linear-gradient(
+					180deg,
+					hsl(208, 100%, 32%) 0%,
+					hsl(208, 100%, 22%) 40%,
+					hsl(0, 0%, 11%) 100%
+				);
+				z-index: -1;
+			}
+
+			.main-background {
+				background-attachment: fixed;
+				background-color: hsl(0, 0%, 11%);
+				z-index: -2;
+				position: absolute;
+				height: 100%;
+				width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<img src="/msp-header.png" />
+		<form id="loginForm">
+			<input type="text" id="username" placeholder="Username" required />
+			<input type="password" id="password" placeholder="Password" required />
+			<button type="submit">LOGIN</button>
+		</form>
+	</body>
+
+	<background>
+		<div class="header-background" />
+	</background>
+
+	<script>
+		const handleSubmit = async (event) => {
+			event.preventDefault();
+
+			const username = document.getElementById('username').value;
+			const password = document.getElementById('password').value;
+
+			const res = await fetch('/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ username, password }),
+				credentials: 'include'
+			});
+
+			if (res.status === 200) {
+				window.location.href = '/';
+			} else {
+				alert('Invalid credentials');
+			}
+		};
+
+		document.getElementById('loginForm').addEventListener('submit', handleSubmit);
+	</script>
+</html>

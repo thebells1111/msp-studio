@@ -11,7 +11,7 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"start": "nodemon server/index.js",
 		"docker:build": "docker build -t msp .",
-		"docker:start": "docker run -it -v /usr/src/app/msp/mspDB:/usr/src/app/mspDB -v /usr/src/app/msp/public:/usr/src/app/public -p 3000:8000 msp",
+		"docker:start": "docker run -it --volume credentials_volume:/usr/src/app/msp -v /usr/src/app/msp/mspDB:/usr/src/app/msp/mspDB -v /usr/src/app/msp/public:/usr/src/app/public -p 3000:8000 msp",
 		"docker:all": "npm run docker:build && npm run docker:start"
 	},
 	"devDependencies": {
@@ -40,6 +40,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"bcrypt": "^5.1.1"
+		"bcrypt": "^5.1.1",
+		"express-rate-limit": "^7.0.2",
+		"express-session": "^1.17.3"
 	}
 }

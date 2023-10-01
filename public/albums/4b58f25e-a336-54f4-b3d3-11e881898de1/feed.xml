@@ -1,0 +1,48 @@
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:podcast="https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md">
+  <channel>
+    <generator>Music Side Project Studio</generator>
+    <itunes:category text="Music"/>
+    <itunes:keywords>music</itunes:keywords>
+    <podcast:medium>music</podcast:medium>
+    <itunes:author>b</itunes:author>
+    <itunes:owner itunes:name="b" itunes:email=""/>
+    <title>a</title>
+    <description>d</description>
+    <itunes:image href="http://localhost:8000/albums/4b58f25e-a336-54f4-b3d3-11e881898de1/image/artwork.png"/>
+    <itunes:explicit>no</itunes:explicit>
+    <link>https://curiocaster.com/</link>
+    <podcast:value type="lightning" method="keysend">
+      <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="100" type="node"/>
+      <item>
+        <podcast:value type="lightning" method="keysend">
+          <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="100" type="node"/>
+        </podcast:value>
+        <duration>2001.12</duration>
+        <guid isPermaLink="false">d96c3b27-ba63-4d29-9eb3-af6a6591930a</guid>
+        <title>t1</title>
+        <itunes:image href=""/>
+        <enclosure url="/albums/4b58f25e-a336-54f4-b3d3-11e881898de1/d96c3b27-ba63-4d29-9eb3-af6a6591930a/audio/audio.mp3" type="audio/mpeg" length="64036736"/>
+        <description/>
+        <itunes:explicit>no</itunes:explicit>
+        <podcast:chapters url="" type="application/json"/>
+        <podcast:transcript url="" type="application/srt"/>
+      </item>
+    </podcast:value>
+    <podcast:guid>4b58f25e-a336-54f4-b3d3-11e881898de1</podcast:guid>
+    <item>
+      <podcast:value type="lightning" method="keysend">
+        <podcast:valueRecipient name="steve" address="030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3" customKey="696969" customValue="0RaITESl8QCjz67YVTzs" split="100" type="node"/>
+      </podcast:value>
+      <duration>2001.12</duration>
+      <guid isPermaLink="false">d96c3b27-ba63-4d29-9eb3-af6a6591930a</guid>
+      <title>t1</title>
+      <enclosure url="http://localhost:8000/albums/4b58f25e-a336-54f4-b3d3-11e881898de1/d96c3b27-ba63-4d29-9eb3-af6a6591930a/audio/audio.mp3" type="audio/mpeg" length="64036736"/>
+      <description/>
+      <itunes:explicit>no</itunes:explicit>
+      <pubDate>Sat, 30 Sep 2023 05:22:32 +0000</pubDate>
+      <podcast:season>1</podcast:season>
+      <podcast:episode>1</podcast:episode>
+      <itunes:duration>00:33:21</itunes:duration>
+    </item>
+  </channel>
+</rss>

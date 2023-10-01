@@ -40,10 +40,16 @@
 		<header>
 			<h4>Value Recipients</h4>
 		</header>
-		<instructions>for splits, use whole numbers only</instructions>
+		{#if valueBlock?.length}
+			<instructions>for splits, use whole numbers only</instructions>
+		{/if}
 		<value-header>
-			<split-percent>Split %</split-percent>
-			<split-name>Name</split-name>
+			{#if valueBlock?.length}
+				<split-percent>Split %</split-percent>
+				<split-name>Name</split-name>
+			{:else}
+				<click-help>Click here to create your value block. <span>→</span></click-help>
+			{/if}
 			<button class="add-value" on:click={addPerson}><Add size="24" /></button>
 		</value-header>
 		<ul>
@@ -119,6 +125,19 @@
 		);
 		bottom: 32px;
 		right: 32px;
+	}
+
+	click-help {
+		display: block;
+		font-size: 1.1em;
+		color: red;
+		position: relative;
+		bottom: 15px;
+		left: 0;
+	}
+
+	click-help span {
+		font-size: 1.4em;
 	}
 
 	.close {
