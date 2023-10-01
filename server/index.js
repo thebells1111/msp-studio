@@ -11,14 +11,11 @@ import dotenv from 'dotenv';
 import router from './routes/index.js';
 
 dotenv.config();
-console.log(process.env.CREDENTIALS_PATH);
 const SECRET_KEY = process.env.SECRET_KEY;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 8000;
 const DEV = process.env.DEV === 'true';
-
-console.log(DEV);
 
 // Session setup
 app.use(

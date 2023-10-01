@@ -4,7 +4,6 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log(process.env.CREDENTIALS_PATH);
 
 const router = express.Router();
 
