@@ -258,32 +258,20 @@
 {/if}
 
 {#if showHints.audio}
-	<SmallModal
-		closeModal={() => {
-			showHints.audio = false;
-		}}
-	>
+	<SmallModal bind:showModal={showHints.audio}>
 		<p>Upload the mp3 audio for your track.</p>
 	</SmallModal>
 {/if}
 
 {#if showHints.art}
-	<SmallModal
-		closeModal={() => {
-			showHints.art = false;
-		}}
-	>
+	<SmallModal bind:showModal={showHints.art}>
 		<p>Upload a square image for your track art.</p>
 		<p>This is entirely optional, and if not done, the track art will default to your album art.</p>
 	</SmallModal>
 {/if}
 
 {#if showHints.chapters}
-	<SmallModal
-		closeModal={() => {
-			showHints.chapters = false;
-		}}
-	>
+	<SmallModal bind:showModal={showHints.chapters}>
 		<p>
 			Use this to upload a chapters file. To learn more about chapters files, <a
 				href="https://github.com/Podcastindex-org/podcast-namespace/blob/main/chapters/jsonChapters.md"
@@ -301,11 +289,7 @@
 {/if}
 
 {#if showHints.lyrics}
-	<SmallModal
-		closeModal={() => {
-			showHints.lyrics = false;
-		}}
-	>
+	<SmallModal bind:showModal={showHints.lyrics}>
 		<p>Use this to update the transcripts of your lyrics.</p>
 		<p>It's the same type of file a podcast would use for transcripts.</p>
 		<p>

@@ -215,7 +215,7 @@
 					/>
 				</value>
 				<tracks class:hide={hideTracks}>
-					<Tracks />
+					<Tracks albumValueBlock={albumState['podcast:value']} />
 				</tracks>
 			</bottom-pane>
 		</scroll-container>

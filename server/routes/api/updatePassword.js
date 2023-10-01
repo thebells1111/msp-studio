@@ -1,10 +1,14 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import fs from 'fs';
-import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
+console.log(process.env.CREDENTIALS_PATH);
 
 const router = express.Router();
-const filePath = path.join(__dirname, 'credentials.json');
+
+const filePath = process.env.CREDENTIALS_PATH;
 
 router.post('/', async (req, res) => {
 	const { username, oldPassword, newPassword, newPasswordCheck } = req.body;

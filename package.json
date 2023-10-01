@@ -9,9 +9,9 @@
 		"preview": "vite preview",
 		"lint": "prettier --plugin-search-dir . --check .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"start": "nodemon server/index.js",
+		"start": "cross-env DEV=true nodemon server/index.js",
 		"docker:build": "docker build -t msp .",
-		"docker:start": "docker run -it --volume credentials_volume:/usr/src/app/msp -v /usr/src/app/msp/mspDB:/usr/src/app/msp/mspDB -v /usr/src/app/msp/public:/usr/src/app/public -p 3000:8000 msp",
+		"docker:start": "docker run -it -e CREDENTIALS_PATH=/usr/src/app/msp/credentials.json --volume credentials_volume:/usr/src/app/msp -v /usr/src/app/msp/mspDB:/usr/src/app/msp/mspDB -v /usr/src/app/msp/public:/usr/src/app/public -p 3000:8000 msp",
 		"docker:all": "npm run docker:build && npm run docker:start"
 	},
 	"devDependencies": {

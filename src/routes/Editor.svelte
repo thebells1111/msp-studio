@@ -13,7 +13,7 @@
 	main {
 		padding: 8px;
 		position: relative;
-		height: calc(100% - 50px);
+		height: calc(100% - 66px);
 		overflow: auto;
 	}
 </style>

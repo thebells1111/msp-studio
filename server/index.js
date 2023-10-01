@@ -11,12 +11,12 @@ import dotenv from 'dotenv';
 import router from './routes/index.js';
 
 dotenv.config();
+console.log(process.env.CREDENTIALS_PATH);
 const SECRET_KEY = process.env.SECRET_KEY;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const __parentDir = path.resolve(__dirname, '..');
 const app = express();
 const port = 8000;
-const DEV = true || process.env.DEV === 'true';
+const DEV = process.env.DEV === 'true';
 
 console.log(DEV);
 
@@ -87,9 +87,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', loginLimiter, express.json(), async (req, res) => {
 	const { username, password } = req.body;
-	const credentials = JSON.parse(
-		fs.readFileSync(path.join(__parentDir, 'credentials.json'), 'utf8')
-	);
+	const credentials = JSON.parse(fs.readFileSync(process.env.CREDENTIALS_PATH, 'utf8'));
 	if (
 		(await bcrypt.compare(password, credentials.hashedPassword)) &&
 		username === credentials.username

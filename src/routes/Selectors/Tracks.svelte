@@ -6,6 +6,7 @@
 	import Delete from '$icons/Delete.svelte';
 	import TrackInput from './Inputs/TrackInput.svelte';
 	import postFeeds from '$routes/functions/postFeeds.js';
+	export let albumValueBlock;
 
 	import { feeds, editingFeed, selectedTrack, selectedTrackIndex } from '$/stores';
 
@@ -27,7 +28,7 @@
 
 	async function addNewTrack() {
 		let track = {
-			'podcast:value': clone($editingFeed?.['podcast:value']) || {
+			'podcast:value': clone(albumValueBlock) || {
 				'@_type': 'lightning',
 				'@_method': 'keysend',
 				'podcast:valueRecipient': []

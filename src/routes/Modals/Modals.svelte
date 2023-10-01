@@ -1,12 +1,17 @@
 <script>
 	import Close from '../icons/Close.svelte';
+	export let showModal;
+	function handleCloseModal() {
+		closeModal();
+		showModal = false;
+	}
 
 	export let closeModal = () => {};
 </script>
 
-<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
+<blurred-background on:mousedown|self={handleCloseModal} on:touchend|self={handleCloseModal}>
 	<modal>
-		<button class="close" on:click={closeModal}>
+		<button class="close" on:click={handleCloseModal}>
 			<Close size="24" />
 		</button>
 
