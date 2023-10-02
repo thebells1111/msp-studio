@@ -14,7 +14,7 @@
 			expandMenu = true;
 		}}
 	>
-		<SettingsIcon size="36" />
+		<SettingsIcon size="24" />
 	</button>
 
 	{#if expandMenu}

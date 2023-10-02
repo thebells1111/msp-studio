@@ -2,19 +2,35 @@ import fs from 'fs';
 import crypto from 'crypto';
 import readline from 'readline';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config();
+
+const DEV = process.env.DEV === 'true';
 
 const secretKey = crypto.randomBytes(32).toString('hex');
+let envContent = `SECRET_KEY=${secretKey}\n`;
+
+// Add CREDENTIALS_PATH only in development
+if (DEV) {
+	const currentDir = process.cwd();
+	const credentialsPath = path.resolve(currentDir, 'credentials', 'credentials.json');
+	process.env.CREDENTIALS_PATH = credentialsPath;
+	envContent += `CREDENTIALS_PATH=${credentialsPath.replace(/\\/g, '\\\\')}\n`;
+}
 
 // Write to .env file
-fs.writeFileSync('.env', `SECRET_KEY=${secretKey}`);
+fs.writeFileSync('.env', envContent);
 
 const rl = readline.createInterface({
 	input: process.stdin,
 	output: process.stdout
 });
 
-// const filePath = '/usr/src/app/msp/credentials.json';
-const filePath = 'credentials.json';
+const filePath = process.env.CREDENTIALS_PATH;
+
+console.log(filePath);
 
 const storeCredentials = async (username, password) => {
 	const saltRounds = 10;

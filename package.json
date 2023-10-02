@@ -10,8 +10,11 @@
 		"lint": "prettier --plugin-search-dir . --check .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"start": "cross-env DEV=true nodemon server/index.js",
+		"credentials": "cross-env DEV=true node dockerStart.js",
+		"docker:inspect": "docker run -it --entrypoint /bin/bash msp",
 		"docker:build": "docker build -t msp .",
-		"docker:start": "docker run -it -e CREDENTIALS_PATH=/usr/src/app/msp/credentials.json --volume credentials_volume:/usr/src/app/msp -v /usr/src/app/msp/mspDB:/usr/src/app/msp/mspDB -v /usr/src/app/msp/public:/usr/src/app/public -p 3000:8000 msp",
+		"docker:dev": "docker run -it --rm -e CREDENTIALS_PATH=/usr/src/app/msp/credentials/credentials.json -v /var/docker/msp/credentials:/usr/src/app/msp/credentials -v /var/docker/msp/mspDB:/usr/src/app/msp/mspDB -v /var/docker/msp/albums:/usr/src/app/msp/public -p 3000:8000 msp",
+		"docker:start": "docker run -it -e CREDENTIALS_PATH=/usr/src/app/msp/credentials/credentials.json -v /var/docker/msp/credentials:/usr/src/app/msp/credentials -v /var/docker/msp/mspDB:/usr/src/app/msp/mspDB -v /var/docker/msp/albums:/usr/src/app/msp/public -p 3000:8000 msp",
 		"docker:all": "npm run docker:build && npm run docker:start"
 	},
 	"devDependencies": {
