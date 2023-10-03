@@ -97,34 +97,45 @@
 				</image-pane>
 				<edit-pane>
 					<label class="track-name">
-						<ToolTip>
-							<p.tooltip>Enter the name this track</p.tooltip>
-						</ToolTip>
-						<h4>Track Name (required)</h4>
+						<label-head>
+							<h4>Track Name (required)</h4>
+							<ToolTip>
+								<p.tooltip>Enter the name this track</p.tooltip>
+							</ToolTip>
+						</label-head>
 						<input bind:value={newTrackName} />
 					</label>
 
 					<label>
-						<ToolTip>
-							<p.tooltip>The URL where your track's mp3 file resides on the internet</p.tooltip>
-						</ToolTip>
-						<h4>Link to Track mp3 File (required)</h4>
+						<label-head>
+							<h4>Link to Track mp3 File (required)</h4>
+							<ToolTip>
+								<p.tooltip>The URL where your track's mp3 file resides on the internet</p.tooltip>
+							</ToolTip>
+						</label-head>
 						<input bind:value={newTrackEnclosure.url} class="track-mp3" class:uploadable={false} />
 					</label>
 					<label>
-						<ToolTip>
-							<p.tooltip>The URL of an image file that represents your track <br>
-								If left empty most players will display your album art.
-							</p.tooltip>
-						</ToolTip>
-						<h4>Link to Track Image (optional)</h4>
+						<label-head>
+							<h4>Link to Track Image (optional)</h4>
+							<ToolTip>
+								<p.tooltip
+									>The URL of an image file that represents your track <br />
+									If left empty most players will display your album art.
+								</p.tooltip>
+							</ToolTip>
+						</label-head>
 						<input bind:value={newTrackImage} class="track-img" class:uploadable={false} />
 					</label>
 					<explicit>
-						<ToolTip>
-							<p.tooltip>Are there any F bombs or inappropriate language used in this album?</p.tooltip>
-						</ToolTip>
-						<h4>Explicit Content (optional)</h4>
+						<label-head>
+							<h4>Explicit Content (optional)</h4>
+							<ToolTip>
+								<p.tooltip
+									>Are there any F bombs or inappropriate language used in this album?</p.tooltip
+								>
+							</ToolTip>
+						</label-head>
 						<explicit-radio>
 							<label>
 								<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
@@ -139,15 +150,20 @@
 				</edit-pane>
 			</top-pane>
 			<Player bind:playerEnclosure bind:newTrackEnclosure />
-			<ToolTip>
-				<p.tooltip>Interesting facts about this track. <br>
-					Could be anything such as list of performers, <br> 
-					fun facts about the track. <br>
-					Whatever you want to share with the audience.</p.tooltip>
-			</ToolTip>
+
 			<bottom-pane>
 				<label class="track-description">
-					<h4>Track Liner Notes (optional - but recommended)</h4>
+					<label-head>
+						<h4>Track Liner Notes (optional - but recommended)</h4>
+						<ToolTip>
+							<p.tooltip
+								>Interesting facts about this track. <br />
+								Could be anything such as list of performers, <br />
+								fun facts about the track. <br />
+								Whatever you want to share with the audience.</p.tooltip
+							>
+						</ToolTip>
+					</label-head>
 					<textarea bind:value={newTrackDescription} />
 				</label>
 				<pane-2>
@@ -216,6 +232,17 @@
 	label {
 		display: block;
 		margin: 0 16px 16px 0;
+	}
+
+	label-head {
+		display: flex;
+		align-items: center;
+		margin-bottom: 4px;
+	}
+
+	label-head > p,
+	label-head > h4 {
+		margin-right: 8px;
 	}
 
 	input {

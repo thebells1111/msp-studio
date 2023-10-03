@@ -83,37 +83,50 @@
 				<album-inputs>
 					<album-name>
 						<label>
-							<ToolTip>
-								<p.tooltip>Enter the name of your Album</p.tooltip>
-							</ToolTip>
-							<p>Album Name (required)</p>
+							<label-head>
+								<p>Album Name (required)</p>
+								<ToolTip>
+									<p.tooltip>Enter the name of your Album</p.tooltip>
+								</ToolTip>
+							</label-head>
 							<input bind:value={newAlbumName} />
 						</label>
 					</album-name>
 					<album-image class:uploadable={false}>
 						<label>
-							<p>Link to Album Image (required)</p>
-							<ToolTip>
-								<p.tooltip>This the URL to the image cover art for your album</p.tooltip>
-							</ToolTip>
+							<label-head>
+								<p>Link to Album Image (required)</p>
+								<ToolTip>
+									<p.tooltip>This the URL to the image cover art for your album</p.tooltip>
+								</ToolTip>
+							</label-head>
 							<input bind:value={newAlbumImage} />
 						</label>
 					</album-image>
 					<album-link>
 						<label>
-							<p>Link to Album Website (optional)</p>
-							<ToolTip>
-								<p.tooltip>Where would you like the listener to go to find out more info about the album,<br>
-									could be any website, online store, social media page, etc.</p.tooltip>
-							</ToolTip>
+							<label-head>
+								<p>Link to Album Website (optional)</p>
+								<ToolTip>
+									<p.tooltip
+										>Where would you like the listener to go to find out more info about the album,<br
+										/>
+										could be any website, online store, social media page, etc.</p.tooltip
+									>
+								</ToolTip>
+							</label-head>
 							<input bind:value={newAlbumLink} />
 						</label>
 					</album-link>
 					<explicit>
-						<p>Explicit Content (required)</p>
-						<ToolTip>
-							<p.tooltip>Are there any F bombs or inappropriate language used in this album?</p.tooltip>
-						</ToolTip>
+						<label-head>
+							<p>Explicit Content (required)</p>
+							<ToolTip>
+								<p.tooltip
+									>Are there any F bombs or inappropriate language used in this album?</p.tooltip
+								>
+							</ToolTip>
+						</label-head>
 						<explicit-radio>
 							<label>
 								<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
@@ -128,15 +141,17 @@
 				</album-inputs>
 			</top-container>
 			<bottom-pane>
-				<ToolTip>
-					<p.tooltip>
-						Interesting facts about this album. Could be anything <br>
-						such as list of band members, genre of music, date album was recorded,<br>
-						fun facts about the album. Whatever you want to share with the audience.
-					</p.tooltip>
-				</ToolTip>
 				<label class="album-description">
-					<h4>Album Liner Notes (required)<br /> Tell the audience the story of this album</h4>
+					<label-head>
+						<h4>Album Liner Notes (required)</h4>
+						<ToolTip>
+							<p.tooltip>
+								Interesting facts about this album. Could be anything <br />
+								such as list of band members, genre of music, date album was recorded,<br />
+								fun facts about the album. Whatever you want to share with the audience.
+							</p.tooltip>
+						</ToolTip>
+					</label-head>
 					<textarea bind:value={newAlbumDescription} />
 				</label>
 				<value>
@@ -185,6 +200,16 @@
 			var(--color-poster-bg-1) 66%
 		);
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+	label-head {
+		display: flex;
+		align-items: center;
+		margin-bottom: 4px;
+	}
+
+	label-head > p,
+	label-head > h4 {
+		margin-right: 8px;
 	}
 
 	scroll-container {
