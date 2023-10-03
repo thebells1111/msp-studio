@@ -34,15 +34,17 @@
 
 <value-block>
 	<left-pane>
-		<ToolTip>
-			<p.tooltip>In this section we determine who gets a share of any value (bitcoin) <br> 
-				that is received by this album. Could be each band member, and / or anyone <br>
-				who had a key role in the creation of the album that you would like <br>
-				to split incoming bitcoin with. Could also be infrastructure costs such as <br>
-				hosting, indexing, boostagram bots, etc.</p.tooltip>
-		</ToolTip>
 		<header>
 			<h4>Value Recipients</h4>
+			<ToolTip>
+				<p.tooltip
+					>In this section we determine who gets a share of any value (bitcoin) <br />
+					that is received by this album. Could be each band member, and / or anyone <br />
+					who had a key role in the creation of the album that you would like <br />
+					to split incoming bitcoin with. Could also be infrastructure costs such as <br />
+					hosting, indexing, boostagram bots, etc.</p.tooltip
+				>
+			</ToolTip>
 		</header>
 		<instructions>for splits, use whole numbers only</instructions>
 		<value-header>
@@ -106,6 +108,10 @@
 	header {
 		display: flex;
 		align-items: center;
+	}
+
+	header > h4 {
+		margin-right: 8px;
 	}
 	ul {
 		padding: 0;
