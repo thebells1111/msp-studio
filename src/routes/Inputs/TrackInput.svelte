@@ -6,6 +6,7 @@
 	import Close from '../icons/Close.svelte';
 	import Player from '../Player/Player.svelte';
 	import clone from 'just-clone';
+	import ToolTip from '$lib/Shared/ToolTip.svelte';
 
 	import {
 		catalogDB,
@@ -96,19 +97,33 @@
 				</image-pane>
 				<edit-pane>
 					<label class="track-name">
+						<ToolTip>
+							<p.tooltip>Enter the name this track</p.tooltip>
+						</ToolTip>
 						<h4>Track Name (required)</h4>
 						<input bind:value={newTrackName} />
 					</label>
 
 					<label>
+						<ToolTip>
+							<p.tooltip>The URL where your track's mp3 file resides on the internet</p.tooltip>
+						</ToolTip>
 						<h4>Link to Track mp3 File (required)</h4>
 						<input bind:value={newTrackEnclosure.url} class="track-mp3" class:uploadable={false} />
 					</label>
 					<label>
+						<ToolTip>
+							<p.tooltip>The URL of an image file that represents your track <br>
+								If left empty most players will display your album art.
+							</p.tooltip>
+						</ToolTip>
 						<h4>Link to Track Image (optional)</h4>
 						<input bind:value={newTrackImage} class="track-img" class:uploadable={false} />
 					</label>
 					<explicit>
+						<ToolTip>
+							<p.tooltip>Are there any F bombs or inappropriate language used in this album?</p.tooltip>
+						</ToolTip>
 						<h4>Explicit Content (optional)</h4>
 						<explicit-radio>
 							<label>
@@ -124,6 +139,12 @@
 				</edit-pane>
 			</top-pane>
 			<Player bind:playerEnclosure bind:newTrackEnclosure />
+			<ToolTip>
+				<p.tooltip>Interesting facts about this track. <br>
+					Could be anything such as list of performers, <br> 
+					fun facts about the track. <br>
+					Whatever you want to share with the audience.</p.tooltip>
+			</ToolTip>
 			<bottom-pane>
 				<label class="track-description">
 					<h4>Track Liner Notes (optional - but recommended)</h4>
