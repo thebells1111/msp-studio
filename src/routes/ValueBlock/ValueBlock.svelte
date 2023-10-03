@@ -4,6 +4,7 @@
 	import EditAddress from './EditAddress.svelte';
 	import Add from '../icons/GroupAdd.svelte';
 	import Close from '../icons/Close.svelte';
+	import ToolTip from '$lib/Shared/ToolTip.svelte';
 
 	import { newPerson } from '$/stores';
 
@@ -33,6 +34,13 @@
 
 <value-block>
 	<left-pane>
+		<ToolTip>
+			<p.tooltip>In this section we determine who gets a share of any value (bitcoin) <br> 
+				that is received by this album. Could be each band member, and / or anyone <br>
+				who had a key role in the creation of the album that you would like <br>
+				to split incoming bitcoin with. Could also be infrastructure costs such as <br>
+				hosting, indexing, boostagram bots, etc.</p.tooltip>
+		</ToolTip>
 		<header>
 			<h4>Value Recipients</h4>
 		</header>
