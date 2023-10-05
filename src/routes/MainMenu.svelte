@@ -9,13 +9,13 @@
 </script>
 
 <nav>
-	<button
+	<!-- <button
 		on:click={() => {
 			expandMenu = true;
 		}}
 	>
 		<SettingsIcon size="24" />
-	</button>
+	</button> -->
 
 	{#if expandMenu}
 		<container
@@ -59,7 +59,7 @@
 
 	nav {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
 		position: relative;
 		height: 50px;
