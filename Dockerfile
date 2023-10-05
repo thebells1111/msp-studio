@@ -7,8 +7,6 @@ WORKDIR /usr/src/app/msp
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-
-
 # Install dependencies in root
 RUN npm install
 
@@ -26,9 +24,5 @@ COPY . .
 # Build the SvelteKit app
 RUN npm run build
 
-
-# Make dockerStart script executable
-RUN chmod +x ./dockerStart.sh
-
-# Use dockerStart script as the entry point
-ENTRYPOINT ["./dockerStart.sh"]
+# Use pm2 and server script as the entry point
+CMD ["pm2-runtime", "server/index.js"]

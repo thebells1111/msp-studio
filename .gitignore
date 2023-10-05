@@ -13,5 +13,8 @@ vite.config.ts.timestamp-*
 /server/public/*
 # But not the folder
 !/server/public/
-mspDB
+**/mspDB/
 credentials.json
+
+/static/albums/*
+!/static/albums/
