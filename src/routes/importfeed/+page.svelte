@@ -134,6 +134,7 @@
 					await catalogDB.setItem(key, value);
 				}
 				console.log('Data imported successfully.');
+				feedImported = true;
 			} catch (err) {
 				console.log(err);
 			}
@@ -162,39 +163,63 @@
 	let files;
 </script>
 
-<div>
-	<input bind:value={feedUrl} /> <button on:click={getFeed.bind(this, feedUrl)}>Find Feed</button>
-</div>
-<button on:click={exportFeeds}>Export Feeds</button>
-<div
-	id="dropBox"
-	on:dragover={handleDragOver}
-	on:dragleave={handleDragLeave}
-	on:drop={handleDrop}
-	class:dragOver
-	style="width: 300px; height: 150px; border: 2px dashed #aaa; text-align: center; padding: 50px;"
->
-	Drag & Drop your JSON file here
-	<input type="file" hidden bind:files on:change={importFeeds} />
-</div>
-
-{#if feedImported}
-	<h2>Feed Imported.</h2>
-{/if}
-{#if importing}
-	<h2>Importing</h2>
-{/if}
-{#if badUrl}
-	<h2>That Link doesn't return a feed.</h2>
-{/if}
+<main>
+	<find-feed>
+		<input bind:value={feedUrl} placeholder="paste your feed link here" />
+		<button on:click={getFeed.bind(this, feedUrl)}>Find Feed</button>
+	</find-feed>
+	<button class="export" on:click={exportFeeds}>Export Feeds</button>
+	<drop-box
+		on:dragover={handleDragOver}
+		on:dragleave={handleDragLeave}
+		on:drop={handleDrop}
+		class:dragOver
+	>
+		{#if feedImported}
+			<h2>Feed Imported.</h2>
+		{:else if importing}
+			<h2>Importing</h2>
+		{:else if badUrl}
+			<h2>That Link doesn't return a feed.</h2>
+		{:else}
+			<h2>Drag & Drop your Exported Feed here</h2>
+		{/if}
+		<input type="file" hidden bind:files on:change={importFeeds} />
+	</drop-box>
+</main>
 
 <style>
-	div {
+	main {
 		width: 100%;
+		height: 100%;
+		overflow: hidden;
 		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	find-feed {
+		display: flex;
+		width: calc(100% - 16px);
+		margin: 8px;
 	}
 	input {
-		width: 100%;
+		flex: 1;
+		margin-right: 8px;
+	}
+
+	.export {
+		width: 50%;
+	}
+
+	drop-box {
+		width: calc(100% - 64px);
+		height: 50%;
+		border: 2px dashed #aaa;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 8px;
 	}
 	h2 {
 		text-align: center;
