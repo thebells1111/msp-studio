@@ -1,22 +1,21 @@
-# Introducing Music Side Project Studio: Empower your music career and redefine independence!
+This is my attempt at creating a container for this project. I don't know much about containers, so I'm fumbling my way through it.
 
-[Music Side Project Studio](https://studio.musicsideproject.com/) enables you to harness the potential of RSS feeds and the Lightning Network, allowing you to self-host your music and receive direct payment from your fans. Your music will be accessible on any Music 2.0 RSS Music Player, such as [Music Side Project](https://musicsideproject.com/), where you can see firsthand how your feed is being utilized within a fully-functional music playing app.
+To build it, you need to run `npm run docker:build`.
 
-Listen to [Halfway To Somewhere by Late Night Special](https://musicsideproject.com/album/bbba0c65-3abd-515d-b856-ae293ce399e3) to experience playing an album created in Music Side Project Studio for yourself.
+To run it, you run `npm run docker:start`
 
-[Music Side Project Studio](https://studio.musicsideproject.com/) is a versatile tool designed to help you create RSS feeds with ease, streamlining the process of uploading content to a WordPress site that you maintain ownership of. Take control of your music distribution and monetization, and embark on a thriving, independent career with Music Side Project Studio. Explore our GitHub repository to get started on revolutionizing your music journey!
+If you run `npm run docker:dev`, it does the same thing as `docker:start` but will remove the image when you close out.
 
-## Demonstration Video
+If you're developing the front end, you can type `npm run dev` and it will start the server backend for you, and the vite server for handling all of the SvelteKit stuff.
 
-[![Music Side Project Studio Demonstration Video](https://studio.musicsideproject.com/msp-play.png)](https://www.youtube.com/watch?v=2HDyelkS9Ck)
+If you'd like to test the server, you can populate the public folder by typing `npm run build`
 
-## Developing
+You'll need a .env file with a `CREDENTIALS_PATH` variable in it that is an absolute path to the credentials file.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+To create the credentials file for development, run `dockerStart.js` or run `npm run credentials`. It will prompt you for a user name and password and create the credentials file for you.
 
-```bash
-npm run dev
+When you start the docker container, ` dockerStart.sh`` is ran, which will run  `dockerStart.js`to create the credentials file, and then start the server using`pm2`.
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+I'm sure there's room for improvement for security and dockerizing, so I'm open to any help available.
+
+The main things to note is we need some way for the user to log in so they can edit their feeds but keep others out, but we also need the `/public/album` folder in the server to be open to the public so the mp3, images, and xml files are available to all of the apps.
