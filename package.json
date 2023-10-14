@@ -13,8 +13,8 @@
 		"credentials": "cross-env DEV=true node dockerStart.js",
 		"docker:inspect": "docker run -it --entrypoint /bin/bash msp",
 		"docker:build": "docker build -t msp .",
-		"docker:dev": "docker run -it --rm -e CREDENTIALS_PATH=/usr/src/app/msp/credentials/credentials.json -v /var/docker/msp/credentials:/usr/src/app/msp/credentials -v /var/docker/msp/mspDB:/usr/src/app/msp/mspDB -v /var/docker/msp/albums:/usr/src/app/msp/public -p 3000:8000 msp",
-		"docker:start": "docker run -it -e CREDENTIALS_PATH=/usr/src/app/msp/credentials/credentials.json -v /var/docker/msp/credentials:/usr/src/app/msp/credentials -v /var/docker/msp/mspDB:/usr/src/app/msp/mspDB -v /var/docker/msp/albums:/usr/src/app/msp/public -p 3000:8000 msp",
+		"docker:dev": "docker run -it --rm -e CREDENTIALS_PATH=/usr/src/app/msp/storage/credentials.json -v storage:/usr/src/app/msp/storage -p 3000:8000 msp",
+		"docker:start": "docker run -it -e CREDENTIALS_PATH=/usr/src/app/msp/storage/credentials.json -v storage:/usr/src/app/msp/storage -p 3000:8000 msp",
 		"docker:all": "npm run docker:build && npm run docker:start"
 	},
 	"devDependencies": {
@@ -25,13 +25,11 @@
 		"@sveltejs/kit": "^1.20.4",
 		"archiver": "^6.0.1",
 		"cross-env": "^7.0.3",
-		"dotenv": "^16.0.3",
 		"fast-xml-parser": "^3.20.3",
 		"file-saver": "^2.0.5",
 		"form-data": "^4.0.0",
 		"html-entities": "^2.3.3",
 		"just-clone": "^6.2.0",
-		"level": "^8.0.0",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"smui-theme": "^7.0.0-beta.0",
@@ -44,7 +42,9 @@
 	"type": "module",
 	"dependencies": {
 		"bcrypt": "^5.1.1",
+		"dotenv": "^16.0.3",
 		"express-rate-limit": "^7.0.2",
-		"express-session": "^1.17.3"
+		"express-session": "^1.17.3",
+		"level": "^8.0.0"
 	}
 }
