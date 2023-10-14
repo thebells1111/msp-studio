@@ -1,0 +1,14 @@
+version: '3'
+services:
+  msp:
+    build: .
+    image: msp
+    environment:
+      - CREDENTIALS_PATH=/usr/src/app/msp/storage/credentials.json
+    ports:
+      - '3000:8000'
+    # user: '1000'
+    volumes:
+      - storage:/usr/src/app/msp/storage
+volumes:
+  storage:
