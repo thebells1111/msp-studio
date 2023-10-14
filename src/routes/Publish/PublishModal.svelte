@@ -19,7 +19,7 @@
 	async function saveFeed(title, xmlFile) {
 		displayText = `If updating your feed, remember to keep your file name the same as your old file.
 		<br/> <br/>Then replace your old file with the new file.`;
-		var blob = new Blob([xmlFile], { type: 'text/plain;charset=utf-8' });
+		var blob = new Blob([xmlFile], { type: 'text/xml;charset=utf-8' });
 
 		saveAs(blob, `${title.toLowerCase()}.xml`);
 	}
