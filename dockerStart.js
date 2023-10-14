@@ -103,8 +103,22 @@ const promptUser = () => {
 	});
 };
 
-if (fs.existsSync(filePath)) {
-	promptOverwrite();
+const generateCredentials = () => {
+	const username = 'admin';
+	const password = crypto.randomBytes(16).toString('hex');
+
+	storeCredentials(username, password);
+
+	console.log(`Generated username: ${username}`);
+	console.log(`Generated password: ${password}`);
+};
+
+if (process.stdout.isTTY) { // able to prompt the user
+	if (fs.existsSync(filePath)) {
+		promptOverwrite();
+	} else {
+		promptUser();
+	}
 } else {
-	promptUser();
+	generateCredentials();
 }
