@@ -6,4 +6,4 @@ Dockerfile
 build
 .env
 credentials.json
-mspDB
+storage/*

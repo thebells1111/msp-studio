@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 		return res.status(400).send('Invalid GUID');
 	}
 
-	const folderPath = path.join(__dirname, '../../public/albums', guid);
+	const folderPath = path.resolve(process.env.ALBUMS_PATH, guid);
 
 	if (!fs.existsSync(folderPath)) {
 		console.error('folder not found');

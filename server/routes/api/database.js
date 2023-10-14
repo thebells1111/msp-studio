@@ -1,8 +1,14 @@
 import express from 'express';
 import { Level } from 'level';
+import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
-const db = new Level('mspDB', { valueEncoding: 'json' });
+const dbPath = path.resolve(process.env.MSPDB_PATH);
+
+const db = new Level(dbPath, { valueEncoding: 'json' });
 
 db.open((err) => {
 	if (err) {

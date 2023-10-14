@@ -9,9 +9,7 @@ node_modules
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vercel
-# Ignore all files in /server/public
-/server/public/*
-# But not the folder
-!/server/public/
-mspDB
 credentials.json
+# ignore storage folder except .gitkeep
+/storage/*
+!/storage/.gitkeep

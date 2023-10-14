@@ -11,7 +11,9 @@ import dotenv from 'dotenv';
 import router from './routes/index.js';
 
 dotenv.config();
+
 const SECRET_KEY = process.env.SECRET_KEY;
+const ALBUMS_PATH = process.env.ALBUMS_PATH;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 8000;
@@ -98,6 +100,7 @@ app.post('/login', loginLimiter, express.json(), async (req, res) => {
 
 // Static files and custom middleware
 app.use(express.static('public'));
+app.use('/albums', express.static(ALBUMS_PATH));
 app.use((req, res, next) => {
 	let filePath;
 	let folderPath;

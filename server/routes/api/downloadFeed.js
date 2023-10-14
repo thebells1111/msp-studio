@@ -13,7 +13,8 @@ router.get('/', async (req, res) => {
 		return res.status(400).send('Invalid GUID');
 	}
 
-	const folderPath = path.resolve(process.cwd(), './static/albums', guid);
+	const folderPath = path.resolve(process.env.ALBUMS_PATH, guid);
+
 	if (!fs.existsSync(folderPath)) {
 		console.log('Folder not found');
 		return res.status(404).send('Folder not found');

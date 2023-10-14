@@ -12,6 +12,10 @@ const DEV = process.env.DEV === 'true';
 const secretKey = crypto.randomBytes(32).toString('hex');
 let envContent = `SECRET_KEY=${secretKey}\n`;
 
+// Set default paths for mspDB and albums
+envContent += `MSPDB_PATH=${path.resolve(process.cwd(), './storage/mspDB')}\n`;
+envContent += `ALBUMS_PATH=${path.resolve(process.cwd(), './storage/albums')}\n`;
+
 // Add CREDENTIALS_PATH only in development
 if (DEV) {
 	const currentDir = process.cwd();
