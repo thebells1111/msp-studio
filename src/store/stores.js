@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { dev } from '$app/environment';
 
-export const remoteServer = dev ? 'http://localhost:8000' : '';
+export const remoteServer = dev ? 'http://localhost:3000' : '';
 
 export const indexSearchResults = writable([]);
 export const library = writable([]);

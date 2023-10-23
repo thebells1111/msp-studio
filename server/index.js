@@ -5,16 +5,17 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import fs from 'fs';
 import session from 'express-session';
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import router from './routes/index.js';
+import crypto from 'crypto';
 
 dotenv.config();
-const SECRET_KEY = process.env.SECRET_KEY;
+const { ADMIN_USER, ADMIN_PASS } = process.env;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
-const port = 8000;
+const port = 3000;
 const DEV = process.env.DEV === 'true';
+const SECRET_KEY = crypto.randomBytes(32).toString('hex');
 
 // Session setup
 app.use(
@@ -76,11 +77,7 @@ app.get('/login', (req, res) => {
 
 app.post('/login', loginLimiter, express.json(), async (req, res) => {
 	const { username, password } = req.body;
-	const credentials = JSON.parse(fs.readFileSync(process.env.CREDENTIALS_PATH, 'utf8'));
-	if (
-		(await bcrypt.compare(password, credentials.hashedPassword)) &&
-		username === credentials.username
-	) {
+	if (username === ADMIN_USER && password === ADMIN_PASS) {
 		req.session.isAuthenticated = true;
 		res.send('OK');
 	} else {

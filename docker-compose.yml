@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  msp:
+    image: msp:latest
+    container_name: msp
+    command: ['pm2-runtime', 'server/index.js']
+    restart: always
+
+    ports:
+      - 3000:3000
+
+    environment:
+      - ADMIN_USER=test
+      - ADMIN_PASS=password
+
+    volumes:
+      - /var/docker/msp/credentials:/usr/src/app/msp/credentials
+      - /var/docker/msp/mspDB:/usr/src/app/msp/mspDB
+      - /var/docker/msp/albums:/usr/src/app/msp/public

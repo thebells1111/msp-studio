@@ -31,9 +31,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		position: absolute;
-		height: 100%;
-		width: 100%;
+		position: fixed;
+		height: 100vh;
+		width: 100vw;
 		top: 0;
 	}
 
