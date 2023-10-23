@@ -6,7 +6,6 @@ import cors from 'cors';
 import fs from 'fs';
 import session from 'express-session';
 import bcrypt from 'bcrypt';
-import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import router from './routes/index.js';
 
@@ -29,13 +28,6 @@ app.use(
 		}
 	})
 );
-
-// Rate limiter
-const loginLimiter = rateLimit({
-	windowMs: 60 * 60 * 1000,
-	max: 5,
-	message: 'Too many login attempts, please try again later.'
-});
 
 // Middleware
 app.use(cookieParser());
