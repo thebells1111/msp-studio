@@ -75,7 +75,7 @@ app.get('/login', (req, res) => {
 	res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-app.post('/login', loginLimiter, express.json(), async (req, res) => {
+app.post('/login', express.json(), async (req, res) => {
 	const { username, password } = req.body;
 	if (username === ADMIN_USER && password === ADMIN_PASS) {
 		req.session.isAuthenticated = true;
