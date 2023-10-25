@@ -17,25 +17,24 @@ const port = 3000;
 const DEV = process.env.DEV === 'true';
 const SECRET_KEY = crypto.randomBytes(32).toString('hex');
 
-// Session setup
-app.use(
-	session({
-		secret: SECRET_KEY,
-		resave: false,
-		saveUninitialized: true,
-		cookie: {
-			httpOnly: true,
-			sameSite: 'strict'
-		}
-	})
-);
+if (ADMIN_USER && ADMIN_PASS) {
+	app.use(
+		session({
+			secret: SECRET_KEY,
+			resave: false,
+			saveUninitialized: true,
+			cookie: {
+				httpOnly: true,
+				sameSite: 'strict'
+			}
+		})
+	);
+}
 
-// Middleware
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// CORS
 if (DEV) {
 	app.use(
 		cors({
@@ -57,7 +56,6 @@ if (DEV) {
 	});
 }
 
-// Authentication middleware
 const checkAuth = (req, res, next) => {
 	if (req.session.isAuthenticated) {
 		next();
@@ -66,26 +64,26 @@ const checkAuth = (req, res, next) => {
 	}
 };
 
-// Routes
-app.get('/', checkAuth, (req, res) => {
-	res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+if (ADMIN_USER && ADMIN_PASS) {
+	app.get('/', checkAuth, (req, res) => {
+		res.sendFile(path.join(__dirname, 'public', 'index.html'));
+	});
 
-app.get('/login', (req, res) => {
-	res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
+	app.get('/login', (req, res) => {
+		res.sendFile(path.join(__dirname, 'public', 'login.html'));
+	});
 
-app.post('/login', express.json(), async (req, res) => {
-	const { username, password } = req.body;
-	if (username === ADMIN_USER && password === ADMIN_PASS) {
-		req.session.isAuthenticated = true;
-		res.send('OK');
-	} else {
-		res.status(401).send('Unauthorized');
-	}
-});
+	app.post('/login', express.json(), async (req, res) => {
+		const { username, password } = req.body;
+		if (username === ADMIN_USER && password === ADMIN_PASS) {
+			req.session.isAuthenticated = true;
+			res.send('OK');
+		} else {
+			res.status(401).send('Unauthorized');
+		}
+	});
+}
 
-// Static files and custom middleware
 app.use(express.static('public'));
 app.use((req, res, next) => {
 	let filePath;
@@ -109,16 +107,13 @@ app.use((req, res, next) => {
 	next();
 });
 
-// API Routes
 app.use('/', router);
 
-// Fallback and 404 routes
 app.use((req, res) => {
 	const notFoundPath = path.join(__dirname, 'public', '404.html');
 	res.status(404).sendFile(notFoundPath);
 });
 
-// Server start
 app.listen(port, () => {
 	console.log(`Server running on port ${port}`);
 });
