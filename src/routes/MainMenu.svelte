@@ -34,6 +34,8 @@
 </script>
 
 <nav>
+	<a href="/">Home</a>
+	<a href="/importfeed">Import Feed</a>
 	<button
 		on:click={() => {
 			$showTutorial = true;
@@ -77,8 +79,9 @@
 <style>
 	nav {
 		display: flex;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: center;
+		height: 44px;
 	}
 	container {
 		width: 100vw;
@@ -96,8 +99,8 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 33;
-		margin: 10px 8px 0 10px;
 		position: relative;
+		background-color: transparent;
 	}
 
 	a {
@@ -105,6 +108,9 @@
 		justify-content: center;
 		align-items: center;
 		padding: 0 16px;
+		text-decoration: none;
+		font-weight: 600;
+		color: var(--color-text-0);
 	}
 
 	account-button-hover {

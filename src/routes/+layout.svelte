@@ -1,8 +1,12 @@
 <script>
 	import './styles.css';
+	import MainMenu from './MainMenu.svelte';
 </script>
 
-<slot />
+<MainMenu />
+<main class="main-slot">
+	<slot />
+</main>
 
 <background>
 	<div class="header-background" />
@@ -10,6 +14,12 @@
 </background>
 
 <style>
+	main {
+		padding: 8px;
+		position: relative;
+		height: calc(100% - 106px);
+		overflow: auto;
+	}
 	background {
 		position: absolute;
 		top: 0;

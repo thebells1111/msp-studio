@@ -3,11 +3,12 @@
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
 	import { saveAs } from 'file-saver';
+	import clone from 'just-clone';
 	const catalogDB = localforage.createInstance({
 		name: 'catalogDB'
 	});
 
-	let feedUrl = '';
+	let feedUrl = 'https://www.wavlake.com/feed/10c7d820-b5ed-4a45-bdee-3a19cc0319ed';
 	let feedImported = false;
 	let importing = false;
 	let badUrl = false;
@@ -59,51 +60,75 @@
 
 	function transformPodcastData(data) {
 		// Function to transform individual track data
-		function transformTrack(item) {
-			return {
+		function transformTrack(item, channel) {
+			console.log(item);
+			const itemData = {
 				title: item.title,
-				artwork: item['itunes:image']['@_href'],
+				artwork: item?.['itunes:image']?.['@_href'] || '',
 				url: item.enclosure['@_url'],
-				value: item['podcast:value']['podcast:valueRecipient'].map((recipient) => ({
-					name: recipient['@_name'],
-					address: recipient['@_address'],
-					key: recipient['@_customKey'],
-					value: recipient['@_customValue'],
-					split: recipient['@_split']
-				})),
+
 				description: data.description,
 				explicit: item['itunes:explicit'],
 				enclosure: {
 					url: item.enclosure['@_url'],
-					enclosureLength: item.enclosure['@_length'],
-					type: item.enclosure['@_type']
+					enclosureLength: item.enclosure?.['@_length'] || '',
+					type: item?.enclosure?.['@_type'] || ''
 				},
 				guid: item.guid
 			};
-		}
 
-		// If data.item is an array, map each item. If not, put the single item into an array and map it.
-		const tracks = Array.isArray(data.item)
-			? data.item.map(transformTrack)
-			: [transformTrack(data.item)];
+			if (!item['podcast:value']) {
+				item['podcast:value'] = clone(channel['podcast:value']);
+			}
+			console.log(item?.['podcast:value']?.['podcast:valueRecipient']);
 
-		return {
-			title: data.title,
-			artwork: data['itunes:image']['@_href'],
-			tracks: tracks,
-			value: data['podcast:value']['podcast:valueRecipient'].map((recipient) => ({
+			itemData.value = (
+				item?.['podcast:value']?.['podcast:valueRecipient']
+					? [].concat(item?.['podcast:value']?.['podcast:valueRecipient'])
+					: []
+			).map((recipient) => ({
 				name: recipient['@_name'],
 				address: recipient['@_address'],
 				key: recipient['@_customKey'],
 				value: recipient['@_customValue'],
 				split: recipient['@_split']
-			})),
+			}));
+
+			return itemData;
+		}
+
+		// If data.item is an array, map each item. If not, put the single item into an array and map it.
+		const tracks = Array.isArray(data.item)
+			? data.item.map(transformTrack)
+			: [transformTrack(data.item, data)];
+
+		const podcastData = {
+			title: data.title,
+			artwork: data['itunes:image']['@_href'],
+			tracks: tracks,
+
 			description: data.description,
 			explicit: data['itunes:explicit'],
 			link: data.link, // No corresponding value in the input object
 			enclosureUrl: data.enclosureUrl, // No corresponding value in the input object
 			guid: data['podcast:guid']
 		};
+
+		if (data?.['podcast:value']) {
+			podcastData.value = (
+				data?.['podcast:value']?.['podcast:valueRecipient']
+					? [].concat(data?.['podcast:value']?.['podcast:valueRecipient'])
+					: []
+			).map((recipient) => ({
+				name: recipient['@_name'],
+				address: recipient['@_address'],
+				key: recipient['@_customKey'],
+				value: recipient['@_customValue'],
+				split: recipient['@_split']
+			}));
+		}
+
+		return podcastData;
 	}
 
 	async function exportFeeds() {

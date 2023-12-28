@@ -7,22 +7,13 @@
 	import { selectedScreen } from '$/stores';
 </script>
 
-<MainMenu />
-<main>
-	{#if $selectedScreen === 'bands'}
-		<SelectBandScreen />
-	{:else if $selectedScreen === 'albums'}
-		<SelectAlbumScreen />
-	{:else if $selectedScreen === 'tracks'}
-		<SelectTrackScreen />
-	{/if}
-</main>
+{#if $selectedScreen === 'bands'}
+	<SelectBandScreen />
+{:else if $selectedScreen === 'albums'}
+	<SelectAlbumScreen />
+{:else if $selectedScreen === 'tracks'}
+	<SelectTrackScreen />
+{/if}
 
 <style>
-	main {
-		padding: 8px;
-		position: relative;
-		height: calc(100% - 106px);
-		overflow: auto;
-	}
 </style>
