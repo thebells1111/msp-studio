@@ -24,6 +24,22 @@
 		showPersonEdit = false;
 	}
 
+	function checkForMSP(block) {
+		const _block = [].concat(block);
+		const hasMSP = _block.filter((v) => v?.value === 'UzrnTK2oEHR55gw7Djmb');
+		return hasMSP.length > 0;
+	}
+
+	function addMSP() {
+		valueBlock = valueBlock.concat({
+			name: 'Music Side Project',
+			address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+			key: '696969',
+			value: 'UzrnTK2oEHR55gw7Djmb',
+			split: 5
+		});
+	}
+
 	function closeModal() {
 		console.log(window.innerWidth);
 		if (window.innerWidth < 992) {
@@ -47,11 +63,24 @@
 			</ToolTip>
 		</header>
 		<instructions>for splits, use whole numbers only</instructions>
+		{#if !checkForMSP(valueBlock)}
+			<support>
+				<button class="add-value" on:click={addMSP.bind(this, valueBlock)}>
+					<Add size="32" />
+				</button>
+				<div>
+					<p>You should add MSP</p>
+					<p>to your value block.</p>
+					<p>I help you, you help me.</p>
+				</div>
+			</support>
+		{/if}
 		<value-header>
 			<split-percent>Split %</split-percent>
 			<split-name>Name</split-name>
 			<button class="add-value" on:click={addPerson}><Add size="24" /></button>
 		</value-header>
+
 		<ul>
 			{#each valueBlock || [] as person, index}
 				<li>
@@ -146,6 +175,32 @@
 
 	value-footer {
 		border-top: 1px solid var(--color-text-0);
+	}
+
+	support {
+		display: flex;
+		position: relative;
+		color: red;
+		padding: 4px 0;
+		border-top: 1px solid red;
+		border-bottom: 1px solid red;
+		margin: 4px 0 20px 0;
+	}
+
+	support > div > p {
+		margin: 0;
+		font-weight: 550;
+	}
+
+	support > button.add-value {
+		right: initial;
+		top: initial;
+		position: relative;
+		height: 60px;
+		width: 60px;
+		border-radius: 50%;
+		margin-right: 16px;
+		background-color: var(--color-bg-edit-album);
 	}
 
 	split-percent,
