@@ -8,7 +8,7 @@
 		name: 'catalogDB'
 	});
 
-	let feedUrl = 'https://www.wavlake.com/feed/10c7d820-b5ed-4a45-bdee-3a19cc0319ed';
+	let feedUrl = '';
 	let feedImported = false;
 	let importing = false;
 	let badUrl = false;
