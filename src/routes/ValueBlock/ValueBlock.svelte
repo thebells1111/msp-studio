@@ -4,20 +4,26 @@
 	import EditAddress from './EditAddress.svelte';
 	import Add from '../icons/GroupAdd.svelte';
 	import Close from '../icons/Close.svelte';
-	import ToolTip from '$lib/Shared/ToolTip.svelte';
 
 	import { newPerson } from '$/stores';
 
 	export let valueBlock = [];
 	let showPersonEdit = false;
 	let selectedIndex = -1;
+	export let hideTracks = false;
+
+	$: hideTracks = window?.innerWidth >= 992 && showPersonEdit;
+
+	$: console.log(hideTracks);
 
 	function addPerson() {
 		valueBlock = valueBlock.concat({ ...$newPerson });
+		selectedIndex = valueBlock.length - 1;
+		showPersonEdit = true;
 	}
 
 	$: splitTotal = valueBlock.reduce((t, v) => {
-		return t + Number(v.split);
+		return t + Number(v['@_split']);
 	}, 0);
 
 	$: if (selectedIndex === -1) {
@@ -25,10 +31,7 @@
 	}
 
 	function closeModal() {
-		console.log(window.innerWidth);
-		if (window.innerWidth < 992) {
-			showPersonEdit = false;
-		}
+		showPersonEdit = false;
 	}
 </script>
 
@@ -36,20 +39,17 @@
 	<left-pane>
 		<header>
 			<h4>Value Recipients</h4>
-			<ToolTip>
-				<p.tooltip
-					>In this section we determine who gets a share of any value (bitcoin) <br />
-					that is received by this album. Could be each band member, and / or anyone <br />
-					who had a key role in the creation of the album that you would like <br />
-					to split incoming bitcoin with. Could also be infrastructure costs such as <br />
-					hosting, indexing, boostagram bots, etc.</p.tooltip
-				>
-			</ToolTip>
 		</header>
-		<instructions>for splits, use whole numbers only</instructions>
+		{#if valueBlock?.length}
+			<instructions>for splits, use whole numbers only</instructions>
+		{/if}
 		<value-header>
-			<split-percent>Split %</split-percent>
-			<split-name>Name</split-name>
+			{#if valueBlock?.length}
+				<split-percent>Split %</split-percent>
+				<split-name>Name</split-name>
+			{:else}
+				<click-help>Click here to create your value block. <span>→</span></click-help>
+			{/if}
 			<button class="add-value" on:click={addPerson}><Add size="24" /></button>
 		</value-header>
 		<ul>
@@ -74,11 +74,10 @@
 			</total>
 		</value-footer>
 	</left-pane>
-	<right-pane
-		class:mobile-modal={showPersonEdit}
-		on:mousedown|self={closeModal}
-		on:touchend|self={closeModal}
-	>
+</value-block>
+
+{#if showPersonEdit}
+	<modal class="modal" on:mousedown|self={closeModal} on:touchend|self={closeModal}>
 		{#if showPersonEdit}
 			<address-container>
 				<button class="close mobile" on:click={closeModal}>
@@ -87,8 +86,8 @@
 				<EditAddress bind:valueBlock {selectedIndex} />
 			</address-container>
 		{/if}
-	</right-pane>
-</value-block>
+	</modal>
+{/if}
 
 <style>
 	value-block {
@@ -96,9 +95,56 @@
 		width: 100%;
 	}
 
-	right-pane,
 	left-pane {
-		width: 50%;
+		width: 100%;
+	}
+
+	.modal {
+		position: fixed;
+		top: 0;
+		margin: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 34;
+	}
+
+	.modal address-container {
+		display: block;
+		width: calc(33% - 58px);
+		border-radius: 8px;
+		padding: 8px 16px 8px 8px;
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+		height: 416px;
+		position: absolute;
+		background-color: var(--color-poster-bg-0);
+		background-image: linear-gradient(
+			180deg,
+			var(--color-poster-bg-0) 33%,
+			var(--color-poster-bg-1) 66%
+		);
+		bottom: 32px;
+		right: 32px;
+	}
+
+	click-help {
+		display: block;
+		font-size: 1.1em;
+		color: red;
+		position: relative;
+		bottom: 15px;
+		left: 0;
+	}
+
+	click-help span {
+		font-size: 1.4em;
+	}
+
+	.close {
+		position: absolute;
+		top: -6px;
+		right: -12px;
+		background-color: transparent;
 	}
 
 	left-pane {
@@ -108,10 +154,6 @@
 	header {
 		display: flex;
 		align-items: center;
-	}
-
-	header > h4 {
-		margin-right: 8px;
 	}
 	ul {
 		padding: 0;
@@ -177,17 +219,13 @@
 		right: 0;
 	}
 
-	.mobile {
-		display: none;
-	}
-
 	@media screen and (max-width: 992px) {
 		value-block {
 			display: flex;
 			flex-direction: column;
 		}
 
-		right-pane,
+		modal,
 		left-pane {
 			width: 100%;
 		}
@@ -199,7 +237,7 @@
 			width: calc(100% - 16px);
 		}
 
-		.mobile-modal {
+		.modal {
 			position: fixed;
 			top: 0;
 			margin: 0;
@@ -214,7 +252,7 @@
 			backdrop-filter: blur(6px);
 		}
 
-		.mobile-modal address-container {
+		.modal address-container {
 			display: block;
 			width: calc(100% - 40px);
 			border-radius: 8px;
@@ -222,7 +260,7 @@
 			background-color: red;
 			box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 			height: 416px;
-			position: relative;
+			position: initial;
 			background-color: var(--color-poster-bg-0);
 			background-image: linear-gradient(
 				180deg,
@@ -236,10 +274,6 @@
 			top: -6px;
 			right: -12px;
 			background-color: transparent;
-		}
-
-		.mobile {
-			display: initial;
 		}
 	}
 </style>

@@ -3,7 +3,7 @@
 	import localforage from 'localforage';
 	import Editor from './Editor.svelte';
 
-	import { catalogDB, library, user, wpFeedUrl } from '$/stores';
+	import { catalogDB, feeds, user, wpFeedUrl } from '$/stores';
 
 	let isLoading = true;
 
@@ -25,9 +25,76 @@
 			.keys()
 			.then(async function (keys) {
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
-				$library = await Promise.all(_catalog);
-				$library = $library;
-				console.log($library);
+				const library = await Promise.all(_catalog);
+				let albums = [];
+				library.forEach((band) => {
+					if (band?.albums?.length) {
+						albums = albums.concat(
+							band.albums.map((album) => {
+								album['podcast:guid'] = album.guid;
+								album['itunes:author'] = band.title;
+								album['itunes:image'] = { '@_href': album.artwork || '' };
+								album['podcast:value'] = {
+									'@_type': 'lightning',
+									'@_method': 'keysend',
+									'podcast:valueRecipient': []
+										.concat(album?.value)
+										.filter((v) => v)
+										.map((value) => {
+											let rec = {};
+											rec['@_name'] = value.name || '';
+											rec['@_address'] = value.address || '';
+											rec['@_customKey'] = value.key || '';
+											rec['@_customValue'] = value.value || '';
+											rec['@_split'] = Number(value.split) || 0;
+											return rec;
+										})
+								};
+
+								album.item = album.tracks.map((track) => {
+									track['itunes:image'] = { '@_href': track.artwork || '' };
+									track.enclosure = {
+										'@_url': track?.enclosure?.url || '',
+										'@_length': track?.enclosure?.enclosureLength || '',
+										'@_type': track?.enclosure?.type
+									};
+									track['itunes:explicit'] = track?.explicit;
+
+									track['podcast:value'] = {
+										'@_type': 'lightning',
+										'@_method': 'keysend',
+										'podcast:valueRecipient': []
+											.concat(track?.value)
+											.filter((v) => v)
+											.map((value) => {
+												let rec = {};
+												rec['@_name'] = value.name || '';
+												rec['@_address'] = value.address || '';
+												rec['@_customKey'] = value.key || '';
+												rec['@_customValue'] = value.value || '';
+												rec['@_split'] = Number(value.split) || 0;
+												return rec;
+											})
+									};
+
+									delete track.artwork;
+									delete track.explicit;
+									delete track.value;
+									return track;
+								});
+
+								delete album.guid;
+								delete album.artwork;
+								delete album.value;
+								delete album.tracks;
+
+								return album;
+							})
+						);
+					}
+				});
+				$feeds = albums;
+				console.log($feeds);
 				setTimeout(() => {
 					isLoading = false;
 				}, 2000);
@@ -36,6 +103,21 @@
 				console.log(err);
 			});
 	});
+
+	function buildValue(tag, name) {
+		let value = {
+			'@_type': 'lightning',
+			'@_method': 'keysend',
+			'podcast:valueRecipient': tag.map((v, i) => {
+				let rec = { '@_type': 'node' };
+				let person = v.name;
+
+				return rec;
+			})
+		};
+
+		return value;
+	}
 </script>
 
 {#if isLoading}

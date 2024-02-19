@@ -1,5 +1,9 @@
 import { writable } from 'svelte/store';
 
+import { dev } from '$app/environment';
+
+export const remoteServer = dev ? 'http://localhost:3000' : '';
+
 export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
@@ -7,10 +11,14 @@ export const library = writable([]);
 export const user = writable({ loggedIn: false });
 export const currentModal = writable();
 export const showTutorial = writable(false);
+
+export const feedFile = writable();
+
+export const feeds = writable({});
+export const editingFeed = writable();
 export const uploadCB = writable(() => {});
 export const uploadFileType = writable();
 export const uploadFileText = writable();
-export const feedFile = writable();
 export const wpFeedUrl = writable();
 
 export const selectedBand = writable({ title: '', artwork: '', albums: [] });

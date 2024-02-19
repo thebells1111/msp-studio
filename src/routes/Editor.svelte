@@ -1,28 +1,19 @@
 <script>
 	import MainMenu from './MainMenu.svelte';
-	import SelectBandScreen from './SelectedScreens/SelectBandScreen.svelte';
-	import SelectAlbumScreen from './SelectedScreens/SelectAlbumScreen.svelte';
-	import SelectTrackScreen from './SelectedScreens/SelectTrackScreen.svelte';
-
-	import { selectedScreen } from '$/stores';
+	import AlbumsList from './Selectors/Albums.svelte';
 </script>
 
 <MainMenu />
+
 <main>
-	{#if $selectedScreen === 'bands'}
-		<SelectBandScreen />
-	{:else if $selectedScreen === 'albums'}
-		<SelectAlbumScreen />
-	{:else if $selectedScreen === 'tracks'}
-		<SelectTrackScreen />
-	{/if}
+	<AlbumsList />
 </main>
 
 <style>
 	main {
 		padding: 8px;
 		position: relative;
-		height: calc(100% - 106px);
+		height: calc(100% - 66px);
 		overflow: auto;
 	}
 </style>
