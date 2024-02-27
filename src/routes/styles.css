@@ -28,10 +28,10 @@
 	--color-bg-download-feed: hsl(198, 50%, 52%);
 	--color-bg-delete: hsl(0, 100%, 30%);
 	--color-playbar-text-0: hsl(0, 0%, 84%);
-	--color-text-0: hsl(0, 0%, 100%);
-	--color-text-1: hsl(0, 0%, 75%);
-	--color-text-2: hsl(0, 0%, 50%);
-	--color-text-3: hsl(0, 0%, 25%);
+	--color-text-0: hsl(0, 0%, 5%);
+	--color-text-1: hsl(0, 0%, 50%);
+	--color-text-2: hsl(0, 0%, 75%);
+	--color-text-3: hsl(0, 0%, 95%);
 	--color-text-4: hsl(208, 100%, 62%);
 	--color-text-support-button: hsl(0, 0%, 5%);
 	--color-text-boost-cancel-0: hsla(0, 0%, 75%, .4);
@@ -41,10 +41,10 @@
 	--color-player-icon-0: var(--color-nav-icon-0);
 	--color-text-boost-button: hsl(0, 0%, 4%);
 	--color-bg-boost-button: pink;
-	--color-input-bg-0: hsla(208, 14%, 49%, .5);	
+	--color-input-bg-0: hsla(0, 0%, 94%, 0.5);	
 	--color-input-bg-1: hsla(208, 14%, 49%, .75);
 	--color-input-text-0: hsl(0, 0%, 95%);
-	--color-input-text-1: hsl(0, 0%, 81%);
+	--color-input-text-1: hsl(0, 0%, 05%);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--color-list-divider: rgba(255, 255, 255, 0.2);
@@ -65,7 +65,6 @@ html, body {
 body {
 	margin: 0;
 	background-attachment: fixed;
-	background-color: var(--color-bg-3);
 	-webkit-tap-highlight-color: transparent !important;
 	outline: none !important;
 	margin:0 auto;

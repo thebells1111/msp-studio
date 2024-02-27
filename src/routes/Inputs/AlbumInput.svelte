@@ -61,107 +61,96 @@
 	}
 </script>
 
-<blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<album-modal transition:fade|global={{ duration: 25 }}>
-		<button
-			on:click={() => {
-				$showTutorial = true;
-			}}>Tutorial</button
-		>
-		<button class="close" on:click={closeModal}>
-			<Close size="24" />
-		</button>
-		<scroll-container>
-			<top-container>
-				<img
-					width="258"
-					height="258"
-					alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
-					src={newAlbumImage}
-				/>
+<album-input transition:fade|global={{ duration: 25 }}>
+	<scroll-container>
+		<top-container>
+			<img
+				width="258"
+				height="258"
+				alt={newAlbumImage ? `${`${newAlbumImage} ` || ''}cover art` : 'add Album Image link'}
+				src={newAlbumImage}
+			/>
 
-				<album-inputs>
-					<album-name>
-						<label>
-							<label-head>
-								<p>Album Name (required)</p>
-								<ToolTip>
-									<p.tooltip>Enter the name of your Album</p.tooltip>
-								</ToolTip>
-							</label-head>
-							<input bind:value={newAlbumName} />
-						</label>
-					</album-name>
-					<album-image class:uploadable={false}>
-						<label>
-							<label-head>
-								<p>Link to Album Image (required)</p>
-								<ToolTip>
-									<p.tooltip>This the URL to the image cover art for your album</p.tooltip>
-								</ToolTip>
-							</label-head>
-							<input bind:value={newAlbumImage} />
-						</label>
-					</album-image>
-					<album-link>
-						<label>
-							<label-head>
-								<p>Link to Album Website (optional)</p>
-								<ToolTip>
-									<p.tooltip
-										>Where would you like the listener to go to find out more info about the album,<br
-										/>
-										could be any website, online store, social media page, etc.</p.tooltip
-									>
-								</ToolTip>
-							</label-head>
-							<input bind:value={newAlbumLink} />
-						</label>
-					</album-link>
-					<explicit>
+			<album-inputs>
+				<album-name>
+					<label>
 						<label-head>
-							<p>Explicit Content (required)</p>
+							<p>Album Name (required)</p>
+							<ToolTip>
+								<p.tooltip>Enter the name of your Album</p.tooltip>
+							</ToolTip>
+						</label-head>
+						<input bind:value={newAlbumName} />
+					</label>
+				</album-name>
+				<album-image class:uploadable={false}>
+					<label>
+						<label-head>
+							<p>Link to Album Image (required)</p>
+							<ToolTip>
+								<p.tooltip>This the URL to the image cover art for your album</p.tooltip>
+							</ToolTip>
+						</label-head>
+						<input bind:value={newAlbumImage} />
+					</label>
+				</album-image>
+				<album-link>
+					<label>
+						<label-head>
+							<p>Link to Album Website (optional)</p>
 							<ToolTip>
 								<p.tooltip
-									>Are there any F bombs or inappropriate language used in this album?</p.tooltip
+									>Where would you like the listener to go to find out more info about the album,<br
+									/>
+									could be any website, online store, social media page, etc.</p.tooltip
 								>
 							</ToolTip>
 						</label-head>
-						<explicit-radio>
-							<label>
-								<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
-								No
-							</label>
-							<label>
-								<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
-								Yes
-							</label>
-						</explicit-radio>
-					</explicit>
-				</album-inputs>
-			</top-container>
-			<bottom-pane>
-				<label class="album-description">
+						<input bind:value={newAlbumLink} />
+					</label>
+				</album-link>
+				<explicit>
 					<label-head>
-						<h4>Album Liner Notes (required)</h4>
+						<p>Explicit Content (required)</p>
 						<ToolTip>
-							<p.tooltip>
-								Interesting facts about this album. Could be anything <br />
-								such as list of band members, genre of music, date album was recorded,<br />
-								fun facts about the album. Whatever you want to share with the audience.
-							</p.tooltip>
+							<p.tooltip
+								>Are there any F bombs or inappropriate language used in this album?</p.tooltip
+							>
 						</ToolTip>
 					</label-head>
-					<textarea bind:value={newAlbumDescription} />
-				</label>
-				<value>
-					<ValueBlock bind:valueBlock={newAlbumValue} />
-				</value>
-			</bottom-pane>
-		</scroll-container>
-		<button class="submit" on:click={handleSubmit}>Submit</button>
-	</album-modal>
-</blurred-background>
+					<explicit-radio>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'no'} />
+							No
+						</label>
+						<label>
+							<input type="radio" bind:group={explicit} name="explicit" value={'yes'} />
+							Yes
+						</label>
+					</explicit-radio>
+				</explicit>
+			</album-inputs>
+		</top-container>
+		<bottom-pane>
+			<label class="album-description">
+				<label-head>
+					<h4>Album Liner Notes (required)</h4>
+					<ToolTip>
+						<p.tooltip>
+							Interesting facts about this album. Could be anything <br />
+							such as list of band members, genre of music, date album was recorded,<br />
+							fun facts about the album. Whatever you want to share with the audience.
+						</p.tooltip>
+					</ToolTip>
+				</label-head>
+				<textarea bind:value={newAlbumDescription} />
+			</label>
+			<value>
+				<ValueBlock bind:valueBlock={newAlbumValue} />
+			</value>
+		</bottom-pane>
+	</scroll-container>
+</album-input>
 
 {#if uploadWarning}
 	<blurred-background on:click={closeWarning}>

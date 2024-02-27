@@ -12,7 +12,9 @@
 	let selectedIndex = -1;
 	export let hideTracks = false;
 
-	$: hideTracks = window?.innerWidth >= 992 && showPersonEdit;
+	// $: if (window) {
+	// 	hideTracks = window?.innerWidth >= 992 && showPersonEdit;
+	// }
 
 	$: console.log(hideTracks);
 

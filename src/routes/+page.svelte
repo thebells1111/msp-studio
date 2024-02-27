@@ -5,7 +5,7 @@
 
 	import { catalogDB, feeds, user, wpFeedUrl } from '$/stores';
 
-	let isLoading = true;
+	let isLoading = false;
 
 	onMount(() => {
 		// fetch('/api/alby/refresh')
@@ -97,7 +97,7 @@
 				console.log($feeds);
 				setTimeout(() => {
 					isLoading = false;
-				}, 2000);
+				}, 1000);
 			})
 			.catch(function (err) {
 				console.log(err);

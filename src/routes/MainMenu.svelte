@@ -70,58 +70,11 @@
 	</container>
 {/if}
 
-<tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
+<!-- <tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
 	<Tutorial />
-</tutorial>
+</tutorial> -->
 
 <style>
-	nav {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	container {
-		width: 100vw;
-		height: 100vh;
-		position: absolute;
-		overflow: hidden;
-		top: 0;
-		left: 0;
-		z-index: 33;
-	}
-
-	button {
-		color: var(--color-text-0);
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 33;
-		margin: 10px 8px 0 10px;
-		position: relative;
-	}
-
-	a {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0 16px;
-	}
-
-	account-button-hover {
-		display: block;
-		width: 56px;
-		height: 56px;
-		cursor: pointer;
-	}
-	menu {
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		right: 8px;
-		margin: 0;
-	}
-
 	ul {
 		width: 150px;
 		background-color: blue;
@@ -139,47 +92,5 @@
 		width: calc(100% - 16px);
 		text-align: end;
 		cursor: pointer;
-	}
-	li:hover {
-		background-color: var(--color-poster-bg-1);
-	}
-
-	tutorial {
-		display: block;
-		height: 100%;
-		width: 100%;
-		position: fixed;
-		top: 0;
-		right: 0;
-		z-index: 50;
-		overflow: hidden;
-		animation: slide-out 0.333s forwards;
-		z-index: 40;
-	}
-
-	tutorial.show {
-		animation: slide-in 0.333s;
-	}
-
-	tutorial.hide {
-		display: none;
-	}
-
-	@keyframes slide-in {
-		0% {
-			transform: translateX(100%);
-		}
-		100% {
-			transform: translateX(0);
-		}
-	}
-
-	@keyframes slide-out {
-		0% {
-			transform: translateX(0);
-		}
-		100% {
-			transform: translateX(100%);
-		}
 	}
 </style>

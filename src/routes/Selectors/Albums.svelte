@@ -4,11 +4,9 @@
 	import Add from '$icons/Add.svelte';
 	import Delete from '$icons/Delete.svelte';
 	import Publish from '../Publish/Publish.svelte';
-	import postFeeds from '$routes/functions/postFeeds.js';
 
 	import { feeds, editingFeed, remoteServer } from '$/stores';
 	import CloudUpload from '$icons/CloudUpload.svelte';
-	import DownloadIcon from '$icons/Download.svelte';
 
 	let showEdit = false;
 	let publishingFeed;
@@ -23,7 +21,6 @@
 		console.log($feeds);
 		delete $feeds[feed['podcast:guid']];
 		$feeds = $feeds;
-		postFeeds($feeds);
 	}
 
 	function addFeed() {
@@ -71,22 +68,8 @@
 		<ul>
 			{#each Object.entries($feeds || {}) as [key, feed]}
 				<li on:click={selectBand.bind(this, feed)}>
-					<button class="publish" on:click|stopPropagation={publishFeed.bind(this, feed)}>
-						<CloudUpload size="27" />
-						<p>Publish</p>
-					</button>
-
-					<!-- <button class="download" on:click={downloadZip.bind(this, feed['podcast:guid'])}>
-						<DownloadIcon size="27" />
-						<p>Download</p>
-					</button> -->
-					<h3>{feed.title || 'Blank Album'} by {feed['itunes:author'] || 'Unknown Artist'}</h3>
-					<button on:click|stopPropagation={deleteFeed.bind(this, feed)} class="delete">
-						<Delete
-							size="30
-						"
-						/>
-					</button>
+					<p>{feed.title || 'Blank Album'}</p>
+					<p>{feed['itunes:author'] || 'Unknown Artist'}</p>
 				</li>
 			{/each}
 		</ul>
@@ -142,73 +125,30 @@
 		right: 32px;
 	}
 
-	.click-help > span {
-		font-size: 1.5em;
-	}
-
-	overflow-container {
-		display: block;
-		height: calc(100% - 50px);
-		overflow: auto;
-	}
 	ul {
 		padding: 0 0 40px 0px;
 		margin: 0 0 0 0;
+		border-right: 1px solid var(--color-text-0);
+		width: 250px;
 	}
 	li {
 		list-style: none;
-		display: flex;
-		align-items: center;
-		margin: 0 8px 8px 0;
-		padding: 4px;
-		border-radius: 6px;
-		min-height: 60px;
-		background-color: var(--color-poster-bg-0);
-		box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
-	}
-
-	li h3 {
-		margin: 0 8px;
+		margin: 0;
 		padding: 0;
-		width: 100%;
+	}
+	li:hover {
+		background-color: var(--color-bg-add-band);
+		color: var(--color-text-3);
 	}
 
-	button.delete {
-		color: var(--color-bg-delete);
+	li > p {
+		padding: 0;
 		margin: 0;
-		padding: 8px;
-		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
 	}
 
-	button.publish,
-	button.download {
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		filter: drop-shadow(0px 4px 2px rgb(0 0 0 / 0.5));
-		background-color: var(--color-bg-edit-album);
-		min-width: 50px;
-		min-height: 50px;
-		border-radius: 50px;
-		color: var(--color-text-0);
-	}
-
-	button.download {
-		background-color: var(--color-bg-edit-band);
-	}
-
-	.publish > p,
-	.download > p {
-		margin: 0;
-		font-size: 0.7em;
-		position: relative;
-		bottom: 4px;
-	}
-
-	.download > p {
-		font-size: 0.6em;
-	}
-
-	@media screen and (max-width: 992px) {
+	li > p:nth-of-type(2) {
+		font-style: italic;
+		font-size: 0.8em;
+		padding-left: 8px;
 	}
 </style>
