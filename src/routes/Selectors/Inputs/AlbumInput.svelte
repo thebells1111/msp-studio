@@ -124,84 +124,53 @@
 
 		return uniqueId;
 	}
+
+
 </script>
 
-<album-input transition:fade|global={{ duration: 25 }}>
-	<scroll-container>
-		<top-container>
-			{#if albumState['itunes:image']['@_href']}
-				<img
-					class="upload"
-					on:click={() => {
-						showUpload = true;
-					}}
-					width="258"
-					height="258"
-					alt={albumState.title
-						? `${`${albumState.title} ` || ''}cover art`
-						: 'add Album Image link'}
-					src={albumState['itunes:image']['@_href'] + '?t=' + imageReload}
-				/>{:else}
-				<button
-					class="upload"
-					on:click={() => {
-						showUpload = true;
-					}}>Click to upload Album Art<br />(required)</button
-				>
-			{/if}
 
-			<album-inputs>
-				<band-name>
-					<label>
-						<h4>Band Name (required)</h4>
-						<input bind:value={albumState['itunes:author']} />
-					</label>
-				</band-name>
-				<album-name>
-					<label>
-						<h4>Album Name (required)</h4>
-						<input bind:value={albumState.title} />
-					</label>
-				</album-name>
-				<album-link>
-					<label>
-						<h4>Link to Album Website (required)</h4>
-						<input bind:value={albumState.link} />
-					</label>
-				</album-link>
-				<explicit>
-					<h4>Explicit Content (required)</h4>
-					<explicit-radio>
-						<label>
-							<input
-								type="radio"
-								bind:group={albumState['itunes:explicit']}
-								name="explicit"
-								value={'no'}
-							/>
-							No
-						</label>
-						<label>
-							<input
-								type="radio"
-								bind:group={albumState['itunes:explicit']}
-								name="explicit"
-								value={'yes'}
-							/>
-							Yes
-						</label>
-					</explicit-radio>
-				</explicit>
-				<button
-					class="add"
-					on:click={() => {
-						showUpload = true;
-					}}>Add Artwork (required)</button
-				>
-			</album-inputs>
-		</top-container>
-		<spacer />
-		<bottom-pane>
+<Grid data={data} />
+
+<top-container>
+	<title-bar>
+		<h4>Band Name</h4>
+		<h4>Album Name</h4>
+		<h4>Website Link</h4>
+		<h4>Explicit Content</h4>
+		<h4>Artwork Link</h4>
+	</title-bar>
+
+	<album-inputs>
+		<input bind:value={albumState['itunes:author']} />
+
+		<input bind:value={albumState.title} />
+		<input bind:value={albumState.link} />
+
+		<input type="checkbox" bind:group={albumState['itunes:explicit']} />
+
+		<input bind:value={albumState['itunes:image']['@_href']} />
+	</album-inputs></top-container
+>
+<spacer />
+{#if albumState['itunes:image']['@_href']}
+	<img
+		class="upload"
+		on:click={() => {
+			showUpload = true;
+		}}
+		width="258"
+		height="258"
+		alt={albumState.title ? `${`${albumState.title} ` || ''}cover art` : 'add Album Image link'}
+		src={albumState['itunes:image']['@_href'] + '?t=' + imageReload}
+	/>{:else}
+	<button
+		class="upload"
+		on:click={() => {
+			showUpload = true;
+		}}>Click to upload Album Art<br />(required)</button
+	>
+{/if}
+<!-- <bottom-pane>
 			<label class="album-description">
 				<h4>Album Liner Notes (required)<br /> Tell the audience the story of this album</h4>
 				<textarea bind:value={albumState.description} />
@@ -215,9 +184,7 @@
 			<tracks class:hide={hideTracks}>
 				<Tracks albumValueBlock={albumState['podcast:value']} />
 			</tracks>
-		</bottom-pane>
-	</scroll-container>
-</album-input>
+		</bottom-pane> -->
 
 {#if showUpload}
 	<FileUploader
@@ -268,35 +235,6 @@
 		height: 12px;
 	}
 
-	band-name input,
-	album-name input,
-	album-link input {
-		width: calc(100% - 16px);
-		margin: 0 8px;
-	}
-
-	button.add {
-		background-color: var(--color-bg-add-shade-2);
-		margin: 8px;
-		width: calc(100% - 32px);
-	}
-
-	explicit {
-		display: flex;
-		flex-direction: column;
-	}
-
-	explicit-radio {
-		display: block;
-		margin: 0 8px;
-	}
-
-	explicit-radio label {
-		display: inline-block;
-		width: 100px;
-		cursor: pointer;
-	}
-
 	h4 {
 		padding: 0;
 		margin: 0;
@@ -304,8 +242,13 @@
 
 	top-container {
 		width: 100%;
+	}
+
+	album-inputs,
+	title-bar {
+		width: 100%;
 		display: flex;
-		justify-content: center;
+		justify-content: space-evenly;
 		margin: 8px 0 0 0;
 	}
 
@@ -349,4 +292,5 @@
 		height: 258px;
 		background-color: transparent;
 	}
-</style>
+
+
