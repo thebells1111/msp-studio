@@ -1,14 +1,14 @@
 <script>
 	import MainMenu from './MainMenu.svelte';
 	import AlbumsList from './Selectors/Albums.svelte';
-	import AlbumInput from './/Selectors/Inputs/AlbumInput.svelte';
+	import Album from './Album/Album.svelte';
 </script>
 
 <MainMenu />
 
 <main>
 	<AlbumsList />
-	<AlbumInput />
+	<Album />
 </main>
 
 <style>

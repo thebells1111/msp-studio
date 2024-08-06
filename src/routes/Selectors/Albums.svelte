@@ -14,7 +14,6 @@
 	async function selectBand(feed) {
 		showEdit = true;
 		$editingFeed = feed;
-		console.log($editingFeed);
 	}
 
 	async function deleteFeed(feed) {
@@ -75,16 +74,6 @@
 		</ul>
 	</overflow-container>
 </div>
-
-{#if publishingFeed}
-	<Publish feed={publishingFeed} onClose={() => (publishingFeed = null)} />
-{/if}
-
-{#if showEdit}
-	<div transition:slide|global={{ duration: 25 }}>
-		<AlbumInput bind:showEdit add={!$editingFeed['podcast:guid']} />
-	</div>
-{/if}
 
 <style>
 	div {

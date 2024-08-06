@@ -156,7 +156,10 @@
 	header {
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		border-bottom: 2px solid black;
 	}
+
 	ul {
 		padding: 0;
 		margin: 0;
