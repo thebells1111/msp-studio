@@ -43,7 +43,7 @@
 	container {
 		display: flex;
 		flex-direction: column;
-		width: calc(100vw - 260px);
+		width: calc(100% - 8px);
 	}
 	ul {
 		display: flex;
@@ -109,7 +109,10 @@
 	h4 {
 		margin: 0;
 		text-align: center;
+		background-color: rgb(0, 170, 255);
+		width: 100%;
 	}
+
 	description {
 		display: block;
 		width: calc((100% - 150px) / 2);

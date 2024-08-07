@@ -17,8 +17,34 @@ export const feedFile = writable();
 export const feeds = writable({});
 export const editingFeed = writable({
 	description: '',
+
 	explicit: 'no',
-	item: [],
+	item: [
+		{
+			description: '',
+			enclosure: {
+				['@_url']: '',
+				['@_enclosureLength']: 33,
+				['@_type']: 'mp3'
+			},
+			explicit: 'no',
+			'itunes:image': { '@_href': '' },
+			'podcast:value': {
+				'@_type': 'lightning',
+				'@_method': 'keysend',
+				'podcast:valueRecipient': [
+					{
+						'@_name': 'Music Side Project',
+						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+						'@_customKey': '696969',
+						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+						'@_split': 5
+					}
+				]
+			},
+			title: ''
+		}
+	],
 	'itunes:author': '',
 	'itunes:image': { '@_href': '' },
 	link: '',
@@ -38,56 +64,84 @@ export const editingFeed = writable({
 	},
 	title: ''
 });
+
+export const newFeed = writable({
+	description: '',
+	explicit: 'no',
+	item: [
+		{
+			description: '',
+			enclosure: {
+				['@_url']: '',
+				['@_enclosureLength']: 33,
+				['@_type']: 'mp3'
+			},
+			explicit: 'no',
+			'itunes:image': { '@_href': '' },
+			'podcast:value': {
+				'@_type': 'lightning',
+				'@_method': 'keysend',
+				'podcast:valueRecipient': [
+					{
+						'@_name': 'Music Side Project',
+						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+						'@_customKey': '696969',
+						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+						'@_split': 5
+					}
+				]
+			},
+			title: ''
+		}
+	],
+	'itunes:author': '',
+	'itunes:image': { '@_href': '' },
+	link: '',
+	'podcast:guid': '',
+	'podcast:value': {
+		'@_type': 'lightning',
+		'@_method': 'keysend',
+		'podcast:valueRecipient': [
+			{
+				'@_name': 'Music Side Project',
+				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+				'@_customKey': '696969',
+				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+				'@_split': 5
+			}
+		]
+	},
+	title: ''
+});
+
+export const newTrack = writable({
+	description: '',
+	enclosure: {
+		['@_url']: '',
+		['@_enclosureLength']: 33,
+		['@_type']: 'mp3'
+	},
+	explicit: 'no',
+	'itunes:image': { '@_href': '' },
+	'podcast:value': {
+		'@_type': 'lightning',
+		'@_method': 'keysend',
+		'podcast:valueRecipient': [
+			{
+				'@_name': 'Music Side Project',
+				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+				'@_customKey': '696969',
+				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+				'@_split': 5
+			}
+		]
+	},
+	title: ''
+});
 export const uploadCB = writable(() => {});
 export const uploadFileType = writable();
 export const uploadFileText = writable();
 export const wpFeedUrl = writable();
-
-export const selectedBand = writable({ title: '', artwork: '', albums: [] });
-export const selectedBandIndex = writable(-1);
-export const newBand = writable({
-	title: '',
-	artwork: '',
-	albums: []
-});
-
-export const selectedAlbum = writable({ title: '', artwork: '', tracks: [] });
-export const selectedAlbumIndex = writable(-1);
-export const newAlbum = writable({
-	title: '',
-	artwork: '',
-	description: '',
-	explicit: 'no',
-	tracks: [],
-	value: [
-		{
-			name: 'Music Side Project',
-			address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-			key: '696969',
-			value: 'UzrnTK2oEHR55gw7Djmb',
-			split: 5
-		}
-	]
-});
-
-export const selectedTrack = writable({});
-export const selectedTrackIndex = writable(-1);
-export const newTrack = writable({
-	title: '',
-	artwork: '',
-	url: '',
-	description: '',
-	explicit: 'no',
-	value: [
-		{
-			name: 'Music Side Project',
-			address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-			key: '696969',
-			value: 'UzrnTK2oEHR55gw7Djmb',
-			split: 5
-		}
-	]
-});
 
 export const MSPValue = writable({
 	name: 'Music Side Project',

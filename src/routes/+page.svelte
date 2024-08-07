@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import localforage from 'localforage';
-	import Editor from './Editor.svelte';
+	import Editor from './Editor/Editor.svelte';
 
 	import { catalogDB, feeds, user, wpFeedUrl } from '$/stores';
 

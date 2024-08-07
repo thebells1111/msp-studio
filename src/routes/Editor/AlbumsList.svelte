@@ -1,55 +1,54 @@
 <script>
-	import { slide } from 'svelte/transition';
-	import AlbumInput from './Inputs/AlbumInput.svelte';
 	import Add from '$icons/Add.svelte';
-	import Delete from '$icons/Delete.svelte';
-	import Publish from '../Publish/Publish.svelte';
+	// import { slide } from 'svelte/transition';
+	// import AlbumInput from './Inputs/AlbumInput.svelte';
+	// import Delete from '$icons/Delete.svelte';
+	// import Publish from '../Publish/Publish.svelte';
 
 	import { feeds, editingFeed, remoteServer } from '$/stores';
-	import CloudUpload from '$icons/CloudUpload.svelte';
+	// import CloudUpload from '$icons/CloudUpload.svelte';
 
-	let showEdit = false;
-	let publishingFeed;
+	// let showEdit = false;
+	// let publishingFeed;
 
 	async function selectBand(feed) {
-		showEdit = true;
 		$editingFeed = feed;
 	}
 
-	async function deleteFeed(feed) {
-		console.log($feeds);
-		delete $feeds[feed['podcast:guid']];
-		$feeds = $feeds;
-	}
+	// async function deleteFeed(feed) {
+	// 	console.log($feeds);
+	// 	delete $feeds[feed['podcast:guid']];
+	// 	$feeds = $feeds;
+	// }
 
 	function addFeed() {
 		showEdit = true;
 		$editingFeed = {};
 	}
 
-	function publishFeed(feed) {
-		publishingFeed = feed;
-	}
+	// function publishFeed(feed) {
+	// 	publishingFeed = feed;
+	// }
 
-	async function downloadZip(guid) {
-		const response = await fetch(remoteServer + `/api/download?guid=${guid}`);
+	// async function downloadZip(guid) {
+	// 	const response = await fetch(remoteServer + `/api/download?guid=${guid}`);
 
-		if (response.status !== 200) {
-			throw new Error(
-				`Failed to download zip. Server responded with status code ${response.status}`
-			);
-		}
+	// 	if (response.status !== 200) {
+	// 		throw new Error(
+	// 			`Failed to download zip. Server responded with status code ${response.status}`
+	// 		);
+	// 	}
 
-		const blob = await response.blob();
-		const url = window.URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.style.display = 'none';
-		a.href = url;
-		a.download = `${guid}.zip`;
-		document.body.appendChild(a);
-		a.click();
-		window.URL.revokeObjectURL(url);
-	}
+	// 	const blob = await response.blob();
+	// 	const url = window.URL.createObjectURL(blob);
+	// 	const a = document.createElement('a');
+	// 	a.style.display = 'none';
+	// 	a.href = url;
+	// 	a.download = `${guid}.zip`;
+	// 	document.body.appendChild(a);
+	// 	a.click();
+	// 	window.URL.revokeObjectURL(url);
+	// }
 </script>
 
 <div>
@@ -57,12 +56,6 @@
 		<h3>Albums</h3>
 	</header>
 
-	{#if Object.keys($feeds).length === 0}
-		<p class="click-help">Click here to add your first album <span>↓</span></p>
-	{/if}
-	<button class="add" on:click={addFeed}>
-		<Add size="60" />
-	</button>
 	<overflow-container>
 		<ul>
 			{#each Object.entries($feeds || {}) as [key, feed]}
@@ -83,6 +76,11 @@
 	header {
 		display: flex;
 		align-items: center;
+	}
+
+	overflow-container {
+		height: 100%;
+		overflow: auto;
 	}
 
 	h3 {
