@@ -1,6 +1,57 @@
+import clone from 'just-clone';
+
 import { writable } from 'svelte/store';
 
 import { dev } from '$app/environment';
+
+export const _newFeed = {
+	description: '',
+	explicit: 'no',
+	item: [
+		{
+			description: '',
+			enclosure: {
+				['@_url']: '',
+				['@_enclosureLength']: 33,
+				['@_type']: 'mp3'
+			},
+			explicit: 'no',
+			'itunes:image': { '@_href': '' },
+			'podcast:value': {
+				'@_type': 'lightning',
+				'@_method': 'keysend',
+				'podcast:valueRecipient': [
+					{
+						'@_name': 'Music Side Project',
+						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+						'@_customKey': '696969',
+						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+						'@_split': 5
+					}
+				]
+			},
+			title: ''
+		}
+	],
+	'itunes:author': '',
+	'itunes:image': { '@_href': '' },
+	link: '',
+	'podcast:guid': '',
+	'podcast:value': {
+		'@_type': 'lightning',
+		'@_method': 'keysend',
+		'podcast:valueRecipient': [
+			{
+				'@_name': 'Music Side Project',
+				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+				'@_customKey': '696969',
+				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+				'@_split': 5
+			}
+		]
+	},
+	title: ''
+};
 
 export const remoteServer = dev ? 'http://localhost:3000' : '';
 
@@ -15,104 +66,10 @@ export const showTutorial = writable(false);
 export const feedFile = writable();
 
 export const feeds = writable({});
-export const editingFeed = writable({
-	description: '',
 
-	explicit: 'no',
-	item: [
-		{
-			description: '',
-			enclosure: {
-				['@_url']: '',
-				['@_enclosureLength']: 33,
-				['@_type']: 'mp3'
-			},
-			explicit: 'no',
-			'itunes:image': { '@_href': '' },
-			'podcast:value': {
-				'@_type': 'lightning',
-				'@_method': 'keysend',
-				'podcast:valueRecipient': [
-					{
-						'@_name': 'Music Side Project',
-						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-						'@_customKey': '696969',
-						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-						'@_split': 5
-					}
-				]
-			},
-			title: ''
-		}
-	],
-	'itunes:author': '',
-	'itunes:image': { '@_href': '' },
-	link: '',
-	'podcast:guid': '',
-	'podcast:value': {
-		'@_type': 'lightning',
-		'@_method': 'keysend',
-		'podcast:valueRecipient': [
-			{
-				'@_name': 'Music Side Project',
-				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-				'@_customKey': '696969',
-				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-				'@_split': 5
-			}
-		]
-	},
-	title: ''
-});
+export const newFeed = writable(clone(_newFeed));
 
-export const newFeed = writable({
-	description: '',
-	explicit: 'no',
-	item: [
-		{
-			description: '',
-			enclosure: {
-				['@_url']: '',
-				['@_enclosureLength']: 33,
-				['@_type']: 'mp3'
-			},
-			explicit: 'no',
-			'itunes:image': { '@_href': '' },
-			'podcast:value': {
-				'@_type': 'lightning',
-				'@_method': 'keysend',
-				'podcast:valueRecipient': [
-					{
-						'@_name': 'Music Side Project',
-						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-						'@_customKey': '696969',
-						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-						'@_split': 5
-					}
-				]
-			},
-			title: ''
-		}
-	],
-	'itunes:author': '',
-	'itunes:image': { '@_href': '' },
-	link: '',
-	'podcast:guid': '',
-	'podcast:value': {
-		'@_type': 'lightning',
-		'@_method': 'keysend',
-		'podcast:valueRecipient': [
-			{
-				'@_name': 'Music Side Project',
-				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-				'@_customKey': '696969',
-				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
-				'@_split': 5
-			}
-		]
-	},
-	title: ''
-});
+export const editingFeed = writable(clone(_newFeed));
 
 export const newTrack = writable({
 	description: '',

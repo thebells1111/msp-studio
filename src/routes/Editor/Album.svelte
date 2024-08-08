@@ -7,6 +7,10 @@
 	import { MSPValue, editingFeed, feeds } from '$/stores';
 
 	$: console.log($editingFeed);
+	function updateFeeds() {
+		$feeds = $feeds;
+	}
+	$: console.log($feeds);
 </script>
 
 <container>
@@ -18,8 +22,8 @@
 	</ul>
 
 	<ul class="inputs">
-		<li><input bind:value={$editingFeed['itunes:author']} /></li>
-		<li><input bind:value={$editingFeed.title} /></li>
+		<li><input bind:value={$editingFeed['itunes:author']} on:input={updateFeeds} /></li>
+		<li><input bind:value={$editingFeed.title} on:input={updateFeeds} /></li>
 		<li><input bind:value={$editingFeed.link} /></li>
 		<li><input bind:value={$editingFeed.explicit} /></li>
 	</ul>
