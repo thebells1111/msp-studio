@@ -2,16 +2,16 @@
 :root {
 	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-	--color-bg-0: hsl(0, 0%, 100%);
-	--color-bg-1:  hsl(0, 0%, 100%);
-	--color-bg-2: hsl(0, 0%, 100%);
-	--color-bg-3:  hsl(0, 0%, 100%);
-	--color-bg-boostagram-1:   hsl(0, 0%, 100%);
-	--color-poster-bg-0:  hsl(0, 0%, 100%);
-	--color-poster-bg-1:  hsl(0, 0%, 100%);
+	--color-bg-0: hsl(208, 100%, 32%);
+	--color-bg-1: hsl(208, 100%, 22%);
+	--color-bg-2: hsl(0, 0%, 11%);
+	--color-bg-3: hsl(0, 0%, 15%);
+	--color-bg-boostagram-1:  hsl(0, 0%, 19%);
+	--color-poster-bg-0: hsl(208, 100%, 15%);
+	--color-poster-bg-1: hsl(208, 100%, 6%);
 	--color-progressbar-0: hsl(208, 100%, 42%);
-	--color-progressbar-1: hsl(0, 0%, 0%);
-	--color-text-0: hsl(0, 0%, 0%);
+	--color-progressbar-1: hsl(0, 0%, 97%);
+	--color-text-0: hsl(0, 0%, 97%);
 	--color-button-shadow:  hsl(0, 0%, 0%);
 	--color-bg-button: hsl(234, 100%, 62%);
 	--color-bg-button-upload-0: hsl(234, 100%, 72%);
@@ -28,10 +28,10 @@
 	--color-bg-download-feed: hsl(198, 50%, 52%);
 	--color-bg-delete: hsl(0, 100%, 30%);
 	--color-playbar-text-0: hsl(0, 0%, 84%);
-	--color-text-0: hsl(0, 0%, 5%);
-	--color-text-1:  hsl(0, 0%, 5%);
-	--color-text-2:  hsl(0, 0%, 5%);
-	--color-text-3:  hsl(0, 0%, 5%);
+	--color-text-0: hsl(0, 0%, 100%);
+	--color-text-1: hsl(0, 0%, 75%);
+	--color-text-2: hsl(0, 0%, 50%);
+	--color-text-3: hsl(0, 0%, 25%);
 	--color-text-4: hsl(208, 100%, 62%);
 	--color-text-support-button: hsl(0, 0%, 5%);
 	--color-text-boost-cancel-0: hsla(0, 0%, 75%, .4);
@@ -41,10 +41,10 @@
 	--color-player-icon-0: var(--color-nav-icon-0);
 	--color-text-boost-button: hsl(0, 0%, 4%);
 	--color-bg-boost-button: pink;
-	--color-input-bg-0: hsl(0, 0%, 100%);	
-	--color-input-bg-1:  hsl(0, 0%, 100%);
-	--color-input-text-0: hsl(0, 0%, 5%);
-	--color-input-text-1: hsl(0, 0%, 5%);
+	--color-input-bg-0: hsla(208, 14%, 49%, .5);	
+	--color-input-bg-1: hsla(208, 14%, 49%, .75);
+	--color-input-text-0: hsl(0, 0%, 95%);
+	--color-input-text-1: hsl(0, 0%, 81%);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--color-list-divider: rgba(255, 255, 255, 0.2);
@@ -65,6 +65,7 @@ html, body {
 body {
 	margin: 0;
 	background-attachment: fixed;
+	background-color: var(--color-bg-3);
 	-webkit-tap-highlight-color: transparent !important;
 	outline: none !important;
 	margin:0 auto;
@@ -136,10 +137,10 @@ button:focus:not(:focus-visible) {
 input, textarea{	
 	color: var(--color-input-text-0);
 	background-color: var(--color-input-bg-0);
-	border-radius: 0px;
+	border-radius: 4px;
 	outline: 0;
 	padding: 4px;
-	border: 1px solid transparent;
+	border: 1px solid transparent
 }
 
 input::placeholder {

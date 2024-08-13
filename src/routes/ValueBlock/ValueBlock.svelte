@@ -156,8 +156,6 @@
 	header {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		border-bottom: 2px solid black;
 	}
 
 	ul {
@@ -170,6 +168,7 @@
 
 	h4 {
 		margin: 0;
+		text-align: left;
 	}
 
 	instructions {
