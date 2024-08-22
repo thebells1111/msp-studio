@@ -50,7 +50,6 @@
 	ul {
 		display: flex;
 		justify-content: space-between;
-		border: 2px solid black;
 		height: 18px;
 		align-items: center;
 		padding: 0;
@@ -62,14 +61,13 @@
 		list-style: none;
 		height: 100%;
 		width: 100%;
-		border-right: 1px solid black;
 		text-align: center;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0;
-		margin: 0;
 		cursor: initial;
+		margin: 0 4px;
 	}
 	li:last-of-type {
 		min-width: 80px;
@@ -78,20 +76,18 @@
 
 	.inputs {
 		height: 30px;
-		border-top: none;
-		border-bottom: none;
 	}
 
 	input {
-		width: calc(100% - 4px);
-		border-radius: 0;
+		border-radius: 30px;
+		width: calc(100%);
 	}
 
 	info-2 {
 		display: flex;
 		width: 100%;
 		height: 300px;
-		border: 2px solid black;
+		margin-top: 8px;
 	}
 
 	artwork {
@@ -104,37 +100,33 @@
 		cursor: pointer;
 		height: 150px;
 		width: 150px;
-		border-top: 2px solid black;
-		border-bottom: 1px solid black;
-	}
-
-	h3 {
-		margin-bottom: 0;
+		border: 1px solid black;
+		border-radius: 5px;
 	}
 
 	h4 {
-		margin: 0;
-		text-align: center;
-		background-color: aqua;
+		margin: 0 8px;
+		text-align: left;
 		width: 100%;
 	}
+
 	description {
 		display: block;
 		width: calc((100% - 150px) / 2);
-		border-left: 1px solid black;
 		display: flex;
 		flex-direction: column;
+		margin: 0 4px 0 8px;
 	}
 
 	textarea {
 		resize: none;
 		height: 100%;
-		border-top: 2px solid black;
+		border-radius: 5px;
+		margin: 0 4px;
 	}
 
 	value {
 		display: block;
 		width: calc((100% - 150px) / 2);
-		border-left: 1px solid black;
 	}
 </style>

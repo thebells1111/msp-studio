@@ -11,16 +11,7 @@
 	let fileName;
 	let fileInput;
 
-	import {
-		uploadCB,
-		currentModal,
-		uploadFileType,
-		uploadFileText,
-		feedFile,
-		selectedAlbum,
-		selectedTrack,
-		wpFeedUrl
-	} from '$/stores';
+	import { uploadFileText, wpFeedUrl } from '$/stores';
 
 	function msToTime(ms) {
 		// Convert milliseconds to seconds
@@ -55,121 +46,124 @@
 		return extension;
 	}
 
-	function uploadFile() {
-		const file = files[0];
-		const extension = getFileExtension(file.name);
-		console.log(file);
+	// function uploadFile() {
+	// 	const file = files[0];
+	// 	const extension = getFileExtension(file.name);
+	// 	console.log(file);
 
-		let allowedExtensions = [];
-		console.log($uploadFileType);
+	// 	let allowedExtensions = [];
+	// 	console.log($uploadFileType);
 
-		if ($uploadFileType === 'audio') {
-			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
-			fileName = `${$selectedAlbum.title}_${$selectedTrack.title}.${extension}`;
-		}
+	// 	if ($uploadFileType === 'audio') {
+	// 		allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
+	// 		fileName = `${$selectedAlbum.title}_${$selectedTrack.title}.${extension}`;
+	// 	}
 
-		if ($uploadFileType === 'image') {
-			allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+	// 	if ($uploadFileType === 'image') {
+	// 		allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-			if ($uploadFileText === 'Upload Album Image') {
-				fileName = `${$selectedAlbum.title}_artwork.${extension}`;
-			}
-			if ($uploadFileText === 'Upload Track Image') {
-				fileName = `${$selectedAlbum.title}_${$selectedTrack.title}_artwork.${extension}`;
-			}
-		}
+	// 		if ($uploadFileText === 'Upload Album Image') {
+	// 			fileName = `${$selectedAlbum.title}_artwork.${extension}`;
+	// 		}
+	// 		if ($uploadFileText === 'Upload Track Image') {
+	// 			fileName = `${$selectedAlbum.title}_${$selectedTrack.title}_artwork.${extension}`;
+	// 		}
+	// 	}
 
-		if ($uploadFileType === 'feed') {
-			allowedExtensions = ['application/xml', 'text/xml'];
-			fileName = `${$selectedAlbum.title}.xml`;
-		}
+	// 	if ($uploadFileType === 'feed') {
+	// 		allowedExtensions = ['application/xml', 'text/xml'];
+	// 		fileName = `${$selectedAlbum.title}.xml`;
+	// 	}
 
-		if (allowedExtensions.includes(file.type)) {
-			displayText = 'Uploading File';
-			isUploading = true;
-			startTime = new Date().getTime();
-			setTimeout(setTimerText, 1000);
-			warning = false;
-			const formData = new FormData();
-			formData.append('file', file, fileName);
-			console.log($wpFeedUrl);
-			fetch('api/fileupload', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({ url: $wpFeedUrl })
-			})
-				.then((response) => response.json())
-				.then(async (result) => {
-					const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
+	// 	if (allowedExtensions.includes(file.type)) {
+	// 		displayText = 'Uploading File';
+	// 		isUploading = true;
+	// 		startTime = new Date().getTime();
+	// 		setTimeout(setTimerText, 1000);
+	// 		warning = false;
+	// 		const formData = new FormData();
+	// 		formData.append('file', file, fileName);
+	// 		console.log($wpFeedUrl);
+	// 		fetch('api/fileupload', {
+	// 			method: 'POST',
+	// 			headers: {
+	// 				'Content-Type': 'application/json'
+	// 			},
+	// 			body: JSON.stringify({ url: $wpFeedUrl })
+	// 		})
+	// 			.then((response) => response.json())
+	// 			.then(async (result) => {
+	// 				const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
 
-					// Check if the file already exists in WordPress
-					return fetch(`${mediaEndpoint}?search=${fileName}`)
-						.then((response) => response.json())
-						.then((data) => {
-							console.log(data);
-							if (data.length > 0) {
-								const mediaId = data[0].id;
-								return fetch(`${mediaEndpoint}/${mediaId}`, {
-									method: 'PUT',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `attachment; filename="${fileName}"`
-									}
-								});
-							} else {
-								return fetch(mediaEndpoint, {
-									method: 'POST',
-									body: formData,
-									headers: {
-										Authorization:
-											'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-										'Content-Disposition': `form-data; filename="${fileName}"`
-									}
-								});
-							}
-						});
-				})
-				.then(async (response) => {
-					if (response.ok) {
-						const jsonData = await response.json();
-						$uploadCB(jsonData.source_url);
-						$currentModal = '';
-						isUploading = false;
-					} else {
-						isUploading = false;
-						displayText = `Failed to upload file to WordPress: ${response.status} ${
-							response.statusText
-						} ${JSON.stringify(response)}`;
-						warning = true;
-					}
-				})
-				.catch((error) => {
-					isUploading = false;
-					console.error('Error:', error);
-					displayText = 'Error: ' + error;
-				});
-		} else {
-			displayText = `Invalid file type. Please upload an ${$uploadFileType} file.`;
-			warning = true;
-		}
-	}
+	// 				// Check if the file already exists in WordPress
+	// 				return fetch(`${mediaEndpoint}?search=${fileName}`)
+	// 					.then((response) => response.json())
+	// 					.then((data) => {
+	// 						console.log(data);
+	// 						if (data.length > 0) {
+	// 							const mediaId = data[0].id;
+	// 							return fetch(`${mediaEndpoint}/${mediaId}`, {
+	// 								method: 'PUT',
+	// 								body: formData,
+	// 								headers: {
+	// 									Authorization:
+	// 										'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
+	// 									'Content-Disposition': `attachment; filename="${fileName}"`
+	// 								}
+	// 							});
+	// 						} else {
+	// 							return fetch(mediaEndpoint, {
+	// 								method: 'POST',
+	// 								body: formData,
+	// 								headers: {
+	// 									Authorization:
+	// 										'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
+	// 									'Content-Disposition': `form-data; filename="${fileName}"`
+	// 								}
+	// 							});
+	// 						}
+	// 					});
+	// 			})
+	// 			.then(async (response) => {
+	// 				if (response.ok) {
+	// 					const jsonData = await response.json();
+	// 					$uploadCB(jsonData.source_url);
+	// 					$currentModal = '';
+	// 					isUploading = false;
+	// 				} else {
+	// 					isUploading = false;
+	// 					displayText = `Failed to upload file to WordPress: ${response.status} ${
+	// 						response.statusText
+	// 					} ${JSON.stringify(response)}`;
+	// 					warning = true;
+	// 				}
+	// 			})
+	// 			.catch((error) => {
+	// 				isUploading = false;
+	// 				console.error('Error:', error);
+	// 				displayText = 'Error: ' + error;
+	// 			});
+	// 	} else {
+	// 		displayText = `Invalid file type. Please upload an ${$uploadFileType} file.`;
+	// 		warning = true;
+	// 	}
+	// }
 
-	function handleDrop(e) {
-		isHighlighted = false;
-		files = e.dataTransfer.files;
-		uploadFile();
-	}
+	// function handleDrop(e) {
+	// 	isHighlighted = false;
+	// 	files = e.dataTransfer.files;
+	// 	uploadFile();
+	// }
 
-	if ($uploadFileType === 'feed') {
-		const blob = new Blob([$feedFile], { type: 'application/xml' });
-		const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
-		files = [file];
-		uploadFile();
-	}
+	// if ($uploadFileType === 'feed') {
+	// 	const blob = new Blob([$feedFile], { type: 'application/xml' });
+	// 	const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
+	// 	files = [file];
+	// 	uploadFile();
+	// }
+
+	function uploadFile() {}
+	function handleDrop() {}
 </script>
 
 <p
@@ -242,9 +236,9 @@
 	.dropzone {
 		border: 2px dashed #0087f7;
 		border-radius: 5px;
-		padding: 200px 0;
+		padding: 200px 20px;
 		text-align: center;
-		margin: 32px;
+		margin: 16px 0;
 		cursor: pointer;
 	}
 

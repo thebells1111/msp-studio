@@ -1,16 +1,22 @@
 <script>
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import FileUploader from '../Modals/FileUploader.svelte';
+	import Modals from '../Modals/Modals.svelte';
 
 	import { onMount } from 'svelte';
 
 	import { MSPValue, editingFeed, feeds } from '$/stores';
+	import SmallModal from '../Modals/SmallModal.svelte';
 
 	$: console.log($editingFeed);
 	function updateFeeds() {
 		$feeds = $feeds;
 	}
 	$: console.log($feeds);
+
+	let showUpload = true;
+	let imageReload = '';
 </script>
 
 <container>
@@ -28,9 +34,16 @@
 		<li><input bind:value={$editingFeed.explicit} /></li>
 	</ul>
 	<info-2>
-		<artwork>
+		<artwork
+			on:click={() => {
+				showUpload = true;
+			}}
+		>
 			<h4>Album Art</h4>
-			<img src={$editingFeed['itunes:image']['@_href']} alt="album art - click to edit" />
+			<img
+				src={$editingFeed['itunes:image']['@_href'] + '?t=' + imageReload}
+				alt="album art - click to edit"
+			/>
 			<p>Click Image<br /> to <br />Change Artwork</p>
 		</artwork>
 		<description>
@@ -42,6 +55,22 @@
 		</value>
 	</info-2>
 </container>
+
+{#if showUpload}
+	<SmallModal
+		closeModal={() => {
+			showUpload = false;
+		}}
+	>
+		<FileUploader
+			bind:filePath={$editingFeed['itunes:image']['@_href']}
+			bind:fileReload={imageReload}
+			fileName="artwork"
+			folderName={$editingFeed['podcast:guid']}
+			type="image"
+		/>
+	</SmallModal>
+{/if}
 
 <style>
 	container {
