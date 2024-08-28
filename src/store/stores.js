@@ -53,7 +53,7 @@ export const _newFeed = {
 	title: ''
 };
 
-export const remoteServer = dev ? 'http://localhost:3000' : '';
+export const remoteServer = dev ? 'http://localhost:8000' : '';
 
 export const catalogDB = writable();
 export const indexSearchResults = writable([]);
@@ -69,7 +69,7 @@ export const feeds = writable({});
 
 export const newFeed = writable(clone(_newFeed));
 
-export const editingFeed = writable(clone(_newFeed));
+export const editingFeed = writable();
 
 export const newTrack = writable({
 	description: '',

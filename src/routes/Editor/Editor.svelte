@@ -6,7 +6,9 @@
 
 	import { MSPValue, editingFeed, feeds } from '$/stores';
 
-	$: trackLength = $editingFeed.item.length;
+	$: trackLength = $editingFeed?.item?.length;
+
+	$: console.log($editingFeed);
 </script>
 
 <MainMenu />
@@ -14,11 +16,13 @@
 <main>
 	<AlbumsList />
 	<editors>
-		<Album />
-		<h2>Tracks {trackLength > 0 ? `(${trackLength} Total)` : ''}</h2>
-		{#each $editingFeed.item as track, i}
-			<Track bind:track trackNumber={i + 1} />
-		{/each}
+		{#if $editingFeed}
+			<Album />
+			<h2>Tracks {trackLength > 0 ? `(${trackLength} Total)` : ''}</h2>
+			{#each $editingFeed.item as track, i}
+				<Track bind:track trackNumber={i + 1} />
+			{/each}
+		{/if}
 	</editors>
 </main>
 

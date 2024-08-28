@@ -40,8 +40,9 @@
 			}}
 		>
 			<h4>Album Art</h4>
+
 			<img
-				src={$editingFeed['itunes:image']['@_href'] + '?t=' + imageReload}
+				src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
 				alt="album art - click to edit"
 			/>
 			<p>Click Image<br /> to <br />Change Artwork</p>

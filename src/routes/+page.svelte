@@ -92,6 +92,10 @@
 							})
 						);
 					}
+
+					if (band.item) {
+						albums.push(band);
+					}
 				});
 				$feeds = albums;
 				console.log($feeds);

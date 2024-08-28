@@ -6,7 +6,7 @@
 	import Delete from '$icons/Delete.svelte';
 	// import Publish from '../Publish/Publish.svelte';
 
-	import { feeds, editingFeed, newFeed, remoteServer } from '$/stores';
+	import { feeds, editingFeed, newFeed, remoteServer, catalogDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feed) {
@@ -16,15 +16,19 @@
 	async function deleteFeed(feed) {
 		const confirmed = window.confirm(`Are you sure you want to delete ${feed.title}?`);
 		if (confirmed) {
+			let guid = $editingFeed['podcast:guid'];
 			$feeds = $feeds.filter((_feed) => _feed['podcast:guid'] !== feed['podcast:guid']);
+			setTimeout(() => ($editingFeed = undefined), 50);
+			await $catalogDB.removeItem(guid);
 		}
 	}
 
-	function addFeed() {
+	async function addFeed() {
 		$editingFeed = clone($newFeed);
 		$editingFeed['podcast:guid'] = generateValidGuid();
 		$feeds = $feeds.concat($editingFeed);
 		checkPodcastGuid($editingFeed);
+		await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
 	// function publishFeed(feed) {
@@ -58,10 +62,10 @@
 	}
 
 	async function checkPodcastGuid(feed) {
-		let url = `/api/queryindex?q=${encodeURIComponent(
-			`podcasts/byguid?guid=${feed['podcast:guid']}`
-		)}`;
-
+		let url =
+			remoteServer +
+			`/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${feed['podcast:guid']}`)}`;
+		console.log(url);
 		const res = await fetch(url);
 		const data = await res.json();
 		if (data?.feed?.length) {
@@ -80,7 +84,7 @@
 	<overflow-container>
 		<ul>
 			{#each Object.entries($feeds || {}) as [key, feed]}
-				<li>
+				<li class:selected={feed['podcast:guid'] === $editingFeed?.['podcast:guid']}>
 					<album-info on:click={selectBand.bind(this, feed)}>
 						<p>{feed.title || 'Blank Album'}</p>
 						<p>{feed['itunes:author'] || 'Unknown Artist'}</p>
@@ -151,6 +155,10 @@
 	li:hover {
 		background-color: var(--color-bg-add-band);
 		color: var(--color-text-3);
+	}
+
+	li.selected {
+		background-color: gray;
 	}
 
 	album-info {
