@@ -75,6 +75,9 @@
 </tutorial> -->
 
 <style>
+	nav {
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
 	ul {
 		width: 150px;
 		background-color: blue;

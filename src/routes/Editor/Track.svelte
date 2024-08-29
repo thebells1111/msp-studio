@@ -13,7 +13,7 @@
 </script>
 
 <container>
-	<h3>Track #{trackNumber}</h3>
+	<h3 class:first={trackNumber === 1}>Track #{trackNumber}</h3>
 	<ul>
 		<li><h4>Title</h4></li>
 		<li><h4>Link to mp3</h4></li>
@@ -45,14 +45,14 @@
 	container {
 		display: flex;
 		flex-direction: column;
-		width: calc(100% - 8px);
+		width: calc(100% - 16px);
 	}
 	ul {
 		display: flex;
 		justify-content: space-between;
 		height: 18px;
 		align-items: center;
-		padding: 0;
+		padding: 0 8px;
 		margin: 0;
 		width: 100%;
 	}
@@ -88,6 +88,7 @@
 		width: 100%;
 		height: 300px;
 		margin-top: 8px;
+		padding: 0 8px;
 	}
 
 	artwork {
@@ -104,6 +105,19 @@
 		border-radius: 5px;
 	}
 
+	h3 {
+		border-top: 1px solid var(--color-text-0);
+		padding-top: 8px;
+		color: var(--color-bg-add-band);
+		margin-top: 8px;
+		padding: 8px 8px 0 8px;
+	}
+
+	h3.first {
+		padding-top: 0;
+		border-top: none;
+		padding: 0 8px;
+	}
 	h4 {
 		margin: 0 8px;
 		text-align: left;

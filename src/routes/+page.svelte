@@ -26,45 +26,25 @@
 			.then(async function (keys) {
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
 				const library = await Promise.all(_catalog);
-				let albums = [];
-				library.forEach((band) => {
-					if (band?.albums?.length) {
-						albums = albums.concat(
-							band.albums.map((album) => {
-								album['podcast:guid'] = album.guid;
-								album['itunes:author'] = band.title;
-								album['itunes:image'] = { '@_href': album.artwork || '' };
-								album['podcast:value'] = {
-									'@_type': 'lightning',
-									'@_method': 'keysend',
-									'podcast:valueRecipient': []
-										.concat(album?.value)
-										.filter((v) => v)
-										.map((value) => {
-											let rec = {};
-											rec['@_name'] = value.name || '';
-											rec['@_address'] = value.address || '';
-											rec['@_customKey'] = value.key || '';
-											rec['@_customValue'] = value.value || '';
-											rec['@_split'] = Number(value.split) || 0;
-											return rec;
-										})
-								};
 
-								album.item = album.tracks.map((track) => {
-									track['itunes:image'] = { '@_href': track.artwork || '' };
-									track.enclosure = {
-										'@_url': track?.enclosure?.url || '',
-										'@_length': track?.enclosure?.enclosureLength || '',
-										'@_type': track?.enclosure?.type
-									};
-									track['itunes:explicit'] = track?.explicit;
+				let oldFormat = library.some((v) => v?.albums?.length);
 
-									track['podcast:value'] = {
+				if (oldFormat) {
+					let albums = [];
+
+					library.forEach((band) => {
+						if (band?.albums?.length) {
+							oldFormat = true;
+							albums = albums.concat(
+								band.albums.map((album) => {
+									album['podcast:guid'] = album.guid;
+									album['itunes:author'] = band.title;
+									album['itunes:image'] = { '@_href': album.artwork || '' };
+									album['podcast:value'] = {
 										'@_type': 'lightning',
 										'@_method': 'keysend',
 										'podcast:valueRecipient': []
-											.concat(track?.value)
+											.concat(album?.value)
 											.filter((v) => v)
 											.map((value) => {
 												let rec = {};
@@ -77,27 +57,67 @@
 											})
 									};
 
-									delete track.artwork;
-									delete track.explicit;
-									delete track.value;
-									return track;
-								});
+									album.item = album.tracks.map((track) => {
+										track['itunes:image'] = { '@_href': track.artwork || '' };
+										track.enclosure = {
+											'@_url': track?.enclosure?.url || '',
+											'@_length': track?.enclosure?.enclosureLength || '',
+											'@_type': track?.enclosure?.type
+										};
+										track['itunes:explicit'] = track?.explicit;
 
-								delete album.guid;
-								delete album.artwork;
-								delete album.value;
-								delete album.tracks;
+										track['podcast:value'] = {
+											'@_type': 'lightning',
+											'@_method': 'keysend',
+											'podcast:valueRecipient': []
+												.concat(track?.value)
+												.filter((v) => v)
+												.map((value) => {
+													let rec = {};
+													rec['@_name'] = value.name || '';
+													rec['@_address'] = value.address || '';
+													rec['@_customKey'] = value.key || '';
+													rec['@_customValue'] = value.value || '';
+													rec['@_split'] = Number(value.split) || 0;
+													return rec;
+												})
+										};
 
-								return album;
-							})
-						);
-					}
+										delete track.artwork;
+										delete track.explicit;
+										delete track.value;
+										return track;
+									});
 
-					if (band.item) {
-						albums.push(band);
-					}
-				});
-				$feeds = albums;
+									delete album.guid;
+									delete album.artwork;
+									delete album.value;
+									delete album.tracks;
+
+									return album;
+								})
+							);
+						}
+
+						if (band.item) {
+							albums.push(band);
+						}
+					});
+
+					$feeds = albums;
+
+					let updated = albums.map(async (v, i) => {
+						if (!v?.['podcast:guid']) {
+							v['podcast:guid'] = generateValidGuid();
+							await checkPodcastGuid(v);
+						}
+						$catalogDB.removeItem(keys[i]);
+						return $catalogDB.setItem(v['podcast:guid'], v);
+					});
+					await Promise.all(updated);
+				} else {
+					$feeds = library;
+				}
 				console.log($feeds);
 				setTimeout(() => {
 					isLoading = false;
@@ -107,6 +127,25 @@
 				console.log(err);
 			});
 	});
+
+	function generateValidGuid() {
+		const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
+		const inputString = uuidv4();
+		return uuidv5(inputString, namespace);
+	}
+
+	async function checkPodcastGuid(feed) {
+		let url =
+			remoteServer +
+			`/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${feed['podcast:guid']}`)}`;
+		console.log(url);
+		const res = await fetch(url);
+		const data = await res.json();
+		if (data?.feed?.length) {
+			feed['podcast:guid'] = generateValidGuid();
+			await checkPodcastGuid(feed);
+		}
+	}
 
 	function buildValue(tag, name) {
 		let value = {

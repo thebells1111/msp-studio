@@ -11,6 +11,7 @@
 
 	async function selectBand(feed) {
 		$editingFeed = feed;
+		console.log(feed);
 	}
 
 	async function deleteFeed(feed) {
@@ -27,7 +28,7 @@
 		$editingFeed = clone($newFeed);
 		$editingFeed['podcast:guid'] = generateValidGuid();
 		$feeds = $feeds.concat($editingFeed);
-		checkPodcastGuid($editingFeed);
+		await checkPodcastGuid($editingFeed);
 		await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
@@ -70,7 +71,7 @@
 		const data = await res.json();
 		if (data?.feed?.length) {
 			feed['podcast:guid'] = generateValidGuid();
-			checkPodcastGuid(feed);
+			await checkPodcastGuid(feed);
 		}
 	}
 </script>
@@ -99,14 +100,15 @@
 <style>
 	div {
 		height: calc(100%);
+		width: 260px;
 		overflow: hidden;
-		border: 1px solid black;
-		margin: 0 8px 0 8px;
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 	}
 	header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		padding: 4px 4px 0 4px;
 	}
 
 	overflow-container {
@@ -143,7 +145,7 @@
 	ul {
 		padding: 0 0 40px 0px;
 		margin: 0 0 0 0;
-		width: 250px;
+		width: 260px;
 	}
 	li {
 		list-style: none;
@@ -152,13 +154,13 @@
 		display: flex;
 		justify-content: space-between;
 	}
-	li:hover {
-		background-color: var(--color-bg-add-band);
-		color: var(--color-text-3);
-	}
 
 	li.selected {
-		background-color: gray;
+		background-color: var(--color-input-bg-0);
+	}
+	li:hover {
+		background-color: var(--color-poster-bg-0);
+		color: var(--color-text-0);
 	}
 
 	album-info {

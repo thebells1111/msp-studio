@@ -6,12 +6,16 @@
 
 	import { onMount } from 'svelte';
 
-	import { MSPValue, editingFeed, feeds } from '$/stores';
+	import { MSPValue, editingFeed, feeds, catalogDB } from '$/stores';
 	import SmallModal from '../Modals/SmallModal.svelte';
+	let updateTimeout;
 
-	$: console.log($editingFeed);
 	function updateFeeds() {
-		$feeds = $feeds;
+		clearTimeout(updateTimeout);
+		updateTimeout = setTimeout(() => {
+			$feeds = $feeds;
+			$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+		}, 500);
 	}
 	$: console.log($feeds);
 
@@ -77,7 +81,9 @@
 	container {
 		display: flex;
 		flex-direction: column;
-		width: calc(100% - 8px);
+		width: calc(100% - 16px);
+		padding: 0 8px;
+		margin: 8px 0;
 	}
 	ul {
 		display: flex;
