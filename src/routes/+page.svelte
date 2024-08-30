@@ -3,7 +3,7 @@
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
 
-	import { catalogDB, feeds, user, wpFeedUrl } from '$/stores';
+	import { catalogDB, feeds, user, wpFeedUrl, _newFeed } from '$/stores';
 
 	let isLoading = false;
 
@@ -119,6 +119,13 @@
 					$feeds = library;
 				}
 				console.log($feeds);
+
+				$feeds = $feeds.map((v) => {
+					v.item = (v.item || []).map((item) => addMissingKeys(item, _newFeed.item[0]));
+
+					return addMissingKeys(v, _newFeed);
+				});
+
 				setTimeout(() => {
 					isLoading = false;
 				}, 1000);
@@ -145,6 +152,27 @@
 			feed['podcast:guid'] = generateValidGuid();
 			await checkPodcastGuid(feed);
 		}
+	}
+
+	function addMissingKeys(obj, template) {
+		for (const key in template) {
+			if (!(key in obj)) {
+				obj[key] = template[key]; // Add missing key
+			} else if (typeof template[key] === 'object' && !Array.isArray(template[key])) {
+				addMissingKeys(obj[key], template[key]); // Recurse for nested objects
+			} else if (Array.isArray(template[key])) {
+				if (!Array.isArray(obj[key])) {
+					obj[key] = template[key]; // Add missing array
+				} else {
+					obj[key].forEach((item, index) => {
+						if (typeof item === 'object') {
+							addMissingKeys(item, template[key][0]); // Recurse for each item in array
+						}
+					});
+				}
+			}
+		}
+		return obj;
 	}
 
 	function buildValue(tag, name) {

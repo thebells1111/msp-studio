@@ -34,7 +34,8 @@
 			'@_endcoding': 'UTF-8',
 			'@_xmlns:itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd',
 			'@_xmlns:podcast':
-				'https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md'
+				'https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md',
+			'@_xmlns:media': 'http://search.yahoo.com/mrss/'
 		};
 
 		let channel = {
