@@ -2,6 +2,7 @@
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import FileUploader from '../Modals/FileUploader.svelte';
+	import ExplicitToggle from './ExplicitToggle.svelte';
 	import Modals from '../Modals/Modals.svelte';
 
 	import { onMount } from 'svelte';
@@ -35,7 +36,7 @@
 		<li><input bind:value={$editingFeed['itunes:author']} on:input={updateFeeds} /></li>
 		<li><input bind:value={$editingFeed.title} on:input={updateFeeds} /></li>
 		<li><input bind:value={$editingFeed.link} /></li>
-		<li><input bind:value={$editingFeed.explicit} /></li>
+		<li><ExplicitToggle bind:checked={$editingFeed.explicit} handleInput={updateFeeds} /></li>
 	</ul>
 	<info-2>
 		<artwork
@@ -108,8 +109,11 @@
 		margin: 0 4px;
 	}
 	li:last-of-type {
-		min-width: 80px;
-		max-width: 80px;
+		min-width: 60px;
+		max-width: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.inputs {

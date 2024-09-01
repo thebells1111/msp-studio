@@ -1,6 +1,7 @@
 <script>
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import ExplicitToggle from './ExplicitToggle.svelte';
 
 	import clone from 'just-clone';
 
@@ -23,7 +24,7 @@
 	<ul class="inputs">
 		<li><input bind:value={track.title} /></li>
 		<li><input bind:value={track.enclosure['@_url']} /></li>
-		<li><input bind:value={track.explicit} /></li>
+		<li><ExplicitToggle bind:checked={track.explicit} /></li>
 	</ul>
 	<info-2>
 		<artwork>
