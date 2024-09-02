@@ -32,6 +32,9 @@
 					if (info.customData[0]) {
 						selectedPerson['@_customValue'] = info.customData[0].customValue;
 						selectedPerson['@_customKey'] = info.customData[0].customKey;
+					} else {
+						selectedPerson['@_customValue'] = '';
+						selectedPerson['@_customKey'] = '';
 					}
 					userFound = name + '@getalby.com';
 				} else {
@@ -53,6 +56,9 @@
 					if (info.customData[0]) {
 						selectedPerson['@_customValue'] = info.customData[0].customValue;
 						selectedPerson['@_customKey'] = info.customData[0].customKey;
+					} else {
+						selectedPerson['@_customValue'] = '';
+						selectedPerson['@_customKey'] = '';
 					}
 					userFound = name + '@fountain.fm';
 				} else {
@@ -194,6 +200,9 @@
 	.cancel-provider {
 		background-color: var(--color-bg-delete);
 	}
+	input {
+		max-width: calc(100vw - 84px);
+	}
 
 	wallet-provider input {
 		width: 80%;
@@ -209,7 +218,7 @@
 	}
 	.user-name input {
 		margin: 0px 0px 8px 8px;
-		width: calc(100% - 16px);
+		width: calc(100% - 24px);
 	}
 
 	button.provider {
@@ -269,6 +278,6 @@
 
 	advanced input {
 		margin: 0 8px;
-		width: calc(100% - 18px);
+		width: calc(100% - 24px);
 	}
 </style>

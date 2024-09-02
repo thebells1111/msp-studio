@@ -65,15 +65,4 @@
 		margin: 42px 16px 0 16px;
 		overflow: hidden;
 	}
-
-	@media screen and (max-width: 992px) {
-		modal {
-			position: relative;
-			width: 100%;
-			height: calc(100%);
-			overflow-y: auto;
-			overflow-x: hidden;
-			border-radius: 8px;
-		}
-	}
 </style>

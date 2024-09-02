@@ -3,7 +3,6 @@
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import FileUploader from '../Modals/FileUploader.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
-	import Modals from '../Modals/Modals.svelte';
 
 	import { onMount } from 'svelte';
 
