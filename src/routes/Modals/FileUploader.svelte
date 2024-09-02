@@ -11,7 +11,59 @@
 	let fileName;
 	let fileInput;
 
-	import { uploadFileText, wpFeedUrl } from '$/stores';
+	import { onMount } from 'svelte';
+
+	let selectedFile = null;
+	let uploadProgress = 0;
+	let uploadStatus = '';
+
+	// Function to upload the selected image to the server
+	async function uploadFile(event) {
+		selectedFile = event.target.files[0];
+		if (!selectedFile) {
+			uploadStatus = 'Please select an image to upload.';
+			return;
+		}
+
+		uploadStatus = 'Uploading...';
+		uploadProgress = 0;
+
+		const formData = new FormData();
+		formData.append('image', selectedFile);
+
+		try {
+			const response = await fetch(remoteServer + '/api/bunny/', {
+				// Replace with your server endpoint
+				method: 'POST',
+				body: formData,
+				headers: {
+					Accept: 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				throw new Error('Upload failed.');
+			}
+
+			const result = await response.json();
+			uploadStatus = 'Upload successful!';
+			console.log('Uploaded:', result);
+		} catch (error) {
+			console.error('Upload error:', error);
+			uploadStatus = 'Upload failed. Please try again.';
+		}
+	}
+
+	// Function to handle real-time progress updates from the server
+	onMount(() => {
+		const socket = io(); // Make sure to have Socket.IO client installed and set up
+
+		socket.on('imageUploadProgress', ({ progress }) => {
+			uploadProgress = progress;
+		});
+	});
+
+	import { uploadFileText, wpFeedUrl, remoteServer } from '$/stores';
 
 	function msToTime(ms) {
 		// Convert milliseconds to seconds
@@ -162,7 +214,6 @@
 	// 	uploadFile();
 	// }
 
-	function uploadFile() {}
 	function handleDrop() {}
 </script>
 
