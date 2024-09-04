@@ -19,12 +19,12 @@
 
 	// Function to upload the selected image to the server
 	async function uploadFile(event) {
-		selectedFile = event.target.files[0];
+		const selectedFile = event.target.files[0];
 		if (!selectedFile) {
 			uploadStatus = 'Please select an image to upload.';
 			return;
 		}
-
+		console.log(selectedFile);
 		uploadStatus = 'Uploading...';
 		uploadProgress = 0;
 
@@ -32,11 +32,11 @@
 		formData.append('image', selectedFile);
 
 		try {
-			const response = await fetch(remoteServer + '/api/bunny/', {
-				// Replace with your server endpoint
+			const response = await fetch(remoteServer + '/api/bunny/uploadimage', {
 				method: 'POST',
 				body: formData,
 				headers: {
+					// No need to set 'Content-Type' because `fetch` automatically sets it to `multipart/form-data`
 					Accept: 'application/json'
 				}
 			});
@@ -55,13 +55,7 @@
 	}
 
 	// Function to handle real-time progress updates from the server
-	onMount(() => {
-		const socket = io(); // Make sure to have Socket.IO client installed and set up
-
-		socket.on('imageUploadProgress', ({ progress }) => {
-			uploadProgress = progress;
-		});
-	});
+	onMount(() => {});
 
 	import { uploadFileText, wpFeedUrl, remoteServer } from '$/stores';
 
