@@ -1,12 +1,9 @@
 <script>
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
-	import FileUploader from '../Modals/FileUploader.svelte';
+	import FileUploader from './FileUploader.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 
-	import { onMount } from 'svelte';
-
-	import { MSPValue, editingFeed, feeds, catalogDB } from '$/stores';
+	import { editingFeed, feeds, catalogDB } from '$/stores';
 	import SmallModal from '../Modals/SmallModal.svelte';
 	let updateTimeout;
 
@@ -19,8 +16,12 @@
 	}
 	$: console.log($feeds);
 
-	let showUpload = true;
+	let showUpload = false;
 	let imageReload = '';
+	$: if (imageReload) {
+		showUpload = false;
+		updateFeeds();
+	}
 </script>
 
 <container>
@@ -70,9 +71,10 @@
 		<FileUploader
 			bind:filePath={$editingFeed['itunes:image']['@_href']}
 			bind:fileReload={imageReload}
-			fileName="artwork"
+			fileName="album-art"
 			folderName={$editingFeed['podcast:guid']}
 			type="image"
+			uploadText="Upload Album Art"
 		/>
 	</SmallModal>
 {/if}

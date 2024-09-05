@@ -2,15 +2,33 @@
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
+	import FileUploader from './FileUploader.svelte';
+	import SmallModal from '../Modals/SmallModal.svelte';
 
 	import clone from 'just-clone';
 
-	import { onMount } from 'svelte';
+	import { newTrack, editingFeed, feeds, catalogDB } from '$/stores';
 
-	import { newTrack, editingFeed } from '$/stores';
+	let updateTimeout;
+
+	function updateFeeds() {
+		clearTimeout(updateTimeout);
+		updateTimeout = setTimeout(() => {
+			$feeds = $feeds;
+			$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+		}, 500);
+	}
 
 	export let track = clone($newTrack);
 	export let trackNumber = 1;
+
+	let imageReload;
+	let showUpload = true;
+
+	$: if (imageReload) {
+		showUpload = false;
+		updateFeeds();
+	}
 </script>
 
 <container>
@@ -27,7 +45,11 @@
 		<li><ExplicitToggle bind:checked={track.explicit} /></li>
 	</ul>
 	<info-2>
-		<artwork>
+		<artwork
+			on:click={() => {
+				showUpload = true;
+			}}
+		>
 			<h4>Track Art</h4>
 			<img src={track['itunes:image']['@_href']} alt="track art - click to edit" />
 			<p>Click Image<br /> to <br />Change Artwork</p>
@@ -41,6 +63,23 @@
 		</value>
 	</info-2>
 </container>
+
+{#if showUpload}
+	<SmallModal
+		closeModal={() => {
+			showUpload = false;
+		}}
+	>
+		<FileUploader
+			bind:filePath={track['itunes:image']['@_href']}
+			bind:fileReload={imageReload}
+			fileName="track-art"
+			folderName={$editingFeed['podcast:guid'] + '/' + track.guid}
+			type="image"
+			uploadText="Track #{trackNumber} Art"
+		/>
+	</SmallModal>
+{/if}
 
 <style>
 	container {

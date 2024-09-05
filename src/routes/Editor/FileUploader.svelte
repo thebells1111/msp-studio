@@ -1,6 +1,13 @@
 <script>
 	import LinearProgress from '@smui/linear-progress';
 	import 'svelte-material-ui/bare.css';
+
+	export let filePath;
+	export let fileReload;
+	export let folderName;
+	export let fileName;
+	export let type;
+	export let uploadText;
 	let files;
 	let isHighlighted = false;
 	let warning = false;
@@ -8,7 +15,6 @@
 	let displayText = 'Drag and drop a file here or click to select a file';
 	let timerText = '0:00';
 	let startTime = '';
-	let fileName;
 	let fileInput;
 
 	import { onMount } from 'svelte';
@@ -24,19 +30,64 @@
 			uploadStatus = 'Please select an image to upload.';
 			return;
 		}
-		console.log(selectedFile);
-		uploadStatus = 'Uploading...';
-		uploadProgress = 0;
 
 		const formData = new FormData();
-		formData.append('image', selectedFile);
+		const extension = getFileExtension(selectedFile.name);
+		let allowedExtensions = [];
+
+		// Ensure folderName, fileName, and type are defined and valid
+		if (!folderName) {
+			console.error('Folder name is undefined.');
+			return;
+		}
+
+		if (!fileName) {
+			console.error('File name is undefined.');
+			return;
+		}
+
+		if (!type) {
+			console.error('File type is undefined.');
+			return;
+		}
+
+		// Append common fields
+		formData.append('folderName', folderName); // Make sure `folderName` is defined
+		formData.append('user', 'StevenB'); // You might want to make this dynamic
+		formData.append('fileName', `${fileName}.${extension}`); // Constructed file name
+
+		// Determine allowed extensions and set `file` field
+		if (type === 'audio') {
+			allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
+		} else if (type === 'image') {
+			allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+		} else if (type === 'feed') {
+			allowedExtensions = ['application/xml', 'text/xml'];
+		} else {
+			uploadStatus = 'Unsupported file type.';
+			return;
+		}
+
+		// Validate file type
+		if (!allowedExtensions.includes(selectedFile.type)) {
+			uploadStatus = `Invalid file type. Allowed types: ${allowedExtensions.join(', ')}`;
+			return;
+		}
+
+		// Log the file name for debugging
+		console.log('Uploading file with name:', formData.get('fileName'));
+
+		uploadStatus = 'Uploading...';
+		uploadProgress = 0; // Assuming `uploadProgress` is used elsewhere to show progress
 
 		try {
-			const response = await fetch(remoteServer + '/api/bunny/uploadimage', {
+			// Add the file field last
+			formData.append('file', selectedFile); // Use a generic `file` field for all types
+
+			const response = await fetch(`${remoteServer}/api/bunny/uploadimage`, {
 				method: 'POST',
 				body: formData,
 				headers: {
-					// No need to set 'Content-Type' because `fetch` automatically sets it to `multipart/form-data`
 					Accept: 'application/json'
 				}
 			});
@@ -48,6 +99,10 @@
 			const result = await response.json();
 			uploadStatus = 'Upload successful!';
 			console.log('Uploaded:', result);
+			if (result.url) {
+				filePath = result.url;
+				fileReload = new Date().getTime();
+			}
 		} catch (error) {
 			console.error('Upload error:', error);
 			uploadStatus = 'Upload failed. Please try again.';
@@ -93,35 +148,7 @@
 	}
 
 	// function uploadFile() {
-	// 	const file = files[0];
-	// 	const extension = getFileExtension(file.name);
-	// 	console.log(file);
 
-	// 	let allowedExtensions = [];
-	// 	console.log($uploadFileType);
-
-	// 	if ($uploadFileType === 'audio') {
-	// 		allowedExtensions = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/flac'];
-	// 		fileName = `${$selectedAlbum.title}_${$selectedTrack.title}.${extension}`;
-	// 	}
-
-	// 	if ($uploadFileType === 'image') {
-	// 		allowedExtensions = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-	// 		if ($uploadFileText === 'Upload Album Image') {
-	// 			fileName = `${$selectedAlbum.title}_artwork.${extension}`;
-	// 		}
-	// 		if ($uploadFileText === 'Upload Track Image') {
-	// 			fileName = `${$selectedAlbum.title}_${$selectedTrack.title}_artwork.${extension}`;
-	// 		}
-	// 	}
-
-	// 	if ($uploadFileType === 'feed') {
-	// 		allowedExtensions = ['application/xml', 'text/xml'];
-	// 		fileName = `${$selectedAlbum.title}.xml`;
-	// 	}
-
-	// 	if (allowedExtensions.includes(file.type)) {
 	// 		displayText = 'Uploading File';
 	// 		isUploading = true;
 	// 		startTime = new Date().getTime();
@@ -190,7 +217,7 @@
 	// 				displayText = 'Error: ' + error;
 	// 			});
 	// 	} else {
-	// 		displayText = `Invalid file type. Please upload an ${$uploadFileType} file.`;
+	// 		displayText = `Invalid file type. Please upload an ${type} file.`;
 	// 		warning = true;
 	// 	}
 	// }
@@ -201,7 +228,7 @@
 	// 	uploadFile();
 	// }
 
-	// if ($uploadFileType === 'feed') {
+	// if (type === 'feed') {
 	// 	const blob = new Blob([$feedFile], { type: 'application/xml' });
 	// 	const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
 	// 	files = [file];
@@ -211,16 +238,8 @@
 	function handleDrop() {}
 </script>
 
-<p
-	class="feed-url"
-	on:click={() => {
-		$wpFeedUrl = '';
-	}}
->
-	{$wpFeedUrl}
-</p>
 <h1>
-	{$uploadFileText}
+	{uploadText}
 </h1>
 
 {#if isUploading}
