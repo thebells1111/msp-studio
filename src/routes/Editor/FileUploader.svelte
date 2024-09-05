@@ -46,6 +46,8 @@
 			return;
 		}
 
+		('https://songs-for-young-lovers.b-cdn.net/210f0659-fc61-5211-8a15-73729f19d55d%2F5fbdcc1b-21ac-5e21-981c-ccdc377c4475%2Ftrack-art.jpg');
+
 		if (!type) {
 			console.error('File type is undefined.');
 			return;

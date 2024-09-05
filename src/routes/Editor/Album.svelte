@@ -2,9 +2,11 @@
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import FileUploader from './FileUploader.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
+	import SmallModal from '../Modals/SmallModal.svelte';
+	import UploadFileIcon from '../icons/UploadFile.svelte';
 
 	import { editingFeed, feeds, catalogDB } from '$/stores';
-	import SmallModal from '../Modals/SmallModal.svelte';
+
 	let updateTimeout;
 
 	function updateFeeds() {
@@ -50,7 +52,7 @@
 				src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
 				alt="album art - click to edit"
 			/>
-			<p>Click Image<br /> to <br />Change Artwork</p>
+			<button><UploadFileIcon size="20" /></button>
 		</artwork>
 		<description>
 			<h4>Description</h4>
@@ -74,7 +76,7 @@
 			fileName="album-art"
 			folderName={$editingFeed['podcast:guid']}
 			type="image"
-			uploadText="Upload Album Art"
+			uploadText="Album Art"
 		/>
 	</SmallModal>
 {/if}
@@ -171,5 +173,20 @@
 	value {
 		display: block;
 		width: calc((100% - 150px) / 2);
+	}
+
+	button {
+		width: 30px;
+		height: 30px;
+		border-radius: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+		position: relative;
+		bottom: 30px;
+		left: 121px;
+		background-color: var(--color-bg-add-band);
+		box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.75);
 	}
 </style>

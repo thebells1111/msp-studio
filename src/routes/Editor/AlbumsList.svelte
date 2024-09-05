@@ -11,6 +11,32 @@
 
 	async function selectBand(feed) {
 		$editingFeed = feed;
+		let itemsMissingGuids = feed.item.some((item) => !item.guid);
+
+		if (itemsMissingGuids) {
+			$editingFeed.item.forEach((item) => {
+				if (!item.guid) {
+					item.guid = generateUniqueGuid(feed.item);
+				}
+			});
+			await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+		}
+
+		function generateUniqueGuid(items) {
+			let guid = generateValidGuid();
+			let maxRetries = 10; // Prevents potential infinite loops
+
+			while (items.some((item) => item.guid && item.guid['#text'] === guid) && maxRetries > 0) {
+				guid = generateValidGuid();
+				maxRetries--;
+			}
+
+			return {
+				'@_PermaLink': 'false',
+				'#text': guid
+			};
+		}
+
 		console.log(feed);
 	}
 
@@ -27,8 +53,8 @@
 	async function addFeed() {
 		$editingFeed = clone($newFeed);
 		$editingFeed['podcast:guid'] = generateValidGuid();
-		$feeds = $feeds.concat($editingFeed);
 		await checkPodcastGuid($editingFeed);
+		$feeds = $feeds.concat($editingFeed);
 		await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
@@ -139,7 +165,7 @@
 
 	.delete {
 		font-size: 1.3em;
-		color: red;
+		color: var(--color-bg-delete);
 	}
 
 	ul {
