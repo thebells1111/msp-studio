@@ -33,12 +33,25 @@
 		showUpload = false;
 		updateFeeds();
 	}
+
+	function deleteTrack() {
+		const confirmed = window.confirm(
+			`Are you sure you want to delete Track #${trackNumber}${
+				track.title ? ` - ${track.title}?` : '?'
+			}`
+		);
+		if (confirmed) {
+			$editingFeed.item = $editingFeed.item.filter(
+				(v) => !(v.guid === track.guid || v.guid['#text'] === track.guid['#text'])
+			);
+		}
+	}
 </script>
 
 <container>
 	<track-header class:first={trackNumber === 1}>
 		<h3>Track #{trackNumber}</h3>
-		<button class="delete">
+		<button class="delete" on:click={deleteTrack}>
 			<DeleteIcon />
 		</button>
 	</track-header>
