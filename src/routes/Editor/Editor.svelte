@@ -8,6 +8,8 @@
 	import AddIcon from '$icons/Add.svelte';
 
 	import { MSPValue, editingFeed, newTrack, catalogDB } from '$/stores';
+	import Modal from '../Modals/Modals.svelte';
+	import TrackSorter from './TrackSorter.svelte';
 
 	$: trackLength = $editingFeed?.item?.length;
 
@@ -60,6 +62,10 @@
 		{/if}
 	</editors>
 </main>
+
+<Modal>
+	<TrackSorter />
+</Modal>
 
 <style>
 	main {
