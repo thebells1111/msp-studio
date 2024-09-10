@@ -1,25 +1,34 @@
 <script>
 	import { SortableList } from '@jhubbardsf/svelte-sortablejs';
-	let exampleItems = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5', 'Item 6'];
+	export let tracks;
 
 	function handleSort(e) {
 		const { oldIndex, newIndex } = e;
 		// Move the item in the array
 		if (oldIndex !== newIndex) {
-			const movedItem = exampleItems.splice(oldIndex, 1)[0];
-			exampleItems.splice(newIndex, 0, movedItem);
+			const movedItem = tracks.splice(oldIndex, 1)[0];
+			tracks.splice(newIndex, 0, movedItem);
 		}
-		console.log('Sorted items:', exampleItems);
+		console.log('Sorted items:', tracks);
 	}
 </script>
 
-<SortableList onSort={handleSort} animation={150} ghostClass="ghost-item">
-	{#each exampleItems as item}
-		<div class="list-group-item">
-			{item}
-		</div>
-	{/each}
-</SortableList>
+<track-list-container>
+	<ul>
+		{#each tracks as track, i}
+			<li>{i + 1}.</li>
+		{/each}
+	</ul>
+	<sortable-list-container>
+		<SortableList onSort={handleSort} animation={150} ghostClass="ghost-item">
+			{#each tracks as track}
+				<div class="list-group-item">
+					{track.title}
+				</div>
+			{/each}
+		</SortableList>
+	</sortable-list-container>
+</track-list-container>
 
 <style>
 	.list-group-item {
@@ -37,5 +46,28 @@
 	.ghost-item {
 		background-color: #cce5ff !important; /* Change to a noticeable background when dragging */
 		border: 1px dashed #007bff;
+	}
+
+	track-list-container {
+		display: flex;
+		width: 100%;
+	}
+
+	sortable-list-container {
+		width: 100%;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+	}
+
+	li {
+		height: 36px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		list-style: none;
+		margin: 4px;
 	}
 </style>

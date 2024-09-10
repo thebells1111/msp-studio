@@ -6,10 +6,13 @@
 	import Album from './Album.svelte';
 	import Track from './Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
+	import SwapVertIcon from '$icons/SwapVert.svelte';
 
 	import { MSPValue, editingFeed, newTrack, catalogDB } from '$/stores';
 	import Modal from '../Modals/Modals.svelte';
 	import TrackSorter from './TrackSorter.svelte';
+
+	let showTrackSorter = false;
 
 	$: trackLength = $editingFeed?.item?.length;
 
@@ -51,9 +54,17 @@
 			<h2>Album</h2>
 			<Album />
 			<track-header>
+				<button
+					class="track-sorter"
+					on:click={() => {
+						showTrackSorter = true;
+					}}
+				>
+					<SwapVertIcon size="76" />
+				</button>
 				<h2>Tracks {trackLength > 0 ? `(${trackLength} Total)` : ''}</h2>
 				<button class="add" on:click={addTrack}>
-					<AddIcon />
+					<AddIcon size="28" />
 				</button>
 			</track-header>
 			{#each $editingFeed.item as track, i}
@@ -63,9 +74,16 @@
 	</editors>
 </main>
 
-<Modal>
-	<TrackSorter />
-</Modal>
+{#if showTrackSorter && $editingFeed?.item?.length > 1}
+	<Modal
+		closeModal={() => {
+			$editingFeed.item = $editingFeed.item;
+			showTrackSorter = false;
+		}}
+	>
+		<TrackSorter bind:tracks={$editingFeed.item} />
+	</Modal>
+{/if}
 
 <style>
 	main {
@@ -95,9 +113,8 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 24px;
-		min-width: 24px;
 		font-size: 2em;
+		overflow: hidden;
 	}
 
 	track-header {
@@ -111,9 +128,19 @@
 			var(--color-poster-bg-0) 10%,
 			var(--color-poster-bg-1) 95%
 		);
+		height: 36px;
 	}
 
 	.add {
 		margin-left: 8px;
+		width: 32px;
+		min-width: 32px;
+	}
+
+	.track-sorter {
+		margin-right: 2px;
+		width: 32px;
+		min-width: 32px;
+		height: 32px;
 	}
 </style>
