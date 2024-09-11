@@ -2,6 +2,7 @@
 	import { slide, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import HamburgerIcon from './icons/Hamburger.svelte';
+	import Register from './Login/Register.svelte';
 	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
@@ -10,18 +11,7 @@
 	let expandMenu = false;
 	$showTutorial = false;
 	let tutorialClicked = false; //change to false
-
-	function gotoAlby() {
-		if (dev) {
-			goto(
-				'https://getalby.com/oauth?client_id=32dVOIuGiA&response_type=code&redirect_uri=http://localhost:3000/api/alby/auth&scope=account:read'
-			);
-		} else {
-			goto(
-				'https://getalby.com/oauth?client_id=srl5nfxtlh&response_type=code&redirect_uri=https://studio.musicsideproject.com/api/alby/auth&scope=account:read'
-			);
-		}
-	}
+	let showRegisterModal = true;
 
 	function logout() {
 		$user = { loggedIn: false };
@@ -65,6 +55,7 @@
 		<menu>
 			<account-button-hover />
 			<ul transition:slide|global={{ duration: 200 }}>
+				<li on:click={() => (showRegisterModal = true)}>Register</li>
 				<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
 				<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
 			</ul>
@@ -75,6 +66,10 @@
 <!-- <tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
 	<Tutorial />
 </tutorial> -->
+
+{#if showRegisterModal}
+	<Register bind:showRegisterModal />
+{/if}
 
 <style>
 	nav {
