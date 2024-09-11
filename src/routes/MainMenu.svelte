@@ -1,11 +1,11 @@
 <script>
 	import { slide, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
-	import AccountIcon from './icons/Account.svelte';
+	import HamburgerIcon from './icons/Hamburger.svelte';
 	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
-	import { user, showTutorial } from '$/stores';
+	import { user, showTutorial, menuPanel } from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
@@ -31,6 +31,10 @@
 	$: if ($showTutorial) {
 		tutorialClicked = true;
 	}
+
+	function selectMenuPanel(menu) {
+		$menuPanel = menu;
+	}
 </script>
 
 <nav>
@@ -42,13 +46,14 @@
 
 	<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
 
-	<!-- <button
+	<button
+		class="menu-icon"
 		on:click={() => {
-			expandMenu = true;
+			expandMenu = !expandMenu;
 		}}
 	>
-		<AccountIcon size="40" />
-	</button> -->
+		<HamburgerIcon size="32" />
+	</button>
 </nav>
 
 {#if expandMenu}
@@ -60,11 +65,8 @@
 		<menu>
 			<account-button-hover />
 			<ul transition:slide|global={{ duration: 200 }}>
-				{#if $user.loggedIn}
-					<li on:click={logout}>Log Out</li>
-				{:else}
-					<li on:click={gotoAlby}>Log In</li>
-				{/if}
+				<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
+				<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
 			</ul>
 		</menu>
 	</container>
@@ -77,6 +79,11 @@
 <style>
 	nav {
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+		display: flex;
+		align-items: center;
+	}
+	a {
+		width: 100%;
 	}
 	ul {
 		width: 150px;
@@ -95,5 +102,31 @@
 		width: calc(100% - 16px);
 		text-align: end;
 		cursor: pointer;
+	}
+	button {
+		background-color: transparent;
+		margin: 0 8px;
+		padding: 0;
+	}
+
+	menu-icon {
+	}
+
+	container {
+		display: block;
+		z-index: 100;
+		width: 100vw;
+		height: 100vh;
+		background-color: transparent;
+		position: absolute;
+		top: 0;
+	}
+
+	menu {
+		position: absolute;
+		top: 36px;
+		padding: 0;
+		margin: 0;
+		right: 4px;
 	}
 </style>

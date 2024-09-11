@@ -129,6 +129,7 @@
 		width: 260px;
 		overflow: hidden;
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+		position: relative;
 	}
 	header {
 		display: flex;

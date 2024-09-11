@@ -3,12 +3,13 @@
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import MainMenu from '../MainMenu.svelte';
 	import AlbumsList from './AlbumsList.svelte';
+	import BunnyCredentials from './BunnyCredentials.svelte';
 	import Album from './Album.svelte';
 	import Track from './Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
 	import SwapVertIcon from '$icons/SwapVert.svelte';
 
-	import { MSPValue, editingFeed, newTrack, catalogDB } from '$/stores';
+	import { MSPValue, editingFeed, newTrack, catalogDB, menuPanel } from '$/stores';
 	import Modal from '../Modals/Modals.svelte';
 	import TrackSorter from './TrackSorter.svelte';
 
@@ -43,25 +44,38 @@
 			return uuidv5(inputString, namespace);
 		}
 	}
+
+	let activePanel = AlbumsList;
+	$: console.log($menuPanel);
+	$: if ($menuPanel === 'albums') {
+		activePanel = AlbumsList;
+	} else if ($menuPanel === 'bunnyCredentials') {
+		activePanel = BunnyCredentials;
+	}
 </script>
 
 <MainMenu />
 
 <main>
-	<AlbumsList />
+	<svelte:component this={activePanel} />
 	<editors>
 		{#if $editingFeed}
 			<h2>Album</h2>
 			<Album />
+
 			<track-header>
-				<button
-					class="track-sorter"
-					on:click={() => {
-						showTrackSorter = true;
-					}}
-				>
-					<SwapVertIcon size="76" />
-				</button>
+				{#if $editingFeed.item?.length > 1}
+					<button
+						class="track-sorter"
+						on:click={() => {
+							showTrackSorter = true;
+						}}
+					>
+						<SwapVertIcon size="76" />
+					</button>
+				{:else}
+					<spacer />
+				{/if}
 				<h2>Tracks {trackLength > 0 ? `(${trackLength} Total)` : ''}</h2>
 				<button class="add" on:click={addTrack}>
 					<AddIcon size="28" />
@@ -142,5 +156,11 @@
 		width: 32px;
 		min-width: 32px;
 		height: 32px;
+	}
+
+	spacer {
+		display: block;
+		width: 32px;
+		min-width: 32px;
 	}
 </style>

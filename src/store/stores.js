@@ -136,3 +136,4 @@ export const posterSwiper = writable();
 export const satsPerTrack = writable(0);
 export const satsPerBoost = writable(1000);
 export const senderName = writable('');
+export const menuPanel = writable('albums');
