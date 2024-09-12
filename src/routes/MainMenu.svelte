@@ -1,21 +1,21 @@
 <script>
 	import { slide, fly } from 'svelte/transition';
-	import { goto } from '$app/navigation';
 	import HamburgerIcon from './icons/Hamburger.svelte';
-	import Register from './Login/Register.svelte';
+	import Login from './Login/Login.svelte';
+
 	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
-	import { user, showTutorial, menuPanel } from '$/stores';
+	import { showTutorial, menuPanel, loggedIn } from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
 	let tutorialClicked = false; //change to false
-	let showRegisterModal = true;
+	let showLoginModal = true;
 
 	function logout() {
-		$user = { loggedIn: false };
-		fetch('/api/alby/logout');
+		$loggedIn = false;
+		fetch('/api/msp/logout');
 	}
 
 	$: if ($showTutorial) {
@@ -55,7 +55,11 @@
 		<menu>
 			<account-button-hover />
 			<ul transition:slide|global={{ duration: 200 }}>
-				<li on:click={() => (showRegisterModal = true)}>Register</li>
+				{#if $loggedIn}
+					<li on:click={logout}>Log Out</li>
+				{:else}
+					<li on:click={() => (showLoginModal = true)}>Log In</li>
+				{/if}
 				<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
 				<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
 			</ul>
@@ -67,8 +71,8 @@
 	<Tutorial />
 </tutorial> -->
 
-{#if showRegisterModal}
-	<Register bind:showRegisterModal />
+{#if showLoginModal}
+	<Login bind:showLoginModal />
 {/if}
 
 <style>

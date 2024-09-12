@@ -3,7 +3,7 @@
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
 
-	import { catalogDB, feeds, user, wpFeedUrl, _newFeed } from '$/stores';
+	import { catalogDB, feeds, loggedIn, wpFeedUrl, _newFeed } from '$/stores';
 
 	let isLoading = false;
 
@@ -13,8 +13,8 @@
 		// 		return res.json();
 		// 	})
 		// 	.then((data) => {
-		// 		$user.loggedIn = data.loggedIn;
-		// 		$user.name = data.name;
+		// 		$loggedIn = data.loggedIn;
+		//
 		// 	});
 
 		$catalogDB = localforage.createInstance({

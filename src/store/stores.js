@@ -69,7 +69,6 @@ export const catalogDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 
-export const user = writable({ loggedIn: false });
 export const currentModal = writable();
 export const showTutorial = writable(false);
 
@@ -137,3 +136,4 @@ export const satsPerTrack = writable(0);
 export const satsPerBoost = writable(1000);
 export const senderName = writable('');
 export const menuPanel = writable('albums');
+export const loggedIn = writable(false);

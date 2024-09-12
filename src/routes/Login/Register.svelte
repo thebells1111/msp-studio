@@ -1,7 +1,7 @@
 <script>
 	import SmallModal from '../Modals/SmallModal.svelte';
 
-	export let showRegisterModal = false;
+	export let showLoginInputs = false;
 
 	import { remoteServer } from '$/stores';
 
@@ -9,7 +9,8 @@
 	let password = '';
 	let registerError = '';
 
-	const saveCredentials = async () => {
+	async function saveCredentials(e) {
+		e.preventDefault();
 		const payload = { email, password };
 
 		const response = await fetch(remoteServer + '/api/msp/register', {
@@ -24,34 +25,36 @@
 		if (data?.status === 'error') {
 			registerError = data.message;
 		}
-	};
+	}
 </script>
 
-<SmallModal closeModal={() => (showRegisterModal = false)}>
-	<p>Please provide a email and password for future log in.</p>
-	<p>A valid email is required for password recovery.</p>
+<p>Please provide an email and password for future log in.</p>
+<p>A valid email is required for password recovery.</p>
+<form on:submit={saveCredentials}>
 	<input type="email" bind:value={email} placeholder="E-mail" />
 	<input type="password" bind:value={password} placeholder="Password" />
 	<button on:click={saveCredentials}>Register</button>
-	{#if registerError}
-		<h3>{registerError}</h3>
-	{/if}
-</SmallModal>
+</form>
+<button
+	class="login"
+	on:click={() => {
+		showLoginInputs = true;
+	}}
+>
+	--click here to log in--
+</button>
+{#if registerError}
+	<h3>{registerError}</h3>
+{/if}
 
 <style>
-	div {
-		display: flex;
-		flex-direction: column;
-		margin: 20px 128px;
-		align-items: center;
-	}
-
 	p {
 		margin: 0;
 		padding: 0;
+		text-align: center;
 	}
 	input {
-		width: calc(100% - 8px);
+		width: calc(100% - 12px);
 		margin: 4px 0;
 	}
 	button {
@@ -59,9 +62,12 @@
 		margin: 4px 0;
 	}
 
-	@media (max-width: 799px) {
-		div {
-			margin: 20px 8px;
-		}
+	button.login {
+		background-color: transparent;
+		font-size: 0.9em;
+	}
+
+	h3 {
+		text-align: center;
 	}
 </style>
