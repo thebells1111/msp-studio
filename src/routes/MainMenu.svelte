@@ -6,16 +6,16 @@
 	import Tutorial from './Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
-	import { showTutorial, menuPanel, loggedIn } from '$/stores';
+	import { showTutorial, menuPanel, loggedIn, remoteServer } from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
 	let tutorialClicked = false; //change to false
-	let showLoginModal = true;
+	let showLoginModal = false;
 
 	function logout() {
 		$loggedIn = false;
-		fetch('/api/msp/logout');
+		fetch(remoteServer + '/api/msp/logout', { method: 'GET', credentials: 'include' });
 	}
 
 	$: if ($showTutorial) {

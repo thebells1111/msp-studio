@@ -3,19 +3,18 @@
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
 
-	import { catalogDB, feeds, loggedIn, wpFeedUrl, _newFeed } from '$/stores';
+	import { catalogDB, feeds, loggedIn, _newFeed, remoteServer } from '$/stores';
 
 	let isLoading = false;
 
 	onMount(() => {
-		// fetch('/api/alby/refresh')
-		// 	.then((res) => {
-		// 		return res.json();
-		// 	})
-		// 	.then((data) => {
-		// 		$loggedIn = data.loggedIn;
-		//
-		// 	});
+		fetch(remoteServer + '/api/msp/refresh', { method: 'GET', credentials: 'include' })
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				$loggedIn = data.status === 'success';
+			});
 
 		$catalogDB = localforage.createInstance({
 			name: 'catalogDB'
