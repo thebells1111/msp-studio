@@ -1,9 +1,9 @@
 <script>
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
-	import FileUploader from './FileUploader.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';
 	import UploadFileIcon from '../icons/UploadFile.svelte';
+	import ArtUpload from './ArtUpload.svelte';
 
 	import { editingFeed, feeds, catalogDB } from '$/stores';
 
@@ -69,16 +69,7 @@
 		closeModal={() => {
 			showUpload = false;
 		}}
-	>
-		<FileUploader
-			bind:filePath={$editingFeed['itunes:image']['@_href']}
-			bind:fileReload={imageReload}
-			fileName="album-art"
-			folderName={$editingFeed['podcast:guid']}
-			type="image"
-			uploadText="Album Art"
-		/>
-	</SmallModal>
+	/>
 {/if}
 
 <style>

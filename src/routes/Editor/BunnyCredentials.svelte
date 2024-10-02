@@ -1,12 +1,33 @@
 <script>
 	import BunnyToggle from './BunnyToggle.svelte';
-	let useBunnyCredentials = false;
+	let useBunnyCredentials = $settings?.bunny?.active || false;
+	import { remoteServer, settings } from '$/stores';
+
+	async function saveSettings() {
+		console.log($settings);
+		const response = await fetch(remoteServer + '/api/msp/savesettings', {
+			method: 'POST',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify($settings)
+		});
+
+		const data = await response.json();
+		console.log(data);
+	}
+
+	function changeBunnySettings() {
+		$settings.bunny = settings.bunny || {};
+		$settings.bunny.active = useBunnyCredentials;
+		console.log($settings.bunny);
+		saveSettings();
+	}
 </script>
 
 <div>
 	<header>
 		<h3>Bunny Credentials</h3>
-		<BunnyToggle bind:checked={useBunnyCredentials} />
+		<BunnyToggle bind:checked={useBunnyCredentials} handleInput={changeBunnySettings} />
 	</header>
 	{#if useBunnyCredentials}
 		<label>

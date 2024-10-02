@@ -29,14 +29,6 @@
 
 <nav>
 	<button
-		on:click={() => {
-			$showTutorial = true;
-		}}>Tutorial</button
-	>
-
-	<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
-
-	<button
 		class="menu-icon"
 		on:click={() => {
 			expandMenu = !expandMenu;
@@ -57,11 +49,21 @@
 			<ul transition:slide|global={{ duration: 200 }}>
 				{#if $loggedIn}
 					<li on:click={logout}>Log Out</li>
+					<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
+					<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
 				{:else}
 					<li on:click={() => (showLoginModal = true)}>Log In</li>
 				{/if}
-				<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
-				<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
+				<li
+					on:click={() => {
+						$showTutorial = true;
+					}}
+				>
+					Tutorial
+				</li>
+				<li>
+					<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
+				</li>
 			</ul>
 		</menu>
 	</container>
@@ -80,6 +82,7 @@
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
 	}
 	a {
 		width: 100%;
@@ -127,5 +130,9 @@
 		padding: 0;
 		margin: 0;
 		right: 4px;
+	}
+
+	a {
+		text-decoration: none;
 	}
 </style>

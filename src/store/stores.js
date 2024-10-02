@@ -137,3 +137,4 @@ export const satsPerBoost = writable(1000);
 export const senderName = writable('');
 export const menuPanel = writable('albums');
 export const loggedIn = writable(false);
+export const settings = writable({});
