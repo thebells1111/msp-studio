@@ -8,6 +8,7 @@
 	export let fileName;
 	export let type;
 	export let uploadText;
+	export let handleUpdate = () => {};
 	let files;
 	let isHighlighted = false;
 	let warning = false;
@@ -104,6 +105,7 @@
 			if (result.url) {
 				filePath = result.url;
 				fileReload = new Date().getTime();
+				handleUpdate({ target: { value: result.url } });
 			}
 		} catch (error) {
 			console.error('Upload error:', error);

@@ -12,7 +12,12 @@
 			filePath: $editingFeed['itunes:image']['@_href'],
 			fileName: 'album-art',
 			folderName: $editingFeed['podcast:guid'],
-			uploadText: 'Album Art'
+			uploadText: 'Album Art',
+			update: (e) => {
+				console.log(e.target.value);
+				$editingFeed['itunes:image']['@_href'] = e.target.value;
+				imageProps.albumSquare.filePath = $editingFeed['itunes:image']['@_href'];
+			}
 		},
 		albumBanner: {
 			filePath: $editingFeed['itunes:image']['@_href'],
@@ -36,7 +41,10 @@
 		<input
 			class="art-upload"
 			class:bottom-space={!showFileUpload}
-			bind:value={currentProps.filePath}
+			value={currentProps.filePath}
+			on:input={(e) => {
+				currentProps.update(e);
+			}}
 			placeholder="enter link to image file"
 		/>
 	</label>
@@ -47,6 +55,9 @@
 			bind:fileReload={imageReload}
 			fileName={currentProps.fileName}
 			folderName={currentProps.folderName}
+			handleUpdate={(e) => {
+				currentProps.update(e);
+			}}
 			type="image"
 		/>
 	{/if}
