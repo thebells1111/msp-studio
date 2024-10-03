@@ -17,11 +17,6 @@ export const _newFeed = {
 			},
 			explicit: 'no',
 			'itunes:image': { '@_href': '' },
-			'media:thumbnail': {
-				'@_url': '',
-				'@_width': '320',
-				'@_height': '100'
-			},
 			'podcast:value': {
 				'@_type': 'lightning',
 				'@_method': 'keysend',
@@ -40,11 +35,6 @@ export const _newFeed = {
 	],
 	'itunes:author': '',
 	'itunes:image': { '@_href': '' },
-	'media:thumbnail': {
-		'@_url': '',
-		'@_width': '320',
-		'@_height': '100'
-	},
 	link: '',
 	'podcast:guid': '',
 	'podcast:value': {

@@ -19,7 +19,6 @@
 	function changeBunnySettings() {
 		$settings.bunny = settings.bunny || {};
 		$settings.bunny.active = useBunnyCredentials;
-		console.log($settings.bunny);
 		saveSettings();
 	}
 </script>

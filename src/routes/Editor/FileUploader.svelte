@@ -240,9 +240,11 @@
 	function handleDrop() {}
 </script>
 
-<h1>
-	{uploadText}
-</h1>
+{#if uploadText}
+	<h1>
+		{uploadText}
+	</h1>
+{/if}
 
 {#if isUploading}
 	<uploading>

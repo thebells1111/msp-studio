@@ -8,6 +8,7 @@
 	import { editingFeed, feeds, catalogDB } from '$/stores';
 
 	let updateTimeout;
+	let imageReload;
 
 	function updateFeeds() {
 		clearTimeout(updateTimeout);
@@ -19,7 +20,7 @@
 	$: console.log($feeds);
 
 	let showUpload = false;
-	let imageReload = '';
+
 	$: if (imageReload) {
 		showUpload = false;
 		updateFeeds();
@@ -69,7 +70,9 @@
 		closeModal={() => {
 			showUpload = false;
 		}}
-	/>
+	>
+		<ArtUpload bind:imageReload imageParent="album" />
+	</SmallModal>
 {/if}
 
 <style>
