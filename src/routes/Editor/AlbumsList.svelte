@@ -4,13 +4,14 @@
 	import Add from '$icons/Add.svelte';
 	// import { slide } from 'svelte/transition';
 	import Delete from '$icons/Delete.svelte';
+	import initializeAlbum from '../functions/initializeAlbum';
 	// import Publish from '../Publish/Publish.svelte';
 
 	import { feeds, editingFeed, newFeed, remoteServer, catalogDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feed) {
-		$editingFeed = feed;
+		$editingFeed = initializeAlbum(feed);
 		let itemsMissingGuids = feed.item.some((item) => !item.guid);
 
 		if (itemsMissingGuids) {
