@@ -15,6 +15,11 @@
 	"itunes:image": {
 		"@_href": ""
 	},
+	"experimental:images": {
+		"@_aspect-ratio": "15/1",
+		"@_src": "",
+		"@_srcset": []
+	},
 	"itunes:explicit": "no",
 	"link": "",
 	"podcast:value": {

@@ -5,6 +5,8 @@
 
 	export let imageReload = '';
 	export let imageParent = 'album';
+	export let track = null;
+	export let trackNumber = 1;
 	let imageType;
 
 	let imageProps = {
@@ -24,12 +26,41 @@
 			fileName: 'album-banner',
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Background Banner'
-		}
+		},
+		trackSquare: track
+			? {
+					filePath: track?.['itunes:image']['@_href'],
+					fileName: 'track-art',
+					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
+					uploadText: `Track ${trackNumber} Art`,
+					update: (e) => {
+						track['itunes:image']['@_href'] = e.target.value;
+						imageProps.trackSquare.filePath = track['itunes:image']['@_href'];
+						$editingFeed = $editingFeed;
+					}
+			  }
+			: {},
+		trackBanner: track
+			? {
+					filePath: track['itunes:image']['@_href'],
+					fileName: 'track-art',
+					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
+					uploadText: `Track ${trackNumber} Art`,
+					update: (e) => {
+						track['itunes:image']['@_href'] = e.target.value;
+						imageProps.trackSquare.filePath = track['itunes:image']['@_href'];
+						console.log(track);
+						$editingFeed = $editingFeed;
+					}
+			  }
+			: {}
 	};
 
 	$: currentProps = imageProps[imageType];
 
 	$: showFileUpload = $loggedIn && $settings?.bunny?.active;
+
+	$: console.log(imageType);
 </script>
 
 {#if imageType}
@@ -56,6 +87,7 @@
 			fileName={currentProps.fileName}
 			folderName={currentProps.folderName}
 			handleUpdate={(e) => {
+				console.log(currentProps);
 				currentProps.update(e);
 			}}
 			type="image"
@@ -65,14 +97,14 @@
 	<art-selector>
 		<button
 			on:click={() => {
-				imageType = imageParent === 'album' ? 'albumSquare' : 'songSquare';
+				imageType = imageParent === 'album' ? 'albumSquare' : 'trackSquare';
 			}}
 		>
 			Upload {imageParent === 'album' ? 'Album' : 'Song'} Art
 		</button>
 		<button
 			on:click={() => {
-				imageType = imageParent === 'album' ? 'albumBanner' : 'songBanner';
+				imageType = imageParent === 'album' ? 'albumBanner' : 'trackBanner';
 			}}
 		>
 			Upload {imageParent === 'album' ? 'Album' : 'Song'} Background Banner

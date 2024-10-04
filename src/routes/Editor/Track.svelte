@@ -1,11 +1,11 @@
 <script>
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 	import FileUploader from './FileUploader.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';
 	import UploadFileIcon from '../icons/UploadFile.svelte';
 	import DeleteIcon from '$icons/Delete.svelte';
+	import ArtUpload from './ArtUpload.svelte';
 
 	import clone from 'just-clone';
 
@@ -116,14 +116,7 @@
 				uploadText="Track #{trackNumber} Audio"
 			/>
 		{:else}
-			<FileUploader
-				bind:filePath={track['itunes:image']['@_href']}
-				bind:fileReload={imageReload}
-				fileName="track-art"
-				folderName={$editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid}
-				type={uploadType}
-				uploadText="Track #{trackNumber} Art"
-			/>
+			<ArtUpload bind:imageReload imageParent="track" {track} {trackNumber} />
 		{/if}
 	</SmallModal>
 {/if}
