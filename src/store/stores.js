@@ -17,10 +17,12 @@ export const _newFeed = {
 			},
 			explicit: 'no',
 			'itunes:image': { '@_href': '' },
-			'podcast:aspectImages': {
-				'@_aspect-ratio': '6/1',
-				'@_src': ''
-			},
+			'podcast:aspectImages': [
+				{
+					'@_aspect-ratio': '6/1',
+					'@_src': ''
+				}
+			],
 			'podcast:value': {
 				'@_type': 'lightning',
 				'@_method': 'keysend',
@@ -39,10 +41,12 @@ export const _newFeed = {
 	],
 	'itunes:author': '',
 	'itunes:image': { '@_href': '' },
-	'podcast:aspectImages': {
-		'@_aspect-ratio': '6/1',
-		'@_src': ''
-	},
+	'podcast:aspectImages': [
+		{
+			'@_aspect-ratio': '6/1',
+			'@_src': ''
+		}
+	],
 	link: '',
 	'podcast:guid': '',
 	'podcast:value': {
@@ -87,10 +91,12 @@ export const newTrack = writable({
 	},
 	explicit: 'no',
 	'itunes:image': { '@_href': '' },
-	'podcast:aspectImages': {
-		'@_aspect-ratio': '6/1',
-		'@_src': ''
-	},
+	'podcast:aspectImages': [
+		{
+			'@_aspect-ratio': '6/1',
+			'@_src': ''
+		}
+	],
 	'podcast:value': {
 		'@_type': 'lightning',
 		'@_method': 'keysend',

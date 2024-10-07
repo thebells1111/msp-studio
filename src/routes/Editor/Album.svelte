@@ -5,19 +5,14 @@
 	import UploadFileIcon from '../icons/UploadFile.svelte';
 	import ArtUpload from './ArtUpload.svelte';
 
-	import { editingFeed, feeds, catalogDB } from '$/stores';
+	import { editingFeed, feeds } from '$/stores';
 
-	let updateTimeout;
 	let imageReload;
 
 	function updateFeeds() {
-		clearTimeout(updateTimeout);
-		updateTimeout = setTimeout(() => {
-			$feeds = $feeds;
-			$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
-		}, 500);
+		$editingFeed = $editingFeed;
+		$feeds = $feeds;
 	}
-	$: console.log($feeds);
 
 	let showUpload = false;
 

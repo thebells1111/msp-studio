@@ -18,14 +18,26 @@
 			update: (e) => {
 				console.log(e.target.value);
 				$editingFeed['itunes:image']['@_href'] = e.target.value;
-				imageProps.albumSquare.filePath = $editingFeed['itunes:image']['@_href'];
+				imageProps.albumSquare.filePath = e.target.value;
 			}
 		},
 		albumBanner: {
-			filePath: $editingFeed['itunes:image']['@_href'],
+			filePath: $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1')[
+				'@_src'
+			],
 			fileName: 'album-banner',
 			folderName: $editingFeed['podcast:guid'],
-			uploadText: 'Album Background Banner'
+			uploadText: 'Album Banner 6:1',
+			update: (event) => {
+				let image = $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
+				console.log(image);
+				image['@_src'] = event.target.value;
+				console.log(image);
+				imageProps.albumBanner.filePath = event.target.value;
+				console.log(imageProps);
+
+				$editingFeed = $editingFeed;
+			}
 		},
 		trackSquare: track
 			? {
@@ -35,22 +47,27 @@
 					uploadText: `Track ${trackNumber} Art`,
 					update: (e) => {
 						track['itunes:image']['@_href'] = e.target.value;
-						imageProps.trackSquare.filePath = track['itunes:image']['@_href'];
+						imageProps.trackSquare.filePath = e.target.value;
 						$editingFeed = $editingFeed;
 					}
 			  }
 			: {},
 		trackBanner: track
 			? {
-					filePath: track['itunes:image']['@_href'],
-					fileName: 'track-art',
+					filePath: track['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1')[
+						'@_src'
+					],
+					fileName: 'track-banner',
 					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
-					uploadText: `Track ${trackNumber} Art`,
-					update: (e) => {
-						track['itunes:image']['@_href'] = e.target.value;
-						imageProps.trackSquare.filePath = track['itunes:image']['@_href'];
-						console.log(track);
+					uploadText: `Track ${trackNumber} Banner 6:1`,
+					update: (event) => {
+						let image = track['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
+						image['@_src'] = event.target.value;
+						imageProps.trackBanner.filePath = event.target.value;
+
 						$editingFeed = $editingFeed;
+						console.log($editingFeed);
+						// updateBanner({ event, propObj: imageProps.trackBanner, parent: track });
 					}
 			  }
 			: {}
@@ -60,7 +77,46 @@
 
 	$: showFileUpload = $loggedIn && $settings?.bunny?.active;
 
-	$: console.log(imageType);
+	function updateBanner({ event, propObj, parent }) {
+		{
+			let image;
+
+			// Initialize or set default array and find image if not already initialized
+			if (!propObj?.initialized) {
+				if (!parent['podcast:aspectImages']) {
+					parent['podcast:aspectImages'] = [
+						{
+							'@_aspect-ratio': '6/1',
+							'@_src': ''
+						}
+					];
+				}
+
+				image = []
+					.concat(parent['podcast:aspectImages'])
+					.find((v) => v['@_aspect-ratio'] === '6/1');
+
+				if (!image) {
+					image = { '@_aspect-ratio': '6/1', '@_src': '' };
+					parent['podcast:aspectImages'].push(image);
+				}
+
+				propObj.initialized = true;
+			} else {
+				image = parent['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
+			}
+
+			updateImage({ image, propObj, event });
+
+			function updateImage({ image, propObj, event }) {
+				image['@_src'] = event.target.value;
+				propObj.filePath = event.target.value;
+
+				$editingFeed = $editingFeed;
+				console.log($editingFeed);
+			}
+		}
+	}
 </script>
 
 {#if imageType}

@@ -3,7 +3,7 @@
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
 
-	import { catalogDB, feeds, loggedIn, _newFeed, remoteServer } from '$/stores';
+	import { catalogDB, feeds, loggedIn, _newFeed, remoteServer, editingFeed } from '$/stores';
 
 	let isLoading = false;
 
@@ -188,6 +188,23 @@
 
 		return value;
 	}
+
+	let updateTimeout;
+
+	function updateFeeds() {
+		if ($catalogDB && $editingFeed?.['podcast:guid']) {
+			clearTimeout(updateTimeout);
+			updateTimeout = setTimeout(() => {
+				$feeds = $feeds;
+				$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+				console.log('updated');
+				console.log($editingFeed);
+				console.log($feeds);
+			}, 500);
+		}
+	}
+
+	$: updateFeeds($editingFeed);
 </script>
 
 {#if isLoading}
