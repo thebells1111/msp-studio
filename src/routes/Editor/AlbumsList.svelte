@@ -10,32 +10,32 @@
 	import { feeds, editingFeed, newFeed, remoteServer, catalogDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
-	async function selectBand(feed) {
-		$editingFeed = initializeAlbum(feed);
-		let itemsMissingGuids = feed.item.some((item) => !item.guid);
+	async function selectBand(feedKey) {
+		let feed = initializeAlbum($feeds[feedKey]); // Create a new object
+		$feeds[feedKey] = feed; // Replace the original feed in $feeds with the new object
+		$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
+
+		const itemsMissingGuids = feed.item.some((item) => !item.guid);
 
 		if (itemsMissingGuids) {
-			$editingFeed.item.forEach((item) => {
+			feed.item.forEach((item) => {
 				if (!item.guid) {
 					item.guid = generateUniqueGuid(feed.item);
 				}
 			});
-			await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+			await $catalogDB.setItem(feed['podcast:guid'], feed);
 		}
 
 		function generateUniqueGuid(items) {
-			let guid = generateValidGuid();
-			let maxRetries = 10; // Prevents potential infinite loops
+			let guid;
+			let retries = 10;
 
-			while (items.some((item) => item.guid && item.guid['#text'] === guid) && maxRetries > 0) {
+			do {
 				guid = generateValidGuid();
-				maxRetries--;
-			}
+				retries--;
+			} while (items.some((item) => item.guid && item.guid['#text'] === guid) && retries > 0);
 
-			return {
-				'@_PermaLink': 'false',
-				'#text': guid
-			};
+			return { '@_PermaLink': 'false', '#text': guid };
 		}
 
 		console.log(feed);
@@ -113,7 +113,7 @@
 		<ul>
 			{#each Object.entries($feeds || {}) as [key, feed]}
 				<li class:selected={feed['podcast:guid'] === $editingFeed?.['podcast:guid']}>
-					<album-info on:click={selectBand.bind(this, feed)}>
+					<album-info on:click={selectBand.bind(this, key)}>
 						<p>{feed.title || 'Blank Album'}</p>
 						<p>{feed['itunes:author'] || 'Unknown Artist'}</p>
 					</album-info>

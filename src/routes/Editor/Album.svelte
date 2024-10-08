@@ -11,7 +11,6 @@
 
 	function updateFeeds() {
 		$editingFeed = $editingFeed;
-		$feeds = $feeds;
 	}
 
 	let showUpload = false;

@@ -14,11 +14,7 @@
 	let updateTimeout;
 
 	function updateFeeds() {
-		clearTimeout(updateTimeout);
-		updateTimeout = setTimeout(() => {
-			$feeds = $feeds;
-			$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
-		}, 500);
+		$editingFeed = $editingFeed;
 	}
 
 	export let track = clone($newTrack);
