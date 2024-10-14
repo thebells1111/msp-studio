@@ -17,7 +17,6 @@
 	}
 
 	function changeBunnySettings() {
-		$settings.bunny = settings.bunny || {};
 		$settings.bunny.active = useBunnyCredentials;
 		saveSettings();
 	}
@@ -31,21 +30,21 @@
 	{#if useBunnyCredentials}
 		<label>
 			Username
-			<input />
+			<input bind:value={$settings.bunny.username} />
 		</label>
 		<label>
 			Hostname
-			<input />
+			<input bind:value={$settings.bunny.hostname} />
 		</label>
 		<label>
 			Bunny Password
-			<input />
+			<input bind:value={$settings.bunny.password} />
 		</label>
 		<label>
 			Linked Hostnames
-			<input />
+			<input bind:value={$settings.bunny.linkedHostname} />
 		</label>
-		<button>Submit</button>
+		<button on:click={changeBunnySettings}>Submit</button>
 	{/if}
 </div>
 

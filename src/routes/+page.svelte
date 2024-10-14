@@ -3,7 +3,16 @@
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
 
-	import { catalogDB, feeds, loggedIn, _newFeed, remoteServer, editingFeed } from '$/stores';
+	import {
+		catalogDB,
+		feeds,
+		loggedIn,
+		_newFeed,
+		remoteServer,
+		editingFeed,
+		_settings,
+		settings
+	} from '$/stores';
 
 	let isLoading = false;
 
@@ -14,6 +23,7 @@
 			})
 			.then((data) => {
 				$loggedIn = data.status === 'success';
+				$settings = data.settings || _settings;
 			});
 
 		$catalogDB = localforage.createInstance({
