@@ -1,4 +1,5 @@
 <script>
+	import clone from 'just-clone';
 	import { onMount } from 'svelte';
 	import localforage from 'localforage';
 	import Editor from './Editor/Editor.svelte';
@@ -22,8 +23,10 @@
 				return res.json();
 			})
 			.then((data) => {
+				console.log(data);
 				$loggedIn = data.status === 'success';
-				$settings = data.settings || _settings;
+				$settings = data.settings || clone(_settings);
+				console.log($settings);
 			});
 
 		$catalogDB = localforage.createInstance({

@@ -146,10 +146,12 @@ export const senderName = writable('');
 export const menuPanel = writable('albums');
 export const loggedIn = writable(false);
 export const _settings = {
-	active: false,
-	username: '',
-	hostname: '',
-	password: '',
-	linkedHostname: ''
+	bunny: {
+		active: false,
+		username: '',
+		hostname: '',
+		password: '',
+		linkedHostname: ''
+	}
 };
 export const settings = writable(clone(_settings));

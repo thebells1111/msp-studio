@@ -2,6 +2,7 @@
 	import SmallModal from '../Modals/SmallModal.svelte';
 
 	export let showLoginInputs = false;
+	export let isRegistered = false;
 
 	import { remoteServer } from '$/stores';
 
@@ -22,6 +23,10 @@
 
 		const data = await response.json();
 		console.log(data);
+		if (data?.status === 'success') {
+			isRegistered = true;
+			showLoginInputs = true;
+		}
 		if (data?.status === 'error') {
 			registerError = data.message;
 		}
