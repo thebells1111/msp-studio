@@ -54,7 +54,6 @@
 
 		// Append common fields
 		formData.append('folderName', folderName); // Make sure `folderName` is defined
-		formData.append('user', 'StevenB'); // You might want to make this dynamic
 		formData.append('fileName', `${fileName}.${extension}`); // Constructed file name
 
 		// Determine allowed extensions and set `file` field
@@ -85,15 +84,18 @@
 			// Add the file field last
 			formData.append('file', selectedFile); // Use a generic `file` field for all types
 
-			const response = await fetch(`${remoteServer}/api/bunny/uploadimage`, {
+			const response = await fetch(`${remoteServer}/api/msp/uploadfile`, {
 				method: 'POST',
 				body: formData,
+				credentials: 'include',
 				headers: {
 					Accept: 'application/json'
 				}
 			});
 
 			if (!response.ok) {
+				const result = await response.json();
+				console.log(result);
 				throw new Error('Upload failed.');
 			}
 

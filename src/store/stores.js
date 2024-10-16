@@ -151,7 +151,7 @@ export const _settings = {
 		username: '',
 		hostname: '',
 		password: '',
-		linkedHostname: ''
+		apiKey: ''
 	}
 };
 export const settings = writable(clone(_settings));

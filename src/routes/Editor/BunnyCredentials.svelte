@@ -14,6 +14,14 @@
 
 		const data = await response.json();
 		console.log(data);
+		if (data.status === 'success') {
+			if ($settings.bunny.password) {
+				$settings.bunny.password = '********';
+			}
+			if ($settings.bunny.apiKey) {
+				$settings.bunny.apiKey = '********';
+			}
+		}
 	}
 
 	function changeBunnySettings() {
@@ -41,8 +49,8 @@
 			<input bind:value={$settings.bunny.password} />
 		</label>
 		<label>
-			Linked Hostnames
-			<input bind:value={$settings.bunny.linkedHostname} />
+			Bunny API Key
+			<input bind:value={$settings.bunny.apiKey} />
 		</label>
 		<button on:click={changeBunnySettings}>Submit</button>
 	{/if}
