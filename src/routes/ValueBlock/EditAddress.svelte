@@ -29,8 +29,8 @@
 				console.log(info);
 				if (info.status === 'OK') {
 					selectedPerson.address = info.pubkey;
-					selectedPerson.value = info.customData[0].customValue;
-					selectedPerson.key = info.customData[0].customKey;
+					selectedPerson.value = info?.customData?.[0]?.customValue || '';
+					selectedPerson.key = info?.customData?.[0]?.customKey || '';
 					userFound = name + '@getalby.com';
 				} else {
 					throw new Error();
@@ -48,8 +48,8 @@
 				info = await res.json();
 				if (info.status === 'OK') {
 					selectedPerson.address = info.pubkey;
-					selectedPerson.value = info.customData[0].customValue;
-					selectedPerson.key = info.customData[0].customKey;
+					selectedPerson.value = info?.customData?.[0]?.customValue || '';
+					selectedPerson.key = info?.customData?.[0]?.customKey || '';
 					userFound = name + '@fountain.fm';
 				} else {
 					throw new Error();
