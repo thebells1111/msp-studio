@@ -1,8 +1,8 @@
 <script>
-	import ValueBlock from '../../routes/ValueBlock/ValueBlock.svelte';
+	import ValueBlock from '$lib/ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';
-	import UploadFileIcon from '../icons/UploadFile.svelte';
+	import UploadFileIcon from '$icons/UploadFile.svelte';
 	import ArtUpload from './ArtUpload.svelte';
 
 	import { editingFeed, feeds } from '$/stores';

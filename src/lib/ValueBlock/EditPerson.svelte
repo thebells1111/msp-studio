@@ -7,6 +7,7 @@
 	export let valueBlock;
 	export let index;
 	export let selectedIndex;
+	export let splitTotal;
 
 	function deletePerson() {
 		valueBlock.splice(index, 1);
@@ -16,7 +17,8 @@
 </script>
 
 <person>
-	<input class="split" type="text" bind:value={person['@_split']} /><span>%</span>
+	<input class="split" type="text" bind:value={person['@_split']} />
+
 	<person-name
 		on:click={() => {
 			if (selectedIndex === index) {
@@ -27,9 +29,11 @@
 			}
 		}}
 	>
+		<split>{Math.round((person['@_split'] / splitTotal) * 100 * 100) / 100}%</split>
 		<edit>
 			<EditSquare />
 		</edit>
+
 		<p>{person['@_name'] || 'Blank Person'}</p>
 	</person-name>
 	<button class="delete" on:click={deletePerson}>
@@ -44,15 +48,20 @@
 		margin-bottom: 8px;
 	}
 
+	split {
+		width: 55px;
+		padding-left: 4px;
+	}
+
 	person-name {
 		display: flex;
+		align-items: center;
 		position: relative;
 		flex-grow: 1;
 	}
 
 	edit {
 		position: relative;
-		top: 1px;
 	}
 
 	person-name p {
@@ -61,11 +70,7 @@
 
 	.split {
 		margin: 0 0 0 8px;
-		width: 30px;
-	}
-
-	span {
-		margin: 0 16px 0 0;
+		width: 55px;
 	}
 
 	button.delete {

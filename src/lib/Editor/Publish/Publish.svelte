@@ -1,5 +1,5 @@
 <script>
-	import parser from 'fast-xml-parser';
+	import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
 
 	// import PublishModal from './PublishModal.svelte';
@@ -15,8 +15,9 @@
 	let xmlFile;
 
 	async function publishFeed() {
+		const parser = new XMLParser();
 		rssErrors = [];
-		let js2xml = new parser.j2xParser({
+		const xmlOptions = {
 			attributeNamePrefix: '@_',
 			//attrNodeName: false,
 			textNodeName: '#text',
@@ -27,7 +28,7 @@
 			supressEmptyNode: true,
 			attrValueProcessor: (val, attrName) => escapeAttr(`${val}`),
 			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
-		});
+		};
 
 		let rss = {
 			'@_version': '2.0',
@@ -81,106 +82,110 @@
 		}
 
 		if (
-			$editingFeed['podcast:valueRecipient']?.['podcast:valueRecipient']?.some(
-				(v) => v?.['@_address']
-			)
+			$editingFeed?.['podcast:value']?.['podcast:valueRecipient']?.some((v) => v?.['@_address'])
 		) {
-			$editingFeed['podcast:valueRecipient'] = buildValue($editingFeed['podcast:valueRecipient']);
+			$editingFeed['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
+				$editingFeed['podcast:value']['podcast:valueRecipient'],
+				'Album'
+			);
 		} else {
 			rssErrors.push('Add some value to the album');
 		}
 
-		// 	let podcastGuid = $selectedAlbum?.guid;
-		// 	if (podcastGuid) {
-		// 		podcastGuid = await checkPodcastGuid(podcastGuid);
-		// 	} else {
-		// 		podcastGuid = await createNewPodcastGuid();
-		// 	}
+		if ($editingFeed?.['podcast:guid']) {
+			$editingFeed['podcast:guid'] = await checkPodcastGuid($editingFeed['podcast:guid']);
+		} else {
+			$editingFeed['podcast:guid'] = await createNewPodcastGuid();
+		}
 
-		// 	$selectedAlbum.guid = podcastGuid;
-		// 	channel['podcast:guid'] = podcastGuid;
+		let uniqueTrackGuids = new Set();
 
-		// 	let uniqueTrackGuids = new Set();
+		let items = $editingFeed.item.map((track, index) => {
+			let trackJSON = {
+				pubDate:
+					track.pubDate ||
+					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
+				'podcast:season': 1,
+				'podcast:episode': index + 1
+			};
 
-		// 	let items = $selectedAlbum.tracks.map((track, index) => {
-		// 		let trackJSON = {
-		// 			pubDate:
-		// 				track.pubDate ||
-		// 				new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
-		// 			'podcast:season': 1,
-		// 			'podcast:episode': index + 1
-		// 		};
+			if (!(track?.guid?.['#text'] || track?.guid)) {
+				const guid = generateTrackGuid();
+				uniqueTrackGuids.add(guid);
+				trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: guid };
+			} else {
+				uniqueTrackGuids.add(track.guid?.['#text'] || track.guid);
+				if (!track.guid?.['!_isPermakLink']) {
+					track.guid = {
+						['@_isPermaLink']: 'false',
+						['#text']: track.guid?.['#text'] || track.guid
+					};
+				}
+				trackJSON.guid = track.guid;
+			}
 
-		// 		if (!track.guid) {
-		// 			track.guid = generateTrackGuid();
-		// 			uniqueTrackGuids.add(track.guid);
-		// 			trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: track.guid };
-		// 			$selectedAlbum.tracks[index].guid = trackJSON.guid;
-		// 		} else {
-		// 			uniqueTrackGuids.add(track.guid?.['#text'] || track.guid);
-		// 			if (!track.guid?.['!_isPermakLink']) {
-		// 				track.guid = {
-		// 					['@_isPermaLink']: 'false',
-		// 					['#text']: track.guid?.['#text'] || track.guid
-		// 				};
-		// 			}
-		// 			trackJSON.guid = track.guid;
-		// 		}
+			let title = track.title;
 
-		// 		let title = track.title;
+			if (track.title) {
+				trackJSON.title = track.title;
+			} else {
+				title = `Track ${index + 1}`;
+				rssErrors.push(title + ' needs a name');
+			}
 
-		// 		if (track.title) {
-		// 			trackJSON.title = track.title;
-		// 		} else {
-		// 			title = `Track ${index + 1}`;
-		// 			rssErrors.push(title + ' needs a name');
-		// 		}
+			if (track?.enclosure?.['@_url']) {
+				trackJSON.enclosure = {
+					'@_url': track?.enclosure?.url,
+					'@_type': track?.enclosure?.type,
+					'@_length': track?.enclosure?.enclosureLength
+				};
 
-		// 		if (track?.enclosure?.url) {
-		// 			trackJSON.enclosure = {
-		// 				'@_url': track?.enclosure?.url,
-		// 				'@_type': track?.enclosure?.type,
-		// 				'@_length': track?.enclosure?.enclosureLength
-		// 			};
+				trackJSON['itunes:duration'] = convertDurationToITunesFormat(track.duration);
+			} else {
+				rssErrors.push(title + ' needs a link to the mp3 file');
+			}
 
-		// 			trackJSON['itunes:duration'] = convertDurationToITunesFormat(track.duration);
-		// 		} else {
-		// 			rssErrors.push(title + ' needs a link to the mp3 file');
-		// 		}
+			if (track.description) {
+				trackJSON.description = track.description;
+			}
 
-		// 		if (track.description) {
-		// 			trackJSON.description = track.description;
-		// 		}
+			if (track?.['itunes:explicit']) {
+				trackJSON['itunes:explicit'] = track.explicit;
+			}
 
-		// 		if (track.explicit) {
-		// 			trackJSON['itunes:explicit'] = track.explicit;
-		// 		}
+			if (track?.['itunes:image']?.['@_href']) {
+				trackJSON['itunes:image'] = { '@_href': track['itunes:image']['@_href'] };
+			}
 
-		// 		if (track.artwork) {
-		// 			trackJSON['itunes:image'] = { '@_href': track.artwork };
-		// 		}
+			if (track?.['podcast:value']?.['podcast:valueRecipient']) {
+				trackJSON['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
+					track['podcast:value']['podcast:valueRecipient'],
+					title
+				);
+			}
 
-		// 		if (track.value) {
-		// 			trackJSON['podcast:value'] = buildValue(track.value, title);
-		// 		}
+			if (track?.['podcast:chapters']?.['@_url']) {
+				trackJSON['podcast:chapters'] = {
+					'@_url': track['podcast:chapters']['@_url'],
+					'@_type': 'application/json'
+				};
+			}
 
-		// 		if (track.chapters) {
-		// 			trackJSON['podcast:chapters'] = { '@_url': track.chapters, '@_type': 'application/json' };
-		// 		}
+			if (track?.['podcast:transcript']?.['@_url']) {
+				trackJSON['podcast:transcript'] = [
+					{
+						'@_url': track['podcast:transcript']['@_url'],
+						'@_type': 'application/srt'
+					}
+				];
+			}
 
-		// 		if (track.transcripts) {
-		// 			trackJSON['podcast:transcript'] = [
-		// 				{
-		// 					'@_url': track.transcripts,
-		// 					'@_type': 'application/srt'
-		// 				}
-		// 			];
-		// 		}
+			return trackJSON;
+		});
 
-		// 		return trackJSON;
-		// 	});
+		$editingFeed.item = [...items];
 
-		// 	channel.item = [...items];
+		console.log($editingFeed);
 
 		// 	rss.channel = channel;
 
@@ -195,158 +200,160 @@
 		// 		showPublishModal = true;
 		// 	}
 
-		// 	async function checkPodcastGuid(guid) {
-		// 		let isValidGuid = checkValidGuid(guid);
+		async function checkPodcastGuid(guid) {
+			let isValidGuid = checkValidGuid(guid);
 
-		// 		if (!isValidGuid) {
-		// 			return await createNewPodcastGuid();
-		// 		} else {
-		// 			return guid;
-		// 		}
-		// 	}
-
-		// 	async function createNewPodcastGuid() {
-		// 		let guid = await generateValidGuid();
-		// 		return guid;
-		// 	}
-
-		// 	function checkValidGuid(input) {
-		// 		const regex = new RegExp(
-		// 			'^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$'
-		// 		);
-		// 		return regex.test(input);
-		// 	}
-
-		// 	async function generateValidGuid() {
-		// 		const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-		// 		const inputString = uuidv4();
-		// 		const uniqueId = uuidv5(inputString, namespace);
-		// 		let url = `/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${uniqueId}`)}`;
-
-		// 		const res = await fetch(url);
-		// 		const data = await res.json();
-		// 		if (data?.feed?.length) {
-		// 			return generateValidGuid();
-		// 		} else {
-		// 			return uniqueId;
-		// 		}
-		// 	}
-
-		// 	function generateTrackGuid() {
-		// 		let trackGuid;
-		// 		do {
-		// 			trackGuid = generateGuid();
-		// 		} while (!isBlockGuidUnique(trackGuid));
-		// 		return trackGuid;
-		// 	}
-
-		// 	function generateGuid() {
-		// 		let uniqueId = uuidv4();
-		// 		return uniqueId;
-		// 	}
-
-		// 	function isBlockGuidUnique(trackGuid) {
-		// 		if (uniqueTrackGuids.has(trackGuid)) {
-		// 			return false;
-		// 		}
-
-		// 		return true;
-		// 	}
-
-		// 	console.log($selectedAlbum);
-		// 	$catalogDB.setItem($selectedBand.title, $selectedBand);
-		// }
-
-		// const escapeAttr = (str) =>
-		// 	str.replace(
-		// 		/[&<>'"]/g,
-		// 		(tag) =>
-		// 			({
-		// 				'&': '&amp;',
-		// 				'<': '&lt;',
-		// 				'>': '&gt;',
-		// 				"'": '&#39;',
-		// 				'"': '&quot;'
-		// 			}[tag])
-		// 	);
-
-		// const escapeTag = (str) => {
-		// 	if (str.match(/[&<>'"]/g)) {
-		// 		return '<![CDATA[' + str + ']]>';
-		// 	}
-		// 	return str;
-		// };
-
-		function buildValue(value) {
-			console.log(value);
-			// let splitTotal = tag.reduce((t, v) => {
-			// 	return t + Number(v.split);
-			// }, 0);
-
-			// if (splitTotal !== 100) {
-			// 	rssErrors.push(
-			// 		`The splits for ${
-			// 			name === 'Album' ? 'the "Album"' : `track "${name}"`
-			// 		} don't add up to 100%`
-			// 	);
-			// }
-			// let value = {
-			// 	'@_type': 'lightning',
-			// 	'@_method': 'keysend',
-			// 	'podcast:valueRecipient': tag.map((v, i) => {
-			// 		let rec = { '@_type': 'node' };
-			// 		let person = v.name;
-			// 		if (v.name) {
-			// 			rec['@_name'] = v.name;
-			// 		} else {
-			// 			person = `Recepient #${i + 1}`;
-			// 			rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
-			// 		}
-			// 		if (v.address) {
-			// 			rec['@_address'] = v.address;
-			// 		} else {
-			// 			rssErrors.push(
-			// 				`Person "${person}" in the "${name}" value tag block needs an lightning address`
-			// 			);
-			// 		}
-
-			// 		if (v.key) {
-			// 			rec['@_customKey'] = v.key;
-			// 		}
-			// 		if (v.value) {
-			// 			rec['@_customValue'] = v.value;
-			// 		}
-			// 		if (Number(v.split)) {
-			// 			rec['@_split'] = v.split;
-			// 		} else {
-			// 			rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
-			// 		}
-			// 		return rec;
-			// 	})
-			// };
-
-			return value;
+			if (!isValidGuid) {
+				return await createNewPodcastGuid();
+			} else {
+				return guid;
+			}
 		}
 
-		// function convertDurationToITunesFormat(durationInSeconds) {
-		// 	// Convert duration to iTunes format (HH:MM:SS)
-		// 	const hours = Math.floor(durationInSeconds / 3600);
-		// 	const minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
-		// 	const seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
-		// 	const durationInITunesFormat = `${hours.toString().padStart(2, '0')}:${minutes
-		// 		.toString()
-		// 		.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+		async function createNewPodcastGuid() {
+			let guid = await generateValidGuid();
+			return guid;
+		}
 
-		// 	// Return duration in iTunes format
-		// 	return durationInITunesFormat;
-		// }
-		// function isValidUrl(url) {
-		// 	// Create a regular expression pattern that matches valid URLs with http, https, or ftp protocols
-		// 	const urlPattern =
-		// 		/^(http|https|ftp):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/;
+		function checkValidGuid(input) {
+			const regex = new RegExp(
+				'^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$'
+			);
+			return regex.test(input);
+		}
 
-		// 	// Test whether the provided URL matches the pattern
-		// 	return urlPattern.test(url);
+		async function generateValidGuid() {
+			const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
+			const inputString = uuidv4();
+			const uniqueId = uuidv5(inputString, namespace);
+			let url = `/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${uniqueId}`)}`;
+
+			const res = await fetch(url);
+			const data = await res.json();
+			if (data?.feed?.length) {
+				return generateValidGuid();
+			} else {
+				return uniqueId;
+			}
+		}
+
+		function generateTrackGuid() {
+			let trackGuid;
+			do {
+				trackGuid = generateGuid();
+			} while (!isBlockGuidUnique(trackGuid));
+			return trackGuid;
+		}
+
+		function generateGuid() {
+			let uniqueId = uuidv4();
+			return uniqueId;
+		}
+
+		function isBlockGuidUnique(trackGuid) {
+			if (uniqueTrackGuids.has(trackGuid)) {
+				return false;
+			}
+
+			return true;
+		}
+
+		// console.log($selectedAlbum);
+		// $catalogDB.setItem($selectedBand.title, $selectedBand);
+
+		const escapeAttr = (str) =>
+			str.replace(
+				/[&<>'"]/g,
+				(tag) =>
+					({
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						"'": '&#39;',
+						'"': '&quot;'
+					}[tag])
+			);
+
+		const escapeTag = (str) => {
+			if (str.match(/[&<>'"]/g)) {
+				return '<![CDATA[' + str + ']]>';
+			}
+			return str;
+		};
+
+		function normalizeSplits(arr, name) {
+			// Helper function to normalize individual splits
+			function normalize(splits) {
+				// Convert strings to numbers
+				let rounded = splits.map((num) => parseFloat(num));
+
+				// Find the factor to scale up the splits
+				let scale = Math.pow(
+					10,
+					Math.max(
+						...rounded.map((num) => {
+							let decimals = (num.toString().split('.')[1] || '').length;
+							return decimals;
+						})
+					)
+				);
+
+				// Scale all splits by the found factor
+				let scaled = rounded.map((num) => Math.round(num * scale));
+
+				return scaled;
+			}
+
+			// Extract all '@_split' values from the array
+			const splits = arr.map((obj) => parseFloat(obj['@_split']));
+
+			// Normalize the extracted splits
+			const normalizedSplits = normalize(splits);
+
+			// Update the original array with the normalized splits
+			return arr.map((v, i) => {
+				const person = `Recepient #${i + 1}`;
+				if (!v?.['@_name']) {
+					rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
+				}
+				if (!v?.['@_address']) {
+					rssErrors.push(
+						`Person "${person}" in the "${name}" value tag block needs an lightning address`
+					);
+				}
+
+				if (!Number(v?.['@_split'])) {
+					rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
+				}
+				return {
+					...v,
+					'@_split': normalizedSplits[i].toString() // Convert back to string
+				};
+			});
+		}
+
+		function convertDurationToITunesFormat(durationInSeconds) {
+			// Convert duration to iTunes format (HH:MM:SS)
+			const hours = Math.floor(durationInSeconds / 3600);
+			const minutes = Math.floor((durationInSeconds - hours * 3600) / 60);
+			const seconds = Math.floor(durationInSeconds - hours * 3600 - minutes * 60);
+			const durationInITunesFormat = `${hours.toString().padStart(2, '0')}:${minutes
+				.toString()
+				.padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+			// Return duration in iTunes format
+			return durationInITunesFormat;
+		}
+
+		function isValidUrl(url) {
+			// Create a regular expression pattern that matches valid URLs with http, https, or ftp protocols
+			const urlPattern =
+				/^(http|https|ftp):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/;
+
+			// Test whether the provided URL matches the pattern
+			return urlPattern.test(url);
+		}
+		console.log(rssErrors);
 	}
 </script>
 

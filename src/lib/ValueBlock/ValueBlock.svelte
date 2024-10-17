@@ -48,7 +48,8 @@
 		{/if}
 		<value-header>
 			{#if valueBlock?.length}
-				<split-percent>Split %</split-percent>
+				<split-percent>Split</split-percent>
+				<span>%</span>
 				<split-name>Name</split-name>
 			{:else}
 				<click-help>Click here to create your value block. <span>→</span></click-help>
@@ -58,24 +59,17 @@
 		<ul>
 			{#each valueBlock || [] as person, index}
 				<li>
-					<EditPerson bind:person bind:showPersonEdit bind:valueBlock bind:selectedIndex {index} />
+					<EditPerson
+						bind:person
+						bind:showPersonEdit
+						bind:valueBlock
+						bind:selectedIndex
+						{index}
+						{splitTotal}
+					/>
 				</li>
 			{/each}
 		</ul>
-		<value-footer>
-			<total>
-				<total-percent>
-					<span>{splitTotal || 0}</span> %
-				</total-percent>
-				<total-name>
-					{#if splitTotal > 100}
-						<warning>Splits exceed 100%</warning>
-					{:else}
-						Total
-					{/if}
-				</total-name>
-			</total>
-		</value-footer>
 	</left-pane>
 </value-block>
 
@@ -145,8 +139,7 @@
 		font-size: 0.9em;
 		margin: 2px 0 0 8px;
 	}
-	value-header,
-	value-footer {
+	value-header {
 		display: block;
 		padding: 8px 0 0 12px;
 	}
@@ -158,24 +151,16 @@
 		position: relative;
 	}
 
-	value-footer {
-		border-top: 1px solid var(--color-text-0);
-	}
-
-	split-percent,
-	total-percent {
+	split-percent {
 		display: inline-block;
-		width: 62px;
+		width: 55px;
 	}
 
-	total-percent span {
-		display: inline-block;
-		width: 31px;
-	}
-
-	warning {
-		color: red;
-		font-weight: 550;
+	value-header > span {
+		width: 55px;
+		display: inline-flex;
+		align-items: center;
+		padding-left: 4px;
 	}
 
 	button.add-value {
