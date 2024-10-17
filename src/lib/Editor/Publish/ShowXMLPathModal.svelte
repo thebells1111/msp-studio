@@ -1,8 +1,7 @@
 <script>
-	import { deserialize } from '$app/forms';
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import Close from '../icons/Close.svelte';
+	import Close from '$icons/Close.svelte';
 	import { copyText } from 'svelte-copy';
 	import { remoteServer, editingFeed } from '$/stores';
 

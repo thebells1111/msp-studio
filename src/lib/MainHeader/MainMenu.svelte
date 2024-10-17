@@ -1,9 +1,9 @@
 <script>
 	import { slide, fly } from 'svelte/transition';
-	import HamburgerIcon from './icons/Hamburger.svelte';
-	import Login from './Login/Login.svelte';
+	import HamburgerIcon from '../icons/Hamburger.svelte';
+	import Login from '../Login/Login.svelte';
 
-	import Tutorial from './Tutorial/Tutorial.svelte';
+	import Tutorial from '$lib/Tutorial/Tutorial.svelte';
 	import { dev } from '$app/environment';
 
 	import { showTutorial, menuPanel, loggedIn, remoteServer, settings } from '$/stores';

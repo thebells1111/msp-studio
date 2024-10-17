@@ -1,15 +1,16 @@
 <script>
 	import clone from 'just-clone';
 	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
-	import MainMenu from '../MainMenu.svelte';
+	import MainMenu from '$lib/MainHeader/MainMenu.svelte';
 	import AlbumsList from './AlbumsList.svelte';
 	import BunnyCredentials from './BunnyCredentials.svelte';
 	import Album from './Album.svelte';
 	import Track from './Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
 	import SwapVertIcon from '$icons/SwapVert.svelte';
+	import Publish from './Publish/Publish.svelte';
 
-	import { MSPValue, editingFeed, newTrack, catalogDB, menuPanel } from '$/stores';
+	import { editingFeed, newTrack, catalogDB, menuPanel } from '$/stores';
 	import Modal from '../Modals/Modals.svelte';
 	import TrackSorter from './TrackSorter.svelte';
 
@@ -60,7 +61,10 @@
 	<svelte:component this={activePanel} />
 	<editors>
 		{#if $editingFeed}
-			<h2>Album</h2>
+			<album-header>
+				<h2>Album</h2>
+			</album-header>
+
 			<Album />
 
 			<track-header>
@@ -86,6 +90,9 @@
 			{/each}
 		{/if}
 	</editors>
+	<div class="publish">
+		<Publish />
+	</div>
 </main>
 
 {#if showTrackSorter && $editingFeed?.item?.length > 1}
@@ -120,7 +127,7 @@
 		text-align: center;
 	}
 
-	button {
+	track-header > button {
 		color: var(--color-bg-add-band);
 		background-color: transparent;
 		padding: 0;
@@ -131,6 +138,7 @@
 		overflow: hidden;
 	}
 
+	album-header,
 	track-header {
 		display: flex;
 		align-items: center;
@@ -162,5 +170,11 @@
 		display: block;
 		width: 32px;
 		min-width: 32px;
+	}
+
+	.publish {
+		position: absolute;
+		bottom: 8px;
+		right: 8px;
 	}
 </style>

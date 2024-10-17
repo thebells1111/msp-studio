@@ -1,5 +1,5 @@
 <script>
-	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import ValueBlock from '../../routes/ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 	import FileUploader from './FileUploader.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';

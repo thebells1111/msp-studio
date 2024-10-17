@@ -2,8 +2,8 @@
 	import { fade } from 'svelte/transition';
 	import EditPerson from './EditPerson.svelte';
 	import EditAddress from './EditAddress.svelte';
-	import Add from '../icons/GroupAdd.svelte';
-	import Close from '../icons/Close.svelte';
+	import Add from '../../lib/icons/GroupAdd.svelte';
+	import Close from '../../lib/icons/Close.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';
 
 	import { newPerson } from '$/stores';

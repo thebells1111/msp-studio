@@ -1,26 +1,19 @@
 <script>
-	import Close from '../icons/Close.svelte';
+	import Close from '../../lib/icons/Close.svelte';
 
-	export let rssErrors;
-	export let showErrorModal = false;
-
-	function closeModal() {
-		showErrorModal = false;
-	}
+	export let closeModal = () => {};
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
-	<error-modal>
+	<modal>
 		<button class="close" on:click={closeModal}>
 			<Close size="24" />
 		</button>
-		<h2>Correct these errors and try downloading again.</h2>
-		<ol>
-			{#each rssErrors as err}
-				<li>{err}</li>
-			{/each}
-		</ol>
-	</error-modal>
+
+		<container>
+			<slot />
+		</container>
+	</modal>
 </blurred-background>
 
 <style>
@@ -34,26 +27,24 @@
 		background: transparent;
 		top: 0;
 		right: 0;
-		z-index: 99;
+		z-index: 34;
 		backdrop-filter: blur(5px);
 	}
 
-	error-modal {
+	modal {
+		display: block;
 		position: relative;
-		width: calc(100% - 50px);
-		height: calc(100% - 50px);
+
 		overflow-y: auto;
 		overflow-x: hidden;
 		border-radius: 8px;
-		padding: 8px;
-		overflow: auto;
 		background-color: var(--color-poster-bg-0);
 		background-image: linear-gradient(
 			180deg,
 			var(--color-poster-bg-0) 33%,
 			var(--color-poster-bg-1) 66%
 		);
-		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+		box-shadow: 0px 3px 10px 3px rgba(0, 0, 0, 1);
 	}
 
 	.close {
@@ -63,15 +54,15 @@
 		background-color: transparent;
 		padding: 8px;
 		color: rgba(255, 255, 255, 0.75);
+		z-index: 33;
 	}
 
-	h2 {
-		margin-left: 8px;
-		color: red;
-		font-weight: 600;
-	}
+	container {
+		display: block;
 
-	li {
-		padding: 4px 0;
+		width: calc(100% - 32px);
+		height: calc(100% - 42px);
+		margin: 42px 16px 0 16px;
+		overflow: hidden;
 	}
 </style>

@@ -6,10 +6,11 @@ const config = {
 	resolve: {
 		alias: {
 			// these are the aliases and paths to them
-			$functions: path.resolve('src', 'functions'),
+			$functions: path.resolve('src', 'lib', 'functions'),
 			$: path.resolve('src', 'store'),
-			$icons: path.resolve('src', 'routes', 'icons'),
-			$routes: path.resolve('src', 'routes')
+			$icons: path.resolve('src', 'lib', 'icons'),
+			$routes: path.resolve('src', 'routes'),
+			$lib: path.resolve('src', 'lib')
 		}
 	}
 };

@@ -1,5 +1,5 @@
 <script>
-	import Close from '../icons/Close.svelte';
+	import Close from '$lib/icons/Close.svelte';
 	import saveAs from 'file-saver';
 
 	import { selectedAlbum, selectedBand, selectedAlbumIndex, catalogDB } from '$/stores';

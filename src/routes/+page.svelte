@@ -2,7 +2,7 @@
 	import clone from 'just-clone';
 	import { onMount } from 'svelte';
 	import localforage from 'localforage';
-	import Editor from './Editor/Editor.svelte';
+	import Editor from '$lib/Editor/Editor.svelte';
 
 	import {
 		catalogDB,

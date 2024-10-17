@@ -1,5 +1,5 @@
 <script>
-	import ValueBlock from '../ValueBlock/ValueBlock.svelte';
+	import ValueBlock from '../../routes/ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from './ExplicitToggle.svelte';
 	import SmallModal from '../Modals/SmallModal.svelte';
 	import UploadFileIcon from '../icons/UploadFile.svelte';
@@ -21,7 +21,7 @@
 	}
 </script>
 
-<container>
+<section>
 	<ul>
 		<li><h4>Band/Artist</h4></li>
 		<li><h4>Album</h4></li>
@@ -57,7 +57,7 @@
 			<ValueBlock bind:valueBlock={$editingFeed['podcast:value']['podcast:valueRecipient']} />
 		</value>
 	</info-2>
-</container>
+</section>
 
 {#if showUpload}
 	<SmallModal
@@ -70,7 +70,7 @@
 {/if}
 
 <style>
-	container {
+	section {
 		display: flex;
 		flex-direction: column;
 		width: calc(100% - 16px);
