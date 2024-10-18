@@ -1,54 +1,20 @@
 <script>
-	import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
+	import parser from 'fast-xml-parser';
 	import { v4 as uuidv4 } from 'uuid';
-	import generateValidGuid from '$functions/generateValidGuid.js';
+	import normalizeSplits from './functions/normalizeSplits.js';
+	import createChannelJSON from './functions/createChannelJSON.js';
 
 	import PublishModal from './PublishModal.svelte';
 	import ErrorModal from './ErrorModal.svelte';
 
 	import { editingFeed } from '$/stores';
 
-	let rssErrors = [];
 	let showErrorModal = false;
 	let showPublishModal = false;
 	let xmlFile;
+	let rssErrors = [];
 
 	async function publishFeed() {
-		rssErrors = [];
-
-		const escapeAttr = (str) =>
-			str.replace(
-				/[&<>'"]/g,
-				(tag) =>
-					({
-						'&': '&amp;',
-						'<': '&lt;',
-						'>': '&gt;',
-						"'": '&#39;',
-						'"': '&quot;'
-					}[tag])
-			);
-
-		const escapeTag = (str) => {
-			if (str.match(/[&<>'"]/g)) {
-				return '<![CDATA[' + str + ']]>';
-			}
-			return str;
-		};
-		const xmlOptions = {
-			attributeNamePrefix: '@_',
-			//attrNodeName: false,
-			textNodeName: '#text',
-			ignoreAttributes: false,
-			ignoreNameSpace: false,
-			format: true,
-			indentBy: '  ',
-			supressEmptyNode: true,
-			attrValueProcessor: (val, attrName) => escapeAttr(`${val}`),
-			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
-		};
-		const builder = new XMLBuilder(xmlOptions);
-
 		let rss = {
 			'@_version': '2.0',
 			'@_endcoding': 'UTF-8',
@@ -58,62 +24,12 @@
 			'@_xmlns:media': 'http://search.yahoo.com/mrss/'
 		};
 
-		$editingFeed.generator = 'Music Side Project Studio';
-		$editingFeed['itunes:category'] = $editingFeed?.['itunes:category'] || { '@_text': 'Music' };
-		$editingFeed['itunes:keywords'] = $editingFeed?.['itunes:keywords'] || 'music';
-		$editingFeed['podcast:medium'] = 'music';
+		let { feed, errors } = await createChannelJSON({ feed: $editingFeed, errors: rssErrors });
 
-		if ($editingFeed?.['itunes:author']) {
-			if (!$editingFeed['itunes:owner']) {
-				$editingFeed['itunes:owner'] = {
-					'@_itunes:name': $editingFeed['itunes:author'],
-					'@_itunes:email': ''
-				};
-			}
-		} else {
-			rssErrors.push('Band needs a name');
-		}
+		$editingFeed = feed;
+		rssErrors = errors;
 
-		if (!$editingFeed.title) {
-			rssErrors.push('Album needs a name');
-		}
-
-		if (!$editingFeed.description) {
-			rssErrors.push('Album needs a description');
-		}
-
-		if (!$editingFeed?.['itunes:image']?.['@_href']) {
-			rssErrors.push('Album needs some artwork');
-		}
-
-		if (!$editingFeed?.explicit) {
-			rssErrors.push('Is the album explicit?');
-		}
-
-		if (!isValidUrl($editingFeed?.link)) {
-			rssErrors.push('Link to Album Website is an invalid link');
-		}
-
-		if ($editingFeed?.['itunes:explicit']) {
-			rssErrors.push('Is the album explicit?');
-		}
-
-		if (
-			$editingFeed?.['podcast:value']?.['podcast:valueRecipient']?.some((v) => v?.['@_address'])
-		) {
-			$editingFeed['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
-				$editingFeed['podcast:value']['podcast:valueRecipient'],
-				'Album'
-			);
-		} else {
-			rssErrors.push('Add some value to the album');
-		}
-
-		if ($editingFeed?.['podcast:guid']) {
-			$editingFeed['podcast:guid'] = await checkPodcastGuid($editingFeed['podcast:guid']);
-		} else {
-			$editingFeed['podcast:guid'] = await createNewPodcastGuid();
-		}
+		console.log($editingFeed);
 
 		let uniqueTrackGuids = new Set();
 
@@ -182,34 +98,45 @@
 		let xmlJson = { rss: rss };
 		console.log(xmlJson);
 
-		xmlFile = builder.build(xmlJson);
-		console.log(xmlJson);
+		const escapeAttr = (str) =>
+			str.replace(
+				/[&<>'"]/g,
+				(tag) =>
+					({
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						"'": '&#39;',
+						'"': '&quot;'
+					}[tag])
+			);
+
+		const escapeTag = (str) => {
+			if (str.match(/[&<>'"]/g)) {
+				return '<![CDATA[' + str + ']]>';
+			}
+			return str;
+		};
+
+		let js2xml = new parser.j2xParser({
+			attributeNamePrefix: '@_',
+			//attrNodeName: false,
+			textNodeName: '#text',
+			ignoreAttributes: false,
+			ignoreNameSpace: false,
+			format: true,
+			indentBy: '  ',
+			supressEmptyNode: true,
+			attrValueProcessor: (val, attrName) => escapeAttr(`${val}`),
+			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
+		});
+
+		let xmlFile = js2xml.parse(xmlJson);
+		console.log(xmlFile);
 		if (rssErrors.length) {
 			showErrorModal = true;
 		} else {
 			showPublishModal = true;
-		}
-
-		async function checkPodcastGuid(guid) {
-			let isValidGuid = checkValidGuid(guid);
-
-			if (!isValidGuid) {
-				return await createNewPodcastGuid();
-			} else {
-				return guid;
-			}
-		}
-
-		async function createNewPodcastGuid() {
-			let guid = await generateValidGuid();
-			return guid;
-		}
-
-		function checkValidGuid(input) {
-			const regex = new RegExp(
-				'^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$'
-			);
-			return regex.test(input);
 		}
 
 		function generateTrackGuid() {
@@ -233,57 +160,6 @@
 			return true;
 		}
 
-		function normalizeSplits(arr, name) {
-			// Helper function to normalize individual splits
-			function normalize(splits) {
-				// Convert strings to numbers
-				let rounded = splits.map((num) => parseFloat(num));
-
-				// Find the factor to scale up the splits
-				let scale = Math.pow(
-					10,
-					Math.max(
-						...rounded.map((num) => {
-							let decimals = (num.toString().split('.')[1] || '').length;
-							return decimals;
-						})
-					)
-				);
-
-				// Scale all splits by the found factor
-				let scaled = rounded.map((num) => Math.round(num * scale));
-
-				return scaled;
-			}
-
-			// Extract all '@_split' values from the array
-			const splits = arr.map((obj) => parseFloat(obj['@_split']));
-
-			// Normalize the extracted splits
-			const normalizedSplits = normalize(splits);
-
-			// Update the original array with the normalized splits
-			return arr.map((v, i) => {
-				const person = `Recepient #${i + 1}`;
-				if (!v?.['@_name']) {
-					rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
-				}
-				if (!v?.['@_address']) {
-					rssErrors.push(
-						`Person "${person}" in the "${name}" value tag block needs an lightning address`
-					);
-				}
-
-				if (!Number(v?.['@_split'])) {
-					rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
-				}
-				return {
-					...v,
-					'@_split': normalizedSplits[i].toString() // Convert back to string
-				};
-			});
-		}
-
 		function convertDurationToITunesFormat(durationInSeconds) {
 			// Convert duration to iTunes format (HH:MM:SS)
 			const hours = Math.floor(durationInSeconds / 3600);
@@ -297,14 +173,6 @@
 			return durationInITunesFormat;
 		}
 
-		function isValidUrl(url) {
-			// Create a regular expression pattern that matches valid URLs with http, https, or ftp protocols
-			const urlPattern =
-				/^(http|https|ftp):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/;
-
-			// Test whether the provided URL matches the pattern
-			return urlPattern.test(url);
-		}
 		console.log(rssErrors);
 	}
 </script>

@@ -1,7 +1,7 @@
 {
 	"generator": "Music Side Project Studio",
 	"itunes:category": {
-		"@_text": "Music"
+		"#text": "Music"
 	},
 	"itunes:keywords": "music",
 	"podcast:medium": "music",
