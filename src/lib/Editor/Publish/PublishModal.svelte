@@ -2,7 +2,7 @@
 	import Close from '$lib/icons/Close.svelte';
 	import saveAs from 'file-saver';
 
-	import { selectedAlbum, selectedBand, selectedAlbumIndex, catalogDB } from '$/stores';
+	import { editingFeed } from '$/stores';
 
 	export let showPublishModal = false;
 	export let xmlFile;
@@ -24,44 +24,42 @@
 		saveAs(blob, `${title.toLowerCase()}.xml`);
 	}
 
-	function checkEnclosure() {
-		if ($selectedAlbum.enclosureUrl && $selectedAlbum.enclosureUrl !== feedUrl) {
-			duplicateEnclosure = true;
-			return;
-		} else {
-			checkPodcastIndex();
-		}
-	}
+	// function checkEnclosure() {
+	// 	if ($editingFeed.enclosureUrl && $editingFeed.enclosureUrl !== feedUrl) {
+	// 		duplicateEnclosure = true;
+	// 		return;
+	// 	} else {
+	// 		checkPodcastIndex();
+	// 	}
+	// }
 
-	async function checkPodcastIndex() {
-		$selectedAlbum.enclosureUrl = feedUrl;
-		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+	// async function checkPodcastIndex() {
+	// 	$editingFeed.enclosureUrl = feedUrl;
+	// 	const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
-		const res = await fetch(feed);
-		const data = await res.json();
-		console.log(data);
+	// 	const res = await fetch(feed);
+	// 	const data = await res.json();
+	// 	console.log(data);
 
-		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
-			$selectedAlbum.guid
-		)}`;
-		const guidRes = await fetch(guidUrl);
-		const guidData = await guidRes.json();
-		console.log(guidData);
+	// 	const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
+	// 		$editingFeed.['podcast:guid']
+	// 	)}`;
+	// 	const guidRes = await fetch(guidUrl);
+	// 	const guidData = await guidRes.json();
+	// 	console.log(guidData);
 
-		if (guidData.status === 'true' && guidData.feed.length) {
-		}
+	// 	if (guidData.status === 'true' && guidData.feed.length) {
+	// 	}
 
-		if (data?.status === 'true') {
-			console.log('podping');
-			podping();
-		} else if (data?.status === 'false' && !guidData?.feed?.length) {
-			console.log('addFeed');
-			addFeed();
-		}
+	// 	if (data?.status === 'true') {
+	// 		console.log('podping');
+	// 		podping();
+	// 	} else if (data?.status === 'false' && !guidData?.feed?.length) {
+	// 		console.log('addFeed');
+	// 		addFeed();
+	// 	}
 
-		$selectedBand.albums[$selectedAlbumIndex] = $selectedAlbum;
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
-	}
+	// }
 
 	async function podping() {
 		let url = `api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
@@ -99,7 +97,7 @@
 				<br />upload the file to your server folder,
 				<br />then enter the link to your feed.
 			</h3>
-			<button class="download" on:click={saveFeed.bind(this, $selectedAlbum.title, xmlFile)}>
+			<button class="download" on:click={saveFeed.bind(this, $editingFeed.title, xmlFile)}>
 				Download Feed
 			</button>
 			<link-container>
@@ -113,7 +111,7 @@
 				{#if duplicateEnclosure}
 					<h3>That link doesn't match your previous link</h3>
 					<h3>Here's your previous link:</h3>
-					<h3>{$selectedAlbum.enclosureUrl}</h3>
+					<h3>{$editingFeed.enclosureUrl}</h3>
 
 					<button class="directory" on:click={checkEnclosure}
 						>I'm positive my feed is not in the Podcast Index.<br />Add my feed.</button

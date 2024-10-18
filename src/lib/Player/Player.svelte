@@ -19,7 +19,7 @@
 		player.onloadedmetadata = async () => {
 			console.log('loaded');
 			player.duration = player.duration;
-			$selectedTrack.duration = player.duration;
+			$selectedTrack['itunes:duration'] = player.duration;
 			const response = await fetch('/api/enclosureproxy?url=' + newTrackEnclosure.url);
 			let { enclosureLength, enclosureType } = await response.json();
 			newTrackEnclosure.enclosureLength = enclosureLength;

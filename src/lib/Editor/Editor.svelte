@@ -8,6 +8,7 @@
 	import Track from './Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
 	import SwapVertIcon from '$icons/SwapVert.svelte';
+	import generateValidGuid from '$functions/generateValidGuid.js';
 	import Publish from './Publish/Publish.svelte';
 
 	import { editingFeed, newTrack, catalogDB, menuPanel } from '$/stores';
@@ -37,12 +38,6 @@
 				'@_PermaLink': 'false',
 				'#text': guid
 			};
-		}
-
-		function generateValidGuid() {
-			const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-			const inputString = uuidv4();
-			return uuidv5(inputString, namespace);
 		}
 	}
 

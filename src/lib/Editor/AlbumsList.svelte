@@ -5,7 +5,7 @@
 	// import { slide } from 'svelte/transition';
 	import Delete from '$icons/Delete.svelte';
 	import initializeAlbum from '../functions/initializeAlbum';
-	// import Publish from '../Publish/Publish.svelte';
+	import generateValidGuid from '$functions/generateValidGuid.js';
 
 	import { feeds, editingFeed, newFeed, remoteServer, catalogDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
@@ -82,12 +82,6 @@
 	// 	a.click();
 	// 	window.URL.revokeObjectURL(url);
 	// }
-
-	function generateValidGuid() {
-		const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-		const inputString = uuidv4();
-		return uuidv5(inputString, namespace);
-	}
 
 	async function checkPodcastGuid(feed) {
 		let url =

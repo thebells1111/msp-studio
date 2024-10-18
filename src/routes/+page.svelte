@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import localforage from 'localforage';
 	import Editor from '$lib/Editor/Editor.svelte';
+	import generateValidGuid from '$functions/generateValidGuid.js';
 
 	import {
 		catalogDB,
@@ -146,12 +147,6 @@
 				console.log(err);
 			});
 	});
-
-	function generateValidGuid() {
-		const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-		const inputString = uuidv4();
-		return uuidv5(inputString, namespace);
-	}
 
 	async function checkPodcastGuid(feed) {
 		let url =

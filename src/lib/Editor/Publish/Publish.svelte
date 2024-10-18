@@ -1,13 +1,12 @@
 <script>
 	import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
+	import { v4 as uuidv4 } from 'uuid';
+	import generateValidGuid from '$functions/generateValidGuid.js';
 
-	// import PublishModal from './PublishModal.svelte';
-	// import ErrorModal from './ErrorModal.svelte';
+	import PublishModal from './PublishModal.svelte';
+	import ErrorModal from './ErrorModal.svelte';
 
-	import { editingFeed, catalogDB } from '$/stores';
-
-	const NAMESPACE = 'c5b4d56b-fb34-4d62-bbc8-1ccbfaa50adf';
+	import { editingFeed } from '$/stores';
 
 	let rssErrors = [];
 	let showErrorModal = false;
@@ -15,8 +14,27 @@
 	let xmlFile;
 
 	async function publishFeed() {
-		const parser = new XMLParser();
 		rssErrors = [];
+
+		const escapeAttr = (str) =>
+			str.replace(
+				/[&<>'"]/g,
+				(tag) =>
+					({
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						"'": '&#39;',
+						'"': '&quot;'
+					}[tag])
+			);
+
+		const escapeTag = (str) => {
+			if (str.match(/[&<>'"]/g)) {
+				return '<![CDATA[' + str + ']]>';
+			}
+			return str;
+		};
 		const xmlOptions = {
 			attributeNamePrefix: '@_',
 			//attrNodeName: false,
@@ -29,6 +47,7 @@
 			attrValueProcessor: (val, attrName) => escapeAttr(`${val}`),
 			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
 		};
+		const builder = new XMLBuilder(xmlOptions);
 
 		let rss = {
 			'@_version': '2.0',
@@ -39,12 +58,10 @@
 			'@_xmlns:media': 'http://search.yahoo.com/mrss/'
 		};
 
-		let channel = {
-			generator: 'Music Side Project Studio',
-			'itunes:category': { '@_text': 'Music' },
-			'itunes:keywords': 'music',
-			'podcast:medium': 'music'
-		};
+		$editingFeed.generator = 'Music Side Project Studio';
+		$editingFeed['itunes:category'] = $editingFeed?.['itunes:category'] || { '@_text': 'Music' };
+		$editingFeed['itunes:keywords'] = $editingFeed?.['itunes:keywords'] || 'music';
+		$editingFeed['podcast:medium'] = 'music';
 
 		if ($editingFeed?.['itunes:author']) {
 			if (!$editingFeed['itunes:owner']) {
@@ -100,19 +117,17 @@
 
 		let uniqueTrackGuids = new Set();
 
-		let items = $editingFeed.item.map((track, index) => {
-			let trackJSON = {
-				pubDate:
-					track.pubDate ||
-					new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000',
-				'podcast:season': 1,
-				'podcast:episode': index + 1
-			};
+		$editingFeed.item.forEach((track, index) => {
+			(track.pubDate =
+				track.pubDate ||
+				new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000'),
+				(track['podcast:season'] = 1),
+				(track['podcast:episode'] = index + 1);
 
 			if (!(track?.guid?.['#text'] || track?.guid)) {
 				const guid = generateTrackGuid();
 				uniqueTrackGuids.add(guid);
-				trackJSON.guid = { ['@_isPermaLink']: 'false', ['#text']: guid };
+				track.guid = { ['@_isPermaLink']: 'false', ['#text']: guid };
 			} else {
 				uniqueTrackGuids.add(track.guid?.['#text'] || track.guid);
 				if (!track.guid?.['!_isPermakLink']) {
@@ -121,84 +136,59 @@
 						['#text']: track.guid?.['#text'] || track.guid
 					};
 				}
-				trackJSON.guid = track.guid;
 			}
 
 			let title = track.title;
 
-			if (track.title) {
-				trackJSON.title = track.title;
-			} else {
+			if (!track.title) {
 				title = `Track ${index + 1}`;
 				rssErrors.push(title + ' needs a name');
 			}
 
 			if (track?.enclosure?.['@_url']) {
-				trackJSON.enclosure = {
-					'@_url': track?.enclosure?.url,
-					'@_type': track?.enclosure?.type,
-					'@_length': track?.enclosure?.enclosureLength
-				};
-
-				trackJSON['itunes:duration'] = convertDurationToITunesFormat(track.duration);
+				track['itunes:duration'] = convertDurationToITunesFormat(track['itunes:duration']);
 			} else {
 				rssErrors.push(title + ' needs a link to the mp3 file');
 			}
 
-			if (track.description) {
-				trackJSON.description = track.description;
-			}
-
-			if (track?.['itunes:explicit']) {
-				trackJSON['itunes:explicit'] = track.explicit;
-			}
-
-			if (track?.['itunes:image']?.['@_href']) {
-				trackJSON['itunes:image'] = { '@_href': track['itunes:image']['@_href'] };
-			}
-
-			if (track?.['podcast:value']?.['podcast:valueRecipient']) {
-				trackJSON['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
+			if (track?.['podcast:value']?.['podcast:valueRecipient']?.length) {
+				track['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
 					track['podcast:value']['podcast:valueRecipient'],
 					title
 				);
 			}
 
 			if (track?.['podcast:chapters']?.['@_url']) {
-				trackJSON['podcast:chapters'] = {
+				track['podcast:chapters'] = {
 					'@_url': track['podcast:chapters']['@_url'],
 					'@_type': 'application/json'
 				};
 			}
 
 			if (track?.['podcast:transcript']?.['@_url']) {
-				trackJSON['podcast:transcript'] = [
+				track['podcast:transcript'] = [
 					{
 						'@_url': track['podcast:transcript']['@_url'],
 						'@_type': 'application/srt'
 					}
 				];
 			}
-
-			return trackJSON;
 		});
-
-		$editingFeed.item = [...items];
 
 		console.log($editingFeed);
 
-		// 	rss.channel = channel;
+		rss.channel = $editingFeed;
 
-		// 	let xmlJson = { rss: rss };
+		let xmlJson = { rss: rss };
+		console.log(xmlJson);
 
-		// 	xmlFile = js2xml.parse(xmlJson);
-		// 	console.log(xmlJson);
-		// 	if (rssErrors.length) {
-		// 		showErrorModal = true;
-		// 	} else {
-		// 		$catalogDB.setItem($selectedBand.title, $selectedBand);
-		// 		showPublishModal = true;
-		// 	}
+		xmlFile = builder.build(xmlJson);
+		console.log(xmlJson);
+		if (rssErrors.length) {
+			showErrorModal = true;
+		} else {
+			showPublishModal = true;
+		}
 
 		async function checkPodcastGuid(guid) {
 			let isValidGuid = checkValidGuid(guid);
@@ -222,21 +212,6 @@
 			return regex.test(input);
 		}
 
-		async function generateValidGuid() {
-			const namespace = 'ead4c236-bf58-58c6-a2c6-a6b28d128cb6';
-			const inputString = uuidv4();
-			const uniqueId = uuidv5(inputString, namespace);
-			let url = `/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${uniqueId}`)}`;
-
-			const res = await fetch(url);
-			const data = await res.json();
-			if (data?.feed?.length) {
-				return generateValidGuid();
-			} else {
-				return uniqueId;
-			}
-		}
-
 		function generateTrackGuid() {
 			let trackGuid;
 			do {
@@ -257,29 +232,6 @@
 
 			return true;
 		}
-
-		// console.log($selectedAlbum);
-		// $catalogDB.setItem($selectedBand.title, $selectedBand);
-
-		const escapeAttr = (str) =>
-			str.replace(
-				/[&<>'"]/g,
-				(tag) =>
-					({
-						'&': '&amp;',
-						'<': '&lt;',
-						'>': '&gt;',
-						"'": '&#39;',
-						'"': '&quot;'
-					}[tag])
-			);
-
-		const escapeTag = (str) => {
-			if (str.match(/[&<>'"]/g)) {
-				return '<![CDATA[' + str + ']]>';
-			}
-			return str;
-		};
 
 		function normalizeSplits(arr, name) {
 			// Helper function to normalize individual splits
@@ -359,13 +311,13 @@
 
 <button class="publish" on:click={publishFeed}>Publish Album</button>
 
-<!-- {#if showErrorModal}
+{#if showErrorModal}
 	<ErrorModal {rssErrors} bind:showErrorModal />
 {/if}
 
 {#if showPublishModal}
 	<PublishModal {xmlFile} bind:showPublishModal />
-{/if} -->
+{/if}
 
 <style>
 	button.publish {
