@@ -1,8 +1,9 @@
 <script>
 	import parser from 'fast-xml-parser';
 	import { v4 as uuidv4 } from 'uuid';
+	import clone from 'just-clone';
 	import normalizeSplits from './functions/normalizeSplits.js';
-	import createChannelJSON from './functions/createChannelJSON.js';
+	import createChannel from './functions/createChannel.js';
 
 	import PublishModal from './PublishModal.svelte';
 	import ErrorModal from './ErrorModal.svelte';
@@ -15,6 +16,7 @@
 	let rssErrors = [];
 
 	async function publishFeed() {
+		rssErrors = [];
 		let rss = {
 			'@_version': '2.0',
 			'@_endcoding': 'UTF-8',
@@ -24,16 +26,15 @@
 			'@_xmlns:media': 'http://search.yahoo.com/mrss/'
 		};
 
-		let { feed, errors } = await createChannelJSON({ feed: $editingFeed, errors: rssErrors });
+		let { feed, errors } = await createChannel({ feed: clone($editingFeed), errors: rssErrors });
 
-		$editingFeed = feed;
 		rssErrors = errors;
 
-		console.log($editingFeed);
+		console.log(feed);
 
 		let uniqueTrackGuids = new Set();
 
-		$editingFeed.item.forEach((track, index) => {
+		feed.item.forEach((track, index) => {
 			(track.pubDate =
 				track.pubDate ||
 				new Date(new Date().getTime() - 60000 * index).toUTCString().split(' GMT')[0] + ' +0000'),
@@ -70,15 +71,25 @@
 			if (track?.['podcast:value']?.['podcast:valueRecipient']?.length) {
 				track['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
 					track['podcast:value']['podcast:valueRecipient'],
-					title
+					title,
+					rssErrors
 				);
-			}
 
+				//this is to copy the updated splits to the editing feed
+				//since "feed" may have things deleted prior to creating the xml file
+				$editingFeed.item[index]['podcast:value']['podcast:valueRecipient'] = clone(
+					track['podcast:value']['podcast:valueRecipient']
+				);
+			} else {
+				delete track['podcast:value'];
+			}
 			if (track?.['podcast:chapters']?.['@_url']) {
 				track['podcast:chapters'] = {
 					'@_url': track['podcast:chapters']['@_url'],
 					'@_type': 'application/json'
 				};
+			} else {
+				delete track['podcast:chapters'];
 			}
 
 			if (track?.['podcast:transcript']?.['@_url']) {
@@ -88,12 +99,29 @@
 						'@_type': 'application/srt'
 					}
 				];
+			} else {
+				delete track['podcast:transcript'];
+			}
+
+			if (!track?.description) {
+				delete track.description;
+			}
+
+			if (!track?.['itunes:image']?.['@_href']) {
+				delete track['itunes:image'];
+			}
+
+			track['podcast:aspectImages'] = []
+				.concat(track['podcast:aspectImages'])
+				.filter((v) => v?.['@_src']);
+			if (!track?.['podcast:aspectImages']?.length) {
+				delete track['podcast:aspectImages'];
 			}
 		});
 
-		console.log($editingFeed);
+		console.log(feed);
 
-		rss.channel = $editingFeed;
+		rss.channel = feed;
 
 		let xmlJson = { rss: rss };
 		console.log(xmlJson);
@@ -131,7 +159,7 @@
 			tagValueProcessor: (val, tagName) => escapeTag(`${val}`)
 		});
 
-		let xmlFile = js2xml.parse(xmlJson);
+		xmlFile = js2xml.parse(xmlJson);
 		console.log(xmlFile);
 		if (rssErrors.length) {
 			showErrorModal = true;

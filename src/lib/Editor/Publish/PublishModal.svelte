@@ -16,6 +16,7 @@
 		showPublishModal = false;
 	}
 
+	$: console.log(xmlFile);
 	async function saveFeed(title, xmlFile) {
 		displayText = `If updating your feed, remember to keep your file name the same as your old file.
 		<br/> <br/>Then replace your old file with the new file.`;

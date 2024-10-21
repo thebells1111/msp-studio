@@ -1,7 +1,7 @@
 import normalizeSplits from './normalizeSplits';
 import generateValidGuid from '$functions/generateValidGuid.js';
 
-export default async function createChannelJSON({ feed, errors }) {
+export default async function createChannel({ feed, errors }) {
 	errors = errors || [];
 	feed.generator = 'Music Side Project Studio';
 	feed['itunes:category'] = feed?.['itunes:category'] || { '#text': 'Music' };
@@ -46,7 +46,8 @@ export default async function createChannelJSON({ feed, errors }) {
 	if (feed?.['podcast:value']?.['podcast:valueRecipient']?.some((v) => v?.['@_address'])) {
 		feed['podcast:value']['podcast:valueRecipient'] = normalizeSplits(
 			feed['podcast:value']['podcast:valueRecipient'],
-			'Album'
+			'Album',
+			errors
 		);
 	} else {
 		errors.push('Add some value to the album');
@@ -56,6 +57,13 @@ export default async function createChannelJSON({ feed, errors }) {
 		feed['podcast:guid'] = await checkPodcastGuid(feed['podcast:guid']);
 	} else {
 		feed['podcast:guid'] = await createNewPodcastGuid();
+	}
+
+	feed['podcast:aspectImages'] = []
+		.concat(feed['podcast:aspectImages'])
+		.filter((v) => v?.['@_src']);
+	if (!feed?.['podcast:aspectImages']?.length) {
+		delete feed['podcast:aspectImages'];
 	}
 
 	return { feed, errors };

@@ -1,4 +1,4 @@
-export default function normalizeSplits(arr, name) {
+export default function normalizeSplits(arr, name, rssErrors) {
 	// Helper function to normalize individual splits
 	function normalize(splits) {
 		// Convert strings to numbers
@@ -29,18 +29,16 @@ export default function normalizeSplits(arr, name) {
 
 	// Update the original array with the normalized splits
 	return arr.map((v, i) => {
-		const person = `Recepient #${i + 1}`;
+		const person = v?.['@_name'] || `Person #${i + 1}`;
 		if (!v?.['@_name']) {
 			rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
 		}
 		if (!v?.['@_address']) {
-			rssErrors.push(
-				`Person "${person}" in the "${name}" value tag block needs an lightning address`
-			);
+			rssErrors.push(`"${person}" in the "${name}" value tag block needs an lightning address`);
 		}
 
 		if (!Number(v?.['@_split'])) {
-			rssErrors.push(`Person "${person}" in the "${name}" value tag block needs a split`);
+			rssErrors.push(`"${person}" in the "${name}" value tag block needs a split`);
 		}
 		return {
 			...v,

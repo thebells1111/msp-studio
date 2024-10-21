@@ -118,19 +118,19 @@ export const uploadFileText = writable();
 export const wpFeedUrl = writable();
 
 export const MSPValue = writable({
-	name: 'Music Side Project',
-	address: '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-	key: '696969',
-	value: 'UzrnTK2oEHR55gw7Djmb',
-	split: 5
+	'@_name': 'Music Side Project',
+	'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
+	'@_customKey': '696969',
+	'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+	'@_split': 5
 });
 
 export const newPerson = writable({
-	name: '',
-	address: '',
-	key: '',
-	value: '',
-	split: 0
+	'@_name': '',
+	'@_address': '',
+	'@_customKey': '',
+	'@_customValue': '',
+	'@_split': 0
 });
 
 export const selectedScreen = writable('bands');
