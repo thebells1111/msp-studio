@@ -24,6 +24,7 @@
 	let audioReload = 1;
 	let showUpload = false;
 	let uploadType = 'image';
+	let imageType = 'trackSquare';
 
 	$: if (imageReload || audioReload) {
 		showUpload = false;
@@ -74,18 +75,38 @@
 		<li><ExplicitToggle bind:checked={track.explicit} /></li>
 	</ul>
 	<info-2>
-		<artwork
+		<banner-art
 			on:click={() => {
 				showUpload = true;
 				uploadType = 'image';
+				imageType = 'trackBanner';
 			}}
 		>
-			<h4>Track Art</h4>
-			<img src={track['itunes:image']['@_href']} alt="track art - click to edit" />
-			<button class="image-upload">
-				<UploadFileIcon size="20" />
-			</button>
-		</artwork>
+			<h4>Banner Art</h4>
+			<img
+				src={track?.['podcast:aspectImage']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
+					'@_src'
+				] +
+					'?t=' +
+					imageReload}
+				alt="banner art - click to edit"
+				class="banner"
+			/>
+			<button><UploadFileIcon size="20" /></button>
+		</banner-art>
+		<track-art
+			on:click={() => {
+				showUpload = true;
+				uploadType = 'image';
+				imageType = 'trackSquare';
+			}}
+		>
+			<h4>Album Art</h4>
+			<img src={track['itunes:image']['@_href']} alt="track art - click to edit" class="album" />
+
+			<button><UploadFileIcon size="20" /></button>
+		</track-art>
+
 		<description>
 			<h4>Description</h4>
 			<textarea bind:value={track.description} />
@@ -112,7 +133,7 @@
 				uploadText="Track #{trackNumber} Audio"
 			/>
 		{:else}
-			<ArtUpload bind:imageReload imageParent="track" {track} {trackNumber} />
+			<ArtUpload bind:imageReload imageParent="track" {track} {trackNumber} {imageType} />
 		{/if}
 	</SmallModal>
 {/if}
@@ -122,13 +143,15 @@
 		display: flex;
 		flex-direction: column;
 		width: calc(100% - 16px);
+		padding: 0 8px;
+		margin-bottom: 8px;
 	}
 	ul {
 		display: flex;
 		justify-content: space-between;
 		height: 18px;
 		align-items: center;
-		padding: 0 8px;
+		padding: 0;
 		margin: 0;
 		width: 100%;
 	}
@@ -161,26 +184,79 @@
 	}
 
 	info-2 {
-		display: flex;
-		width: 100%;
-		height: 300px;
 		margin-top: 8px;
-		padding: 0 8px;
-		margin-bottom: 8px;
+		display: grid;
+		grid-template-columns: 120px 342px calc(100% - 462px); /* First column fixed, B and C flexible */
+		grid-template-rows: 100px 200px; /* Two rows */
+		gap: 8px; /* Adjust spacing between items */
+		width: 100%; /* Full width of the container */
+		height: 300px;
 	}
-
-	artwork {
+	track-art {
+		grid-column: 1; /* First column */
+		grid-row: 2; /* First row */
+		width: 100%;
+		height: 178px;
+		position: relative;
 		display: flex;
 		flex-direction: column;
-		width: 150px;
 	}
 
-	img {
+	img.album {
 		cursor: pointer;
-		height: 150px;
-		width: 150px;
+		height: 120px;
+		width: 120px;
 		border: 1px solid black;
 		border-radius: 5px;
+	}
+
+	banner-art {
+		grid-column: 1 / span 2;
+		grid-row: 1;
+		width: calc ((100% - 150px) / 2);
+		height: 102px;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+	}
+
+	/* Adjust the banner to maintain a 6:1 ratio */
+	img.banner {
+		height: 78.2px;
+		min-height: 78.2px;
+		width: calc(78.2px * 6);
+		cursor: pointer;
+		border: 1px solid black;
+		border-radius: 5px;
+		justify-self: flex-end;
+	}
+
+	h4 {
+		margin: 0 8px;
+		text-align: left;
+		width: 100%;
+	}
+
+	description {
+		grid-column: 2;
+		grid-row: 2;
+		height: calc(100% - 8px); /* Adjust height as needed */
+		display: flex;
+		flex-direction: column;
+	}
+
+	textarea {
+		resize: none;
+		width: calc(100% - 10px);
+		height: 100%;
+		border-radius: 5px;
+	}
+
+	value {
+		grid-column: 3;
+		grid-row: 1 / span 2;
+		height: calc(100% - 8px);
+		margin-right: 8px;
 	}
 
 	h3 {
@@ -192,37 +268,12 @@
 		display: flex;
 		align-items: center;
 		border-top: 1px solid var(--color-text-0);
-		padding: 0 8px;
+		padding: 0;
 		width: 100%;
 	}
 
 	track-header.first {
 		border-top: none;
-	}
-	h4 {
-		margin: 0 8px;
-		text-align: left;
-		width: 100%;
-	}
-
-	description {
-		display: block;
-		width: calc((100% - 150px) / 2);
-		display: flex;
-		flex-direction: column;
-		margin: 0 4px 0 8px;
-	}
-
-	textarea {
-		resize: none;
-		height: 100%;
-		border-radius: 5px;
-		margin: 0 4px;
-	}
-
-	value {
-		display: block;
-		width: calc((100% - 150px) / 2);
 	}
 
 	button {
@@ -238,11 +289,13 @@
 		position: relative;
 		background-color: var(--color-bg-add-band);
 	}
-
-	button.image-upload {
+	track-art > button {
 		bottom: 30px;
-		left: 121px;
-		box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.75);
+		left: 92px;
+	}
+	banner-art > button {
+		bottom: 30px;
+		left: 442px;
 	}
 
 	button.audio-upload {

@@ -7,7 +7,7 @@
 	export let imageParent = 'album';
 	export let track = null;
 	export let trackNumber = 1;
-	let imageType;
+	export let imageType = null;
 
 	let imageProps = {
 		albumSquare: {
@@ -16,7 +16,6 @@
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Art',
 			update: (e) => {
-				console.log(e.target.value);
 				$editingFeed['itunes:image']['@_href'] = e.target.value;
 				imageProps.albumSquare.filePath = e.target.value;
 			}

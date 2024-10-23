@@ -32,10 +32,13 @@
 
 <style>
 	.list-group-item {
-		padding: 8px;
+		padding: 0 8px;
 		margin: 4px;
 		border: 1px solid white;
 		transition: background-color 0.2s;
+		min-height: 40px;
+		display: flex;
+		align-items: center;
 	}
 
 	.list-group-item:hover {
