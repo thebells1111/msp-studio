@@ -2,7 +2,7 @@
 	import Close from '$lib/icons/Close.svelte';
 	import saveAs from 'file-saver';
 
-	import { editingFeed } from '$/stores';
+	import { editingFeed, remoteServer, settings } from '$/stores';
 
 	export let showPublishModal = false;
 	export let xmlFile;
@@ -11,6 +11,7 @@
 
 	let displayText = ``;
 	let duplicateEnclosure = false;
+	let showLink = false;
 
 	function closeModal() {
 		showPublishModal = false;
@@ -18,49 +19,49 @@
 
 	$: console.log(xmlFile);
 	async function saveFeed(title, xmlFile) {
-		displayText = `If updating your feed, remember to keep your file name the same as your old file.
+		displayText = `If manually updating your feed, remember to keep your file name the same as your old file.
 		<br/> <br/>Then replace your old file with the new file.`;
 		var blob = new Blob([xmlFile], { type: 'text/xml;charset=utf-8' });
 
 		saveAs(blob, `${title.toLowerCase()}.xml`);
+		showLink = true;
 	}
 
-	// function checkEnclosure() {
-	// 	if ($editingFeed.enclosureUrl && $editingFeed.enclosureUrl !== feedUrl) {
-	// 		duplicateEnclosure = true;
-	// 		return;
-	// 	} else {
-	// 		checkPodcastIndex();
-	// 	}
-	// }
+	function checkEnclosure() {
+		if ($editingFeed.enclosureUrl && $editingFeed.enclosureUrl !== feedUrl) {
+			duplicateEnclosure = true;
+			return;
+		} else {
+			checkPodcastIndex();
+		}
+	}
 
-	// async function checkPodcastIndex() {
-	// 	$editingFeed.enclosureUrl = feedUrl;
-	// 	const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
+	async function checkPodcastIndex() {
+		$editingFeed.enclosureUrl = feedUrl;
+		const feed = `api/queryindex?q=podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`;
 
-	// 	const res = await fetch(feed);
-	// 	const data = await res.json();
-	// 	console.log(data);
+		const res = await fetch(feed);
+		const data = await res.json();
+		console.log(data);
 
-	// 	const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
-	// 		$editingFeed.['podcast:guid']
-	// 	)}`;
-	// 	const guidRes = await fetch(guidUrl);
-	// 	const guidData = await guidRes.json();
-	// 	console.log(guidData);
+		const guidUrl = `api/queryindex?q=podcasts/byguid?guid=${encodeURIComponent(
+			$editingFeed['podcast:guid']
+		)}`;
+		const guidRes = await fetch(guidUrl);
+		const guidData = await guidRes.json();
+		console.log(guidData);
 
-	// 	if (guidData.status === 'true' && guidData.feed.length) {
-	// 	}
+		if (guidData.status === 'true' && guidData.feed.length) {
+		}
 
-	// 	if (data?.status === 'true') {
-	// 		console.log('podping');
-	// 		podping();
-	// 	} else if (data?.status === 'false' && !guidData?.feed?.length) {
-	// 		console.log('addFeed');
-	// 		addFeed();
-	// 	}
-
-	// }
+		if (data?.status === 'true') {
+			console.log('podping');
+			podping();
+		} else if (data?.status === 'false' && !guidData?.feed?.length) {
+			console.log('addFeed');
+			addFeed();
+		}
+	}
 
 	async function podping() {
 		let url = `api/podping?url=${encodeURIComponent(feedUrl)}&reason=update&medium=music`;
@@ -85,6 +86,60 @@
 		displayText = data.description;
 		console.log(data);
 	}
+
+	async function uploadFeed(feed, xmlFile) {
+		console.log(feed);
+		console.log(xmlFile);
+		uploadFile(feed, xmlFile);
+	}
+
+	async function uploadFile(feed, xmlFile) {
+		displayText = 'Uploading Feed';
+		var blob = new Blob([xmlFile], { type: 'text/xml;charset=utf-8' });
+		let folderName = feed['podcast:guid'];
+
+		const formData = new FormData();
+
+		// Append common fields
+		formData.append('folderName', folderName);
+		formData.append('fileName', 'feed.xml'); // Constructed file name
+
+		// Log the file name for debugging
+		console.log('Uploading file with name:', formData.get('fileName'));
+
+		try {
+			// Add the file field last
+			formData.append('file', blob);
+			console.log(`${remoteServer}/api/msp/uploadfile`);
+			const response = await fetch(`${remoteServer}/api/msp/uploadfile`, {
+				method: 'POST',
+				body: formData,
+				credentials: 'include',
+				headers: {
+					Accept: 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				const result = await response.json();
+				console.log(result);
+				displayText = 'Upload Failed';
+			}
+
+			const result = await response.json();
+
+			console.log('Uploaded:', result);
+			if (result.url) {
+				feedUrl = result.url;
+				$editingFeed.enclosureUrl = result.url;
+				showLink = true;
+				displayText = '';
+			}
+		} catch (error) {
+			console.error('Upload error:', error);
+			displayText = 'Upload failed. Please try again.';
+		}
+	}
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>
@@ -93,20 +148,29 @@
 	</button>
 	<modal>
 		<button-container>
-			<h3>
-				Download your feed,
-				<br />upload the file to your server folder,
-				<br />then enter the link to your feed.
-			</h3>
+			{#if $settings?.bunny?.active}
+				<button class="upload" on:click={uploadFeed.bind(this, $editingFeed, xmlFile)}>
+					Upload Feed to Bunny
+				</button>
+			{:else}
+				<h3>
+					Download your feed,
+					<br />upload the file to your server folder,
+					<br />then enter the link to your feed.
+				</h3>
+			{/if}
+
 			<button class="download" on:click={saveFeed.bind(this, $editingFeed.title, xmlFile)}>
 				Download Feed
 			</button>
-			<link-container>
-				<label>
-					<h4>Link to Feed (required)</h4>
-					<input bind:value={feedUrl} />
-				</label>
-			</link-container>
+			{#if showLink}
+				<link-container>
+					<label>
+						<h4>Link to Feed (required)</h4>
+						<input bind:value={feedUrl} />
+					</label>
+				</link-container>
+			{/if}
 
 			{#if feedUrl?.endsWith('.xml')}
 				{#if duplicateEnclosure}
@@ -118,8 +182,6 @@
 						>I'm positive my feed is not in the Podcast Index.<br />Add my feed.</button
 					>
 				{:else}
-					<h3>Add your feed to the Podcast Index<br />or<br />Podping an existing feed.</h3>
-
 					<button class="directory" on:click={checkEnclosure}>Update Podcast Index</button>
 				{/if}
 			{/if}
@@ -211,6 +273,10 @@
 
 	.download {
 		background-color: var(--color-bg-download-feed);
+	}
+
+	.upload {
+		margin-top: 40px;
 	}
 
 	h3 {

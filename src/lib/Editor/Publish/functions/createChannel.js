@@ -3,6 +3,7 @@ import generateValidGuid from '$functions/generateValidGuid.js';
 
 export default async function createChannel({ feed, errors }) {
 	errors = errors || [];
+	delete feed.enclosureUrl;
 	feed.generator = 'Music Side Project Studio';
 	feed['itunes:category'] = feed?.['itunes:category'] || { '#text': 'Music' };
 	feed['itunes:keywords'] = feed?.['itunes:keywords'] || 'music';

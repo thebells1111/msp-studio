@@ -65,6 +65,8 @@ export const _newFeed = {
 	title: ''
 };
 
+console.log(dev);
+
 export const remoteServer = dev ? 'http://localhost:8000' : '';
 
 export const catalogDB = writable();

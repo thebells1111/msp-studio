@@ -1,12 +1,10 @@
 <script>
-	import { slide, fly } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
+	import clone from 'just-clone';
 	import HamburgerIcon from '../icons/Hamburger.svelte';
 	import Login from '../Login/Login.svelte';
 
-	import Tutorial from '$lib/Tutorial/Tutorial.svelte';
-	import { dev } from '$app/environment';
-
-	import { showTutorial, menuPanel, loggedIn, remoteServer, settings } from '$/stores';
+	import { showTutorial, menuPanel, loggedIn, remoteServer, settings, _settings } from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
@@ -15,7 +13,8 @@
 
 	function logout() {
 		$loggedIn = false;
-		$settings = null;
+		$menuPanel = 'albums';
+		$settings = clone(_settings);
 		fetch(remoteServer + '/api/msp/logout', { method: 'GET', credentials: 'include' });
 	}
 

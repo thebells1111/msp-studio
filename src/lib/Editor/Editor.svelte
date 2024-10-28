@@ -85,9 +85,11 @@
 			{/each}
 		{/if}
 	</editors>
-	<div class="publish">
-		<Publish />
-	</div>
+	{#if $editingFeed}
+		<div class="publish">
+			<Publish />
+		</div>
+	{/if}
 </main>
 
 {#if showTrackSorter && $editingFeed?.item?.length > 1}

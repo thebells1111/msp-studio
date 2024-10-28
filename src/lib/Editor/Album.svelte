@@ -36,6 +36,20 @@
 		<li><ExplicitToggle bind:checked={$editingFeed.explicit} handleInput={updateFeeds} /></li>
 	</ul>
 	<info-2>
+		<album-art
+			on:click={() => {
+				showUpload = true;
+			}}
+		>
+			<h4>Album Art</h4>
+
+			<img
+				src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
+				alt="album art - click to edit"
+				class="album"
+			/>
+			<button><UploadFileIcon size="20" /></button>
+		</album-art>
 		<banner-art
 			on:click={() => {
 				showUpload = true;
@@ -53,20 +67,6 @@
 			/>
 			<button><UploadFileIcon size="20" /></button>
 		</banner-art>
-		<album-art
-			on:click={() => {
-				showUpload = true;
-			}}
-		>
-			<h4>Album Art</h4>
-
-			<img
-				src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
-				alt="album art - click to edit"
-				class="album"
-			/>
-			<button><UploadFileIcon size="20" /></button>
-		</album-art>
 
 		<description>
 			<h4>Description</h4>
@@ -138,16 +138,16 @@
 	info-2 {
 		margin-top: 8px;
 		display: grid;
-		grid-template-columns: 120px 342px calc(100% - 462px); /* First column fixed, B and C flexible */
-		grid-template-rows: 100px 200px; /* Two rows */
+		grid-template-columns: 100px 472px calc(100% - 572px); /* First column fixed, B and C flexible */
+		grid-template-rows: 120px 200px; /* Two rows */
 		gap: 8px; /* Adjust spacing between items */
 		width: 100%; /* Full width of the container */
-		height: 300px;
+		height: 320px;
 	}
 
 	album-art {
 		grid-column: 1; /* First column */
-		grid-row: 2; /* First row */
+		grid-row: 1; /* First row */
 		width: 100%;
 		height: 178px;
 		position: relative;
@@ -157,14 +157,14 @@
 
 	img.album {
 		cursor: pointer;
-		height: 120px;
-		width: 120px;
+		height: 100px;
+		width: 100px;
 		border: 1px solid black;
 		border-radius: 5px;
 	}
 
 	banner-art {
-		grid-column: 1 / span 2;
+		grid-column: 2;
 		grid-row: 1;
 		width: calc ((100% - 150px) / 2);
 		height: 102px;
@@ -175,6 +175,7 @@
 
 	/* Adjust the banner to maintain a 6:1 ratio */
 	img.banner {
+		margin-top: 10px;
 		height: 78.2px;
 		min-height: 78.2px;
 		width: calc(78.2px * 6);
@@ -191,7 +192,7 @@
 	}
 
 	description {
-		grid-column: 2;
+		grid-column: 1 / span 2;
 		grid-row: 2;
 		height: calc(100% - 8px); /* Adjust height as needed */
 		display: flex;
@@ -210,31 +211,30 @@
 		grid-row: 1 / span 2;
 		height: calc(100% - 8px);
 		margin-right: 8px;
+		overflow: auto;
 	}
 
 	button {
-		width: 30px;
-		height: 30px;
-		border-radius: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0;
-		position: absolute;
-		bottom: 32px;
-		right: -8px;
 		background-color: var(--color-bg-add-band);
 		box-shadow: 0px 4px 10px 2px rgba(0, 0, 0, 0.75);
-	}
-
-	banner-art > button {
 		width: 30px;
+		height: 30px;
+		min-width: 30px;
 		min-height: 30px;
 		border-radius: 30px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 0;
+	}
+
+	album-art > button {
+		position: absolute;
+		bottom: 52px;
+		right: -8px;
+	}
+
+	banner-art > button {
 		position: relative;
 		bottom: 30px;
 		left: 442px;

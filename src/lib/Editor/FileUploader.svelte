@@ -112,6 +112,7 @@
 			uploadStatus = 'Upload failed. Please try again.';
 		}
 	}
+	
 
 	// Function to handle real-time progress updates from the server
 	onMount(() => {});
