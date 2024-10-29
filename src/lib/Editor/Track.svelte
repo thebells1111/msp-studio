@@ -6,12 +6,11 @@
 	import UploadFileIcon from '$icons/UploadFile.svelte';
 	import DeleteIcon from '$icons/Delete.svelte';
 	import ArtUpload from './ArtUpload.svelte';
+	import Player from '$lib/Player/Player.svelte';
 
 	import clone from 'just-clone';
 
-	import { newTrack, editingFeed, feeds, catalogDB } from '$/stores';
-
-	let updateTimeout;
+	import { newTrack, editingFeed } from '$/stores';
 
 	function updateFeeds() {
 		$editingFeed = $editingFeed;
@@ -52,6 +51,9 @@
 			<DeleteIcon />
 		</button>
 	</track-header>
+	{#if track?.enclosure?.['@_url']}
+		<Player bind:track />
+	{/if}
 	<ul>
 		<li><h4>Title</h4></li>
 		<li><h4>Link to mp3</h4></li>

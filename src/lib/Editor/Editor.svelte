@@ -11,7 +11,7 @@
 	import generateValidGuid from '$functions/generateValidGuid.js';
 	import Publish from './Publish/Publish.svelte';
 
-	import { editingFeed, newTrack, catalogDB, menuPanel } from '$/stores';
+	import { editingFeed, newTrack, menuPanel } from '$/stores';
 	import Modal from '../Modals/Modals.svelte';
 	import TrackSorter from './TrackSorter.svelte';
 
@@ -23,7 +23,6 @@
 		let _newTrack = clone($newTrack);
 		_newTrack.guid = generateUniqueGuid($editingFeed.item);
 		$editingFeed.item = $editingFeed.item.concat(_newTrack);
-		await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 
 		function generateUniqueGuid(items) {
 			let guid = generateValidGuid();

@@ -204,12 +204,17 @@
 			clearTimeout(updateTimeout);
 			updateTimeout = setTimeout(() => {
 				$feeds = $feeds;
-				$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 				console.log('updated');
 				console.log($editingFeed);
 				console.log($feeds);
+				updateDatabase();
 			}, 500);
 		}
+	}
+
+	function updateDatabase() {
+		console.log($editingFeed['podcast:guid']);
+		$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
 	$: updateFeeds($editingFeed);

@@ -6,30 +6,39 @@
 
 	export let playerEnclosure;
 	export let newTrackEnclosure;
-	import { selectedTrack } from '$/stores';
+	export let track;
 	let player;
+
+	$: console.log(track);
 
 	onMount(setupPlayer);
 
 	function setupPlayer() {
-		player.src = playerEnclosure;
 		player.ontimeupdate = () => {
 			player.currentTime = player.currentTime;
 		};
 		player.onloadedmetadata = async () => {
 			console.log('loaded');
 			player.duration = player.duration;
-			$selectedTrack['itunes:duration'] = player.duration;
-			const response = await fetch('/api/enclosureproxy?url=' + newTrackEnclosure.url);
+			track['itunes:duration'] = player.duration;
+			const response = await fetch('/api/enclosureproxy?url=' + track.enclosure['@_url']);
 			let { enclosureLength, enclosureType } = await response.json();
-			newTrackEnclosure.enclosureLength = enclosureLength;
-			newTrackEnclosure.type = enclosureType;
+			track.enclosure['@_enclosureLength'] = enclosureLength;
+			track.enclosure['@_type'] = enclosureType;
+			console.log(track.enclosure);
 		};
 	}
 </script>
 
-<audio playsinline preload="metadata" bind:this={player} src={playerEnclosure} />
-{#if player?.duration}
+<audio
+	playsinline
+	preload="metadata"
+	class:hide={!track?.['itunes:duration']}
+	bind:this={player}
+	src={track.enclosure['@_url']}
+/>
+
+{#if track?.['itunes:duration']}
 	<player>
 		<player-a>
 			<play-button>
@@ -52,8 +61,6 @@
 			/>
 		</player-b>
 	</player>
-{:else}
-	<spacer />
 {/if}
 
 <style>

@@ -28,7 +28,6 @@
 
 		$selectedAlbum.tracks[$selectedTrackIndex] = $selectedTrack;
 		$selectedAlbum = $selectedAlbum;
-		$catalogDB.setItem($selectedBand.title, $selectedBand);
 		showChaptersUpload = false;
 	}
 </script>

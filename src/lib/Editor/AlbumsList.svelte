@@ -23,7 +23,6 @@
 					item.guid = generateUniqueGuid(feed.item);
 				}
 			});
-			await $catalogDB.setItem(feed['podcast:guid'], feed);
 		}
 
 		function generateUniqueGuid(items) {
@@ -56,7 +55,6 @@
 		$editingFeed['podcast:guid'] = generateValidGuid();
 		await checkPodcastGuid($editingFeed);
 		$feeds = $feeds.concat($editingFeed);
-		await $catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
 	// function publishFeed(feed) {
