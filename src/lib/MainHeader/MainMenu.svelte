@@ -1,8 +1,8 @@
 <script>
 	import { slide } from 'svelte/transition';
 	import clone from 'just-clone';
-	import HamburgerIcon from '../icons/Hamburger.svelte';
-	import Login from '../Login/Login.svelte';
+	import HamburgerIcon from '$icons/Hamburger.svelte';
+	import Login from '$lib/Login/Login.svelte';
 
 	import { showTutorial, menuPanel, loggedIn, remoteServer, settings, _settings } from '$/stores';
 

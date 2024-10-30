@@ -1,11 +1,11 @@
 <script>
-	import ValueBlock from '$lib/ValueBlock/ValueBlock.svelte';
-	import ExplicitToggle from './ExplicitToggle.svelte';
-	import SmallModal from '../Modals/SmallModal.svelte';
+	import ValueBlock from '$lib/Editor/ValueBlock/ValueBlock.svelte';
+	import ExplicitToggle from '$lib/Editor/ExplicitToggle.svelte';
+	import SmallModal from '$lib/Modals/SmallModal.svelte';
 	import UploadFileIcon from '$icons/UploadFile.svelte';
-	import ArtUpload from './ArtUpload.svelte';
+	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
 
-	import { editingFeed, feeds } from '$/stores';
+	import { editingFeed, settings } from '$/stores';
 
 	let imageReload;
 
@@ -48,7 +48,7 @@
 				alt="album art - click to edit"
 				class="album"
 			/>
-			<button><UploadFileIcon size="20" /></button>
+			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</album-art>
 		<banner-art
 			on:click={() => {
@@ -65,7 +65,7 @@
 				alt="banner art - click to edit"
 				class="banner"
 			/>
-			<button><UploadFileIcon size="20" /></button>
+			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</banner-art>
 
 		<description>
@@ -238,5 +238,9 @@
 		position: relative;
 		bottom: 30px;
 		left: 442px;
+	}
+
+	.hide {
+		display: none;
 	}
 </style>

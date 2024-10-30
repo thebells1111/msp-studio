@@ -1,19 +1,18 @@
 <script>
 	import clone from 'just-clone';
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
+	import { v4 as uuidv4 } from 'uuid';
 	import MainMenu from '$lib/MainHeader/MainMenu.svelte';
-	import AlbumsList from './AlbumsList.svelte';
-	import BunnyCredentials from './BunnyCredentials.svelte';
-	import Album from './Album.svelte';
-	import Track from './Track.svelte';
+	import AlbumsList from '$lib/Editor/AlbumsList.svelte';
+	import BunnyCredentials from '$lib/Editor/Bunny/BunnyCredentials.svelte';
+	import Album from '$lib/Editor/Album.svelte';
+	import Track from '$lib/Editor/Tracks/Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
 	import SwapVertIcon from '$icons/SwapVert.svelte';
-	import generateValidGuid from '$functions/generateValidGuid.js';
-	import Publish from './Publish/Publish.svelte';
+	import Publish from '$lib/Editor/Publish/Publish.svelte';
 
 	import { editingFeed, newTrack, menuPanel } from '$/stores';
 	import Modal from '../Modals/Modals.svelte';
-	import TrackSorter from './TrackSorter.svelte';
+	import TrackSorter from './Tracks/TrackSorter.svelte';
 
 	let showTrackSorter = false;
 
@@ -22,14 +21,15 @@
 	async function addTrack() {
 		let _newTrack = clone($newTrack);
 		_newTrack.guid = generateUniqueGuid($editingFeed.item);
+		console.log(_newTrack.guid);
 		$editingFeed.item = $editingFeed.item.concat(_newTrack);
 
 		function generateUniqueGuid(items) {
-			let guid = generateValidGuid();
+			let guid = uuidv4();
 			let maxRetries = 10; // Prevents potential infinite loops
 
 			while (items.some((item) => item.guid && item.guid['#text'] === guid) && maxRetries > 0) {
-				guid = generateValidGuid();
+				guid = uuidv4();
 				maxRetries--;
 			}
 

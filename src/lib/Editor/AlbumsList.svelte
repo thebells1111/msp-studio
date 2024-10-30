@@ -1,13 +1,13 @@
 <script>
 	import clone from 'just-clone';
-	import { v5 as uuidv5, v4 as uuidv4 } from 'uuid';
+	import { v4 as uuidv4 } from 'uuid';
 	import Add from '$icons/Add.svelte';
 	// import { slide } from 'svelte/transition';
 	import Delete from '$icons/Delete.svelte';
 	import initializeAlbum from '../functions/initializeAlbum';
 	import generateValidGuid from '$functions/generateValidGuid.js';
 
-	import { feeds, editingFeed, newFeed, remoteServer, catalogDB } from '$/stores';
+	import { feeds, editingFeed, _newFeed, remoteServer, catalogDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feedKey) {
@@ -30,7 +30,7 @@
 			let retries = 10;
 
 			do {
-				guid = generateValidGuid();
+				guid = uuidv4();
 				retries--;
 			} while (items.some((item) => item.guid && item.guid['#text'] === guid) && retries > 0);
 
@@ -51,35 +51,11 @@
 	}
 
 	async function addFeed() {
-		$editingFeed = clone($newFeed);
-		$editingFeed['podcast:guid'] = generateValidGuid();
+		$editingFeed = clone(_newFeed);
+		$editingFeed['podcast:guid'] = await generateValidGuid();
 		await checkPodcastGuid($editingFeed);
 		$feeds = $feeds.concat($editingFeed);
 	}
-
-	// function publishFeed(feed) {
-	// 	publishingFeed = feed;
-	// }
-
-	// async function downloadZip(guid) {
-	// 	const response = await fetch(remoteServer + `/api/download?guid=${guid}`);
-
-	// 	if (response.status !== 200) {
-	// 		throw new Error(
-	// 			`Failed to download zip. Server responded with status code ${response.status}`
-	// 		);
-	// 	}
-
-	// 	const blob = await response.blob();
-	// 	const url = window.URL.createObjectURL(blob);
-	// 	const a = document.createElement('a');
-	// 	a.style.display = 'none';
-	// 	a.href = url;
-	// 	a.download = `${guid}.zip`;
-	// 	document.body.appendChild(a);
-	// 	a.click();
-	// 	window.URL.revokeObjectURL(url);
-	// }
 
 	async function checkPodcastGuid(feed) {
 		let url =
@@ -89,7 +65,7 @@
 		const res = await fetch(url);
 		const data = await res.json();
 		if (data?.feed?.length) {
-			feed['podcast:guid'] = generateValidGuid();
+			feed['podcast:guid'] = await generateValidGuid();
 			await checkPodcastGuid(feed);
 		}
 	}

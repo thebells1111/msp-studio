@@ -202,19 +202,13 @@
 	function updateFeeds() {
 		if ($catalogDB && $editingFeed?.['podcast:guid']) {
 			clearTimeout(updateTimeout);
+			$feeds = $feeds;
 			updateTimeout = setTimeout(() => {
-				$feeds = $feeds;
-				console.log('updated');
 				console.log($editingFeed);
-				console.log($feeds);
-				updateDatabase();
+				console.log($editingFeed['podcast:guid']);
+				$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 			}, 500);
 		}
-	}
-
-	function updateDatabase() {
-		console.log($editingFeed['podcast:guid']);
-		$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 	}
 
 	$: updateFeeds($editingFeed);

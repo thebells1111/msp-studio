@@ -2,14 +2,10 @@
 	import { onMount } from 'svelte';
 	import AudioProgressBar from './AudioProgressBar.svelte';
 	import PlayPauseButton from './PlayPauseButton.svelte';
-	import convertTime from '../functions/convertTime';
+	import convertTime from '$lib/functions/convertTime';
 
-	export let playerEnclosure;
-	export let newTrackEnclosure;
 	export let track;
 	let player;
-
-	$: console.log(track);
 
 	onMount(setupPlayer);
 
@@ -40,17 +36,11 @@
 
 {#if track?.['itunes:duration']}
 	<player>
+		<h2>{track.title || 'Track Audio'}</h2>
 		<player-a>
 			<play-button>
 				<PlayPauseButton {player} size="30" />
 			</play-button>
-			{#if player}
-				<time>
-					{convertTime(player.currentTime, player.duration) || '0:00'} / {convertTime(
-						player.duration
-					) || '0:00'}
-				</time>
-			{/if}
 		</player-a>
 		<player-b>
 			<AudioProgressBar
@@ -60,16 +50,23 @@
 				trackerColor={'var(--color-progressbar-1)'}
 			/>
 		</player-b>
+		{#if player}
+			<time>
+				{convertTime(player.currentTime, player.duration) || '0:00'} / {convertTime(
+					player.duration
+				) || '0:00'}
+			</time>
+		{/if}
 	</player>
 {/if}
 
 <style>
-	player,
-	spacer {
+	player {
 		display: flex;
 		margin: 8px;
 		width: calc(100% - 32px);
 		height: 48px;
+		position: relative;
 	}
 
 	player-a {
@@ -80,39 +77,22 @@
 	player-b {
 		width: 100%;
 		z-index: 4px;
+		position: relative;
 	}
 
+	h2,
 	time {
 		display: flex;
-		width: 120px;
+		width: 100%;
 		align-items: center;
 		justify-content: center;
+		position: absolute;
+		bottom: 0;
 	}
-
-	@media screen and (max-width: 992px) {
-		player {
-			display: flex;
-			width: calc(100% - 16px);
-			position: relative;
-			margin: 8px 0;
-		}
-
-		player-a {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-		}
-
-		play-button {
-			margin-right: 4px;
-		}
-		time {
-			position: absolute;
-			bottom: -8px;
-			left: calc(50% - 16px);
-			margin: 0;
-			padding: 0;
-			width: auto;
-		}
+	h2 {
+		top: -8px;
+		margin: 0;
+		bottom: initial;
+		color: var(--color-bg-add-track);
 	}
 </style>

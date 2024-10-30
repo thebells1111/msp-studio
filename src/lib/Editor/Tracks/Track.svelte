@@ -1,16 +1,16 @@
 <script>
-	import ValueBlock from '$lib/ValueBlock/ValueBlock.svelte';
-	import ExplicitToggle from './ExplicitToggle.svelte';
-	import FileUploader from './FileUploader.svelte';
-	import SmallModal from '../Modals/SmallModal.svelte';
+	import ValueBlock from '$lib/Editor/ValueBlock/ValueBlock.svelte';
+	import ExplicitToggle from '$lib/Editor/ExplicitToggle.svelte';
+	import FileUploader from '$lib/Editor/FileUploader.svelte';
+	import SmallModal from '$lib/Modals/SmallModal.svelte';
 	import UploadFileIcon from '$icons/UploadFile.svelte';
 	import DeleteIcon from '$icons/Delete.svelte';
-	import ArtUpload from './ArtUpload.svelte';
-	import Player from '$lib/Player/Player.svelte';
+	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
+	import Player from '$lib/Editor/Tracks/Player/Player.svelte';
 
 	import clone from 'just-clone';
 
-	import { newTrack, editingFeed } from '$/stores';
+	import { newTrack, editingFeed, settings } from '$/stores';
 
 	function updateFeeds() {
 		$editingFeed = $editingFeed;
@@ -66,6 +66,7 @@
 			<input bind:value={track.enclosure['@_url']} />
 			<button
 				class="audio-upload"
+				class:hide={!$settings?.bunny?.active}
 				on:click={() => {
 					showUpload = true;
 					uploadType = 'audio';
@@ -94,7 +95,7 @@
 				alt="banner art - click to edit"
 				class="banner"
 			/>
-			<button><UploadFileIcon size="20" /></button>
+			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</banner-art>
 		<track-art
 			on:click={() => {
@@ -106,7 +107,7 @@
 			<h4>Album Art</h4>
 			<img src={track['itunes:image']['@_href']} alt="track art - click to edit" class="track" />
 
-			<button><UploadFileIcon size="20" /></button>
+			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</track-art>
 
 		<description>
@@ -316,5 +317,9 @@
 		background-color: transparent;
 		box-shadow: none;
 		bottom: 1px;
+	}
+
+	.hide {
+		display: none;
 	}
 </style>

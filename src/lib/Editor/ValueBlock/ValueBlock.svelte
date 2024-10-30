@@ -1,23 +1,14 @@
 <script>
-	import { fade } from 'svelte/transition';
 	import EditPerson from './EditPerson.svelte';
 	import EditAddress from './EditAddress.svelte';
-	import Add from '../../lib/icons/GroupAdd.svelte';
-	import Close from '../../lib/icons/Close.svelte';
-	import SmallModal from '../Modals/SmallModal.svelte';
+	import Add from '$icons/GroupAdd.svelte';
+	import SmallModal from '$lib/Modals/SmallModal.svelte';
 
 	import { newPerson } from '$/stores';
 
 	export let valueBlock = [];
 	let showPersonEdit = true;
 	let selectedIndex = -1;
-	export let hideTracks = false;
-
-	// $: if (window) {
-	// 	hideTracks = window?.innerWidth >= 992 && showPersonEdit;
-	// }
-
-	$: console.log(hideTracks);
 
 	function addPerson() {
 		valueBlock = valueBlock.concat({ ...$newPerson });
@@ -48,7 +39,7 @@
 		{/if}
 		<value-header>
 			{#if valueBlock?.length}
-				<split-percent>Split</split-percent>
+				<split-percent>Shares</split-percent>
 				<span>%</span>
 				<split-name>Name</split-name>
 			{:else}

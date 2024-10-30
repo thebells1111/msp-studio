@@ -1,6 +1,6 @@
 <script>
-	import EditSquare from '../../lib/icons/EditSquare.svelte';
-	import Delete from '../../lib/icons/PersonRemove.svelte';
+	import EditSquare from '$icons/EditSquare.svelte';
+	import Delete from '$icons/PersonRemove.svelte';
 
 	export let person = {};
 	export let showPersonEdit = false;
