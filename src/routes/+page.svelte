@@ -204,8 +204,8 @@
 			clearTimeout(updateTimeout);
 			$feeds = $feeds;
 			updateTimeout = setTimeout(() => {
-				console.log($editingFeed);
-				console.log($editingFeed['podcast:guid']);
+				console.log('Feed Saved');
+
 				$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 			}, 500);
 		}

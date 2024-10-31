@@ -33,6 +33,15 @@ export default function normalizeSplits(arr, name, rssErrors) {
 		if (!v?.['@_name']) {
 			rssErrors.push(`"${person}" in the "${name}" value tag block needs a name`);
 		}
+		if (!v?.['@_type']) {
+			v['@_type'] = 'node';
+		}
+		if (!v?.['@_customKey']) {
+			delete v['@_customKey'];
+		}
+		if (!v?.['@_customValue']) {
+			delete v['@_customValue'];
+		}
 		if (!v?.['@_address']) {
 			rssErrors.push(`"${person}" in the "${name}" value tag block needs an lightning address`);
 		}

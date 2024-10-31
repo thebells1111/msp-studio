@@ -17,11 +17,14 @@
 			console.log('loaded');
 			player.duration = player.duration;
 			track['itunes:duration'] = player.duration;
-			const response = await fetch('/api/enclosureproxy?url=' + track.enclosure['@_url']);
-			let { enclosureLength, enclosureType } = await response.json();
-			track.enclosure['@_enclosureLength'] = enclosureLength;
-			track.enclosure['@_type'] = enclosureType;
-			console.log(track.enclosure);
+			if (track.enclosure['@_length'] === 33) {
+				const response = await fetch('/api/enclosureproxy?url=' + track.enclosure['@_url']);
+				let { enclosureLength, enclosureType } = await response.json();
+				track.enclosure['@_length'] = enclosureLength;
+				track.enclosure['@_type'] = enclosureType;
+				console.log('got enclosure length');
+				console.log(track.enclosure);
+			}
 		};
 	}
 </script>

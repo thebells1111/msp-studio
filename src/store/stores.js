@@ -121,6 +121,7 @@ export const wpFeedUrl = writable();
 
 export const MSPValue = writable({
 	'@_name': 'Music Side Project',
+	'@_type': 'node',
 	'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
 	'@_customKey': '696969',
 	'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
@@ -129,6 +130,7 @@ export const MSPValue = writable({
 
 export const newPerson = writable({
 	'@_name': '',
+	'@_type': 'node',
 	'@_address': '',
 	'@_customKey': '',
 	'@_customValue': '',
