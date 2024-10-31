@@ -75,47 +75,6 @@
 	$: currentProps = imageProps[imageType];
 
 	$: showFileUpload = $loggedIn && $settings?.bunny?.active;
-
-	function updateBanner({ event, propObj, parent }) {
-		{
-			let image;
-
-			// Initialize or set default array and find image if not already initialized
-			if (!propObj?.initialized) {
-				if (!parent['podcast:aspectImages']) {
-					parent['podcast:aspectImages'] = [
-						{
-							'@_aspect-ratio': '6/1',
-							'@_src': ''
-						}
-					];
-				}
-
-				image = []
-					.concat(parent['podcast:aspectImages'])
-					.find((v) => v['@_aspect-ratio'] === '6/1');
-
-				if (!image) {
-					image = { '@_aspect-ratio': '6/1', '@_src': '' };
-					parent['podcast:aspectImages'].push(image);
-				}
-
-				propObj.initialized = true;
-			} else {
-				image = parent['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
-			}
-
-			updateImage({ image, propObj, event });
-
-			function updateImage({ image, propObj, event }) {
-				image['@_src'] = event.target.value;
-				propObj.filePath = event.target.value;
-
-				$editingFeed = $editingFeed;
-				console.log($editingFeed);
-			}
-		}
-	}
 </script>
 
 {#if imageType}
@@ -148,34 +107,9 @@
 			type="image"
 		/>
 	{/if}
-{:else}
-	<art-selector>
-		<button
-			on:click={() => {
-				imageType = imageParent === 'album' ? 'albumSquare' : 'trackSquare';
-			}}
-		>
-			Upload {imageParent === 'album' ? 'Album' : 'Song'} Art
-		</button>
-		<button
-			on:click={() => {
-				imageType = imageParent === 'album' ? 'albumBanner' : 'trackBanner';
-			}}
-		>
-			Upload {imageParent === 'album' ? 'Album' : 'Song'} Background Banner
-		</button>
-	</art-selector>
 {/if}
 
 <style>
-	art-selector {
-		display: flex;
-		flex-direction: column;
-	}
-
-	art-selector > button {
-		margin-bottom: 16px;
-	}
 	.bottom-space {
 		margin-bottom: 16px;
 	}

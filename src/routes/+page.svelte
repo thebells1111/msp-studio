@@ -4,6 +4,7 @@
 	import localforage from 'localforage';
 	import Editor from '$lib/Editor/Editor.svelte';
 	import generateValidGuid from '$functions/generateValidGuid.js';
+	import updateMSPdb from '$functions/updateMSPdb.js';
 
 	import {
 		catalogDB,
@@ -38,88 +39,14 @@
 			.keys()
 			.then(async function (keys) {
 				let _catalog = keys.map((v) => $catalogDB.getItem(v));
-				const library = await Promise.all(_catalog);
+				let library = await Promise.all(_catalog);
 
 				let oldFormat = library.some((v) => v?.albums?.length);
 
 				if (oldFormat) {
-					let albums = [];
+					$feeds = await updateMSPdb(library);
 
-					library.forEach((band) => {
-						if (band?.albums?.length) {
-							oldFormat = true;
-							albums = albums.concat(
-								band.albums.map((album) => {
-									album['podcast:guid'] = album.guid;
-									album['itunes:author'] = band.title;
-									album['itunes:image'] = { '@_href': album.artwork || '' };
-									album['podcast:value'] = {
-										'@_type': 'lightning',
-										'@_method': 'keysend',
-										'podcast:valueRecipient': []
-											.concat(album?.value)
-											.filter((v) => v)
-											.map((value) => {
-												let rec = {};
-												rec['@_name'] = value.name || '';
-												rec['@_address'] = value.address || '';
-												rec['@_customKey'] = value.key || '';
-												rec['@_customValue'] = value.value || '';
-												rec['@_split'] = Number(value.split) || 0;
-												return rec;
-											})
-									};
-
-									album.item = album.tracks.map((track) => {
-										track['itunes:image'] = { '@_href': track.artwork || '' };
-										track.enclosure = {
-											'@_url': track?.enclosure?.url || '',
-											'@_length': track?.enclosure?.enclosureLength || '',
-											'@_type': track?.enclosure?.type
-										};
-										track['itunes:explicit'] = track?.explicit;
-
-										track['podcast:value'] = {
-											'@_type': 'lightning',
-											'@_method': 'keysend',
-											'podcast:valueRecipient': []
-												.concat(track?.value)
-												.filter((v) => v)
-												.map((value) => {
-													let rec = {};
-													rec['@_name'] = value.name || '';
-													rec['@_address'] = value.address || '';
-													rec['@_customKey'] = value.key || '';
-													rec['@_customValue'] = value.value || '';
-													rec['@_split'] = Number(value.split) || 0;
-													return rec;
-												})
-										};
-
-										delete track.artwork;
-										delete track.explicit;
-										delete track.value;
-										return track;
-									});
-
-									delete album.guid;
-									delete album.artwork;
-									delete album.value;
-									delete album.tracks;
-
-									return album;
-								})
-							);
-						}
-
-						if (band.item) {
-							albums.push(band);
-						}
-					});
-
-					$feeds = albums;
-
-					let updated = albums.map(async (v, i) => {
+					let updated = $feeds.map(async (v, i) => {
 						if (!v?.['podcast:guid']) {
 							v['podcast:guid'] = generateValidGuid();
 							await checkPodcastGuid(v);
@@ -180,21 +107,6 @@
 			}
 		}
 		return obj;
-	}
-
-	function buildValue(tag, name) {
-		let value = {
-			'@_type': 'lightning',
-			'@_method': 'keysend',
-			'podcast:valueRecipient': tag.map((v, i) => {
-				let rec = { '@_type': 'node' };
-				let person = v.name;
-
-				return rec;
-			})
-		};
-
-		return value;
 	}
 
 	let updateTimeout;

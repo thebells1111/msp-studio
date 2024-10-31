@@ -36,10 +36,6 @@ export default async function createChannel({ feed, errors }) {
 		errors.push('Is the album explicit?');
 	}
 
-	if (!isValidUrl(feed?.link)) {
-		errors.push('Link to Album Website is an invalid link');
-	}
-
 	if (feed?.['itunes:explicit']) {
 		errors.push('Is the album explicit?');
 	}
@@ -58,6 +54,12 @@ export default async function createChannel({ feed, errors }) {
 		feed['podcast:guid'] = await checkPodcastGuid(feed['podcast:guid']);
 	} else {
 		feed['podcast:guid'] = await createNewPodcastGuid();
+	}
+
+	if (!feed?.link) {
+		feed.link = `https://lnbeats.com/album/${feed['podcast:guid']}`;
+	} else if (!isValidUrl(feed?.link)) {
+		errors.push('Link to Album Website is an invalid link');
 	}
 
 	feed['podcast:aspectImages'] = []

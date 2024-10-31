@@ -14,6 +14,7 @@
 	}
 
 	let showUpload = false;
+	let imageType = 'albumSquare';
 
 	$: if (imageReload) {
 		showUpload = false;
@@ -39,6 +40,7 @@
 		<album-art
 			on:click={() => {
 				showUpload = true;
+				imageType = 'albumSquare';
 			}}
 		>
 			<h4>Album Art</h4>
@@ -53,6 +55,8 @@
 		<banner-art
 			on:click={() => {
 				showUpload = true;
+				imageType = 'albumBanner';
+				console.log('yo');
 			}}
 		>
 			<h4>Banner Art</h4>
@@ -84,7 +88,7 @@
 			showUpload = false;
 		}}
 	>
-		<ArtUpload bind:imageReload imageParent="album" />
+		<ArtUpload bind:imageReload imageParent="album" {imageType} />
 	</SmallModal>
 {/if}
 
