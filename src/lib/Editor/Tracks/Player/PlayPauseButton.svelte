@@ -2,7 +2,7 @@
 	import Play from '$icons/PlayArrow.svelte';
 	import Pause from '$icons/Pause.svelte';
 	export let size = 30;
-	export let style;
+	export let style = '';
 	export let player;
 
 	function handlePlayButton() {

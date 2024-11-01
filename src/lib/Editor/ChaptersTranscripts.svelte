@@ -3,13 +3,7 @@
 	import SmallModal from '$routes/Modals/SmallModal.svelte';
 	import { onMount } from 'svelte';
 
-	import {
-		catalogDB,
-		selectedBand,
-		selectedAlbum,
-		selectedTrack,
-		selectedTrackIndex
-	} from '$/stores';
+	import { selectedAlbum, selectedTrack, selectedTrackIndex } from '$/stores';
 
 	let showChaptersUpload = false;
 	let chaptersUrl;

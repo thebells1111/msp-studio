@@ -8,6 +8,7 @@
 
 	import {
 		catalogDB,
+		feedDB,
 		feeds,
 		loggedIn,
 		_newFeed,
@@ -30,49 +31,57 @@
 				$settings = data.settings || clone(_settings);
 				console.log($settings);
 			});
-
+		//all of this catalogDB stuff is vestigal from MSP v1 and is used to xfr the db format
 		$catalogDB = localforage.createInstance({
 			name: 'catalogDB'
 		});
 
-		$catalogDB
-			.keys()
-			.then(async function (keys) {
-				let _catalog = keys.map((v) => $catalogDB.getItem(v));
-				let library = await Promise.all(_catalog);
+		$feedDB = localforage.createInstance({
+			name: 'feedDB'
+		});
 
-				let oldFormat = library.some((v) => v?.albums?.length);
+		$feedDB.keys().then(async function (keys) {
+			let _feeds = keys.map((v) => $feedDB.getItem(v));
+			$feeds = await Promise.all(_feeds);
+			if (!$feeds.length) {
+				$catalogDB
+					.keys()
+					.then(async function (keys) {
+						let _catalog = keys.map((v) => $catalogDB.getItem(v));
+						let library = await Promise.all(_catalog);
 
-				if (oldFormat) {
-					$feeds = await updateMSPdb(library);
+						let oldFormat = library.some((v) => v?.albums?.length);
 
-					let updated = $feeds.map(async (v, i) => {
-						if (!v?.['podcast:guid']) {
-							v['podcast:guid'] = generateValidGuid();
-							await checkPodcastGuid(v);
+						if (oldFormat) {
+							$feeds = await updateMSPdb(library);
+
+							let updated = $feeds.map(async (v, i) => {
+								if (!v?.['podcast:guid']) {
+									v['podcast:guid'] = generateValidGuid();
+									await checkPodcastGuid(v);
+								}
+								$catalogDB.removeItem(keys[i]);
+								return $catalogDB.setItem(v['podcast:guid'], v);
+							});
+							await Promise.all(updated);
+						} else {
+							$feeds = [];
 						}
-						$catalogDB.removeItem(keys[i]);
-						return $catalogDB.setItem(v['podcast:guid'], v);
+
+						$feeds = $feeds.map((v) => {
+							v.item = (v.item || []).map((item) => addMissingKeys(item, _newFeed.item[0]));
+
+							return addMissingKeys(v, _newFeed);
+						});
+					})
+					.catch(function (err) {
+						console.log(err);
 					});
-					await Promise.all(updated);
-				} else {
-					$feeds = library;
-				}
-				console.log($feeds);
-
-				$feeds = $feeds.map((v) => {
-					v.item = (v.item || []).map((item) => addMissingKeys(item, _newFeed.item[0]));
-
-					return addMissingKeys(v, _newFeed);
-				});
-
-				setTimeout(() => {
-					isLoading = false;
-				}, 1000);
-			})
-			.catch(function (err) {
-				console.log(err);
-			});
+			}
+			setTimeout(() => {
+				isLoading = false;
+			}, 1000);
+		});
 	});
 
 	async function checkPodcastGuid(feed) {
@@ -112,13 +121,13 @@
 	let updateTimeout;
 
 	function updateFeeds() {
-		if ($catalogDB && $editingFeed?.['podcast:guid']) {
+		if ($feedDB && $editingFeed?.['podcast:guid']) {
 			clearTimeout(updateTimeout);
 			$feeds = $feeds;
 			updateTimeout = setTimeout(() => {
 				console.log('Feed Saved');
 
-				$catalogDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+				$feedDB.setItem($editingFeed['podcast:guid'], $editingFeed);
 			}, 500);
 		}
 	}

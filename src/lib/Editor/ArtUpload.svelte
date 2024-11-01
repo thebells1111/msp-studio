@@ -28,6 +28,7 @@
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Banner 6:1',
 			update: (event) => {
+				console.log(event);
 				let image = $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
 				console.log(image);
 				image['@_src'] = event.target.value;
@@ -66,7 +67,6 @@
 
 						$editingFeed = $editingFeed;
 						console.log($editingFeed);
-						// updateBanner({ event, propObj: imageProps.trackBanner, parent: track });
 					}
 			  }
 			: {}

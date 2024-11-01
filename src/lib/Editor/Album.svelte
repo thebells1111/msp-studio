@@ -61,7 +61,7 @@
 		>
 			<h4>Banner Art</h4>
 			<img
-				src={$editingFeed?.['podcast:aspectImage']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
+				src={$editingFeed?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
 					'@_src'
 				] +
 					'?t=' +

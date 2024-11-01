@@ -7,7 +7,7 @@
 	import initializeAlbum from '../functions/initializeAlbum';
 	import generateValidGuid from '$functions/generateValidGuid.js';
 
-	import { feeds, editingFeed, _newFeed, remoteServer, catalogDB } from '$/stores';
+	import { feeds, editingFeed, _newFeed, remoteServer, feedDB } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feedKey) {
@@ -46,7 +46,7 @@
 			let guid = $editingFeed['podcast:guid'];
 			$feeds = $feeds.filter((_feed) => _feed['podcast:guid'] !== feed['podcast:guid']);
 			setTimeout(() => ($editingFeed = undefined), 50);
-			await $catalogDB.removeItem(guid);
+			await $feedDB.removeItem(guid);
 		}
 	}
 

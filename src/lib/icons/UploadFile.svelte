@@ -4,7 +4,7 @@
 	export let height = size;
 	export let color = 'currentColor';
 	export let viewBox = '0 96 960 960';
-	export let style;
+	export let style = '';
 </script>
 
 <svg {width} {height} {viewBox} {style}>

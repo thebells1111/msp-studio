@@ -70,6 +70,7 @@ console.log(dev);
 export const remoteServer = dev ? 'http://localhost:8000' : '';
 
 export const catalogDB = writable();
+export const feedDB = writable();
 export const indexSearchResults = writable([]);
 export const library = writable([]);
 

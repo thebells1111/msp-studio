@@ -3,8 +3,8 @@
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
 	import { saveAs } from 'file-saver';
-	const catalogDB = localforage.createInstance({
-		name: 'catalogDB'
+	const feedDB = localforage.createInstance({
+		name: 'feedDB'
 	});
 
 	let feedUrl = '';
@@ -33,7 +33,7 @@
 				console.log(channel);
 				const transformedData = transformPodcastData(channel);
 				console.log(transformedData);
-				let dbData = await catalogDB.getItem(channel['itunes:author']);
+				let dbData = await feedDB.getItem(channel['itunes:author']);
 				if (!dbData) {
 					dbData = { title: channel['itunes:author'], artwork: '', albums: [] };
 				}
@@ -42,7 +42,7 @@
 
 				dbData.albums.push(transformedData);
 				console.log(dbData);
-				await catalogDB.setItem(channel['itunes:author'], dbData);
+				await feedDB.setItem(channel['itunes:author'], dbData);
 				importing = false;
 				feedImported = true;
 				setTimeout(() => {
@@ -110,9 +110,9 @@
 		let jsonVariable = {};
 
 		try {
-			const keys = await catalogDB.keys();
+			const keys = await feedDB.keys();
 			for (const key of keys) {
-				const value = await catalogDB.getItem(key);
+				const value = await feedDB.getItem(key);
 				jsonVariable[key] = value;
 			}
 		} catch (err) {
@@ -122,7 +122,7 @@
 		const blob = new Blob([JSON.stringify(jsonVariable)], {
 			type: 'application/json;charset=utf-8'
 		});
-		saveAs(blob, 'catalog.json');
+		saveAs(blob, 'feed.json');
 	}
 
 	async function importFeeds(file) {
@@ -131,7 +131,7 @@
 			const jsonVariable = JSON.parse(event.target.result);
 			try {
 				for (const [key, value] of Object.entries(jsonVariable)) {
-					await catalogDB.setItem(key, value);
+					await feedDB.setItem(key, value);
 				}
 				console.log('Data imported successfully.');
 				feedImported = true;
