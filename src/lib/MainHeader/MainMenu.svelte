@@ -130,15 +130,19 @@
 	}
 
 	tutorial {
-		display: none;
-		position: absolute;
-		top: 0;
-		width: 100%;
+		display: block;
 		height: 100%;
-		z-index: 10;
+		width: 100%;
+		position: fixed;
+		top: 0;
+		right: -100%;
+		z-index: 50;
+		overflow: hidden;
+		z-index: 40;
+		transition: right 0.3s ease-in-out;
 	}
 
-	.show {
-		display: block;
+	tutorial.show {
+		right: 0;
 	}
 </style>
