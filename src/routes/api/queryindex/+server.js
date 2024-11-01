@@ -55,7 +55,7 @@ export async function GET({ url }) {
 		return json(data);
 	} catch (err) {
 		console.error('queryindex err: ', err);
-		throw error(500, { message: err });
+		error(500, { message: err });
 	}
 }
 

@@ -1,8 +1,11 @@
 <script>
-	import { SortableList } from '@jhubbardsf/svelte-sortablejs';
-	export let tracks;
+	import Sortable from 'sortablejs';
+	import { onMount } from 'svelte';
+
+	export let tracks = [];
 
 	function handleSort(e) {
+		console.log(e);
 		const { oldIndex, newIndex } = e;
 		// Move the item in the array
 		if (oldIndex !== newIndex) {
@@ -11,6 +14,20 @@
 		}
 		console.log('Sorted items:', tracks);
 	}
+
+	let foo;
+
+	onMount(async function () {
+		Sortable.create(foo, {
+			group: {
+				name: 'foo',
+				put: true,
+				pull: false
+			},
+			animation: 200,
+			onSort: handleSort
+		});
+	});
 </script>
 
 <track-list-container>
@@ -19,14 +36,12 @@
 			<li>{i + 1}.</li>
 		{/each}
 	</ul>
-	<sortable-list-container>
-		<SortableList onSort={handleSort} animation={150} ghostClass="ghost-item">
-			{#each tracks as track}
-				<div class="list-group-item">
-					{track.title}
-				</div>
-			{/each}
-		</SortableList>
+	<sortable-list-container bind:this={foo}>
+		{#each tracks as track}
+			<div class="list-group-item">
+				{track.title}
+			</div>
+		{/each}
 	</sortable-list-container>
 </track-list-container>
 
@@ -46,11 +61,6 @@
 		background-color: black;
 	}
 
-	.ghost-item {
-		background-color: #cce5ff !important; /* Change to a noticeable background when dragging */
-		border: 1px dashed #007bff;
-	}
-
 	track-list-container {
 		display: flex;
 		width: 100%;
@@ -66,7 +76,7 @@
 	}
 
 	li {
-		height: 36px;
+		height: 42px;
 		display: flex;
 		align-items: center;
 		justify-content: center;

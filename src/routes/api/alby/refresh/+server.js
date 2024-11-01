@@ -44,6 +44,6 @@ export async function GET({ url, cookies }) {
 		return json({ loggedIn: false });
 	} catch (err) {
 		console.log('alby err: ', err);
-		throw error(500);
+		error(500);
 	}
 }

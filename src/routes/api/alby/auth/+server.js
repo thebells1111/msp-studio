@@ -41,7 +41,7 @@ export async function GET({ url, cookies }) {
 			expiresIn: '10d'
 		});
 
-		throw redirect(302, '/');
+		redirect(302, '/');
 	} catch (err) {
 		if (newToken) {
 			cookies.set('awt', newToken, {
@@ -51,10 +51,10 @@ export async function GET({ url, cookies }) {
 				secure: !dev,
 				maxAge: 60 * 60 * 24 * 30
 			});
-			throw redirect(302, '/');
+			redirect(302, '/');
 		}
 
 		console.error('alby err: ', err);
-		throw error(500, { message: err.response?.data?.error_description });
+		error(500, { message: err.response?.data?.error_description });
 	}
 }
