@@ -53,6 +53,11 @@
 			<input bind:value={$settings.bunny.apiKey} />
 		</label>
 		<button on:click={changeBunnySettings}>Submit</button>
+	{:else}
+		<p>Host your music at Bunny.net for as little as $1 per month.</p>
+		<a href="https://bunny.net?ref=pnx450l5qr" target="_blank"
+			>Click here to create your own <br /> Bunny Account</a
+		>
 	{/if}
 </div>
 
@@ -88,5 +93,16 @@
 	}
 	button {
 		margin: 8px;
+	}
+
+	p,
+	a {
+		text-align: center;
+	}
+
+	p {
+		margin: 8px 0;
+		padding: 0;
+		line-height: 1;
 	}
 </style>
