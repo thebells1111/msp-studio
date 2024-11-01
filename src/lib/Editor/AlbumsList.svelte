@@ -108,7 +108,8 @@
 	}
 
 	overflow-container {
-		height: 100%;
+		display: block;
+		height: calc(100% - 102px);
 		overflow: auto;
 	}
 

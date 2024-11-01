@@ -3,12 +3,12 @@
 	import clone from 'just-clone';
 	import HamburgerIcon from '$icons/Hamburger.svelte';
 	import Login from '$lib/Login/Login.svelte';
+	import Tutorial from '$lib/Tutorial/Tutorial.svelte';
 
 	import { showTutorial, menuPanel, loggedIn, remoteServer, settings, _settings } from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
-	let tutorialClicked = false; //change to false
 	let showLoginModal = false;
 
 	function logout() {
@@ -16,10 +16,6 @@
 		$menuPanel = 'albums';
 		$settings = clone(_settings);
 		fetch(remoteServer + '/api/msp/logout', { method: 'GET', credentials: 'include' });
-	}
-
-	$: if ($showTutorial) {
-		tutorialClicked = true;
 	}
 
 	function selectMenuPanel(menu) {
@@ -69,9 +65,9 @@
 	</container>
 {/if}
 
-<!-- <tutorial class:show={$showTutorial} class:hide={!tutorialClicked}>
+<tutorial class:show={$showTutorial}>
 	<Tutorial />
-</tutorial> -->
+</tutorial>
 
 {#if showLoginModal}
 	<Login bind:showLoginModal />
@@ -111,9 +107,6 @@
 		padding: 0;
 	}
 
-	menu-icon {
-	}
-
 	container {
 		display: block;
 		z-index: 100;
@@ -134,5 +127,18 @@
 
 	a {
 		text-decoration: none;
+	}
+
+	tutorial {
+		display: none;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 10;
+	}
+
+	.show {
+		display: block;
 	}
 </style>

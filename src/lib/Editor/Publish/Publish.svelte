@@ -205,7 +205,7 @@
 	}
 </script>
 
-<button class="publish" on:click={publishFeed}>Publish Album</button>
+<button on:click={publishFeed}>Publish Album</button>
 
 {#if showErrorModal}
 	<ErrorModal {rssErrors} bind:showErrorModal />
@@ -216,7 +216,7 @@
 {/if}
 
 <style>
-	button.publish {
+	button {
 		color: var(--color-text-0);
 		background-color: blueviolet;
 		padding: 8px 16px;

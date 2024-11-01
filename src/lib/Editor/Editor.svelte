@@ -171,6 +171,7 @@
 	.publish {
 		position: absolute;
 		bottom: 8px;
-		right: 8px;
+		left: 7px;
+		width: 246px;
 	}
 </style>
