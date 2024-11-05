@@ -43,6 +43,7 @@
 		$feedDB.keys().then(async function (keys) {
 			let _feeds = keys.map((v) => $feedDB.getItem(v));
 			$feeds = await Promise.all(_feeds);
+			console.log($feeds);
 			if (!$feeds.length) {
 				$catalogDB
 					.keys()
