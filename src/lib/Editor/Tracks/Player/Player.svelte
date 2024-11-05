@@ -6,6 +6,7 @@
 
 	export let track;
 	let player;
+	let trackSrc = '';
 
 	onMount(setupPlayer);
 
@@ -17,14 +18,19 @@
 			console.log('loaded');
 			player.duration = player.duration;
 			track['itunes:duration'] = player.duration;
-			if (track.enclosure['@_length'] === 33) {
+
+			if (trackSrc && trackSrc !== player.src) {
 				const response = await fetch('/api/enclosureproxy?url=' + track.enclosure['@_url']);
 				let { enclosureLength, enclosureType } = await response.json();
 				track.enclosure['@_length'] = enclosureLength;
 				track.enclosure['@_type'] = enclosureType;
+				if (track?.enclosure?.['@_enclosureLength']) {
+					delete track.enclosure['@_enclosureLength'];
+				}
 				console.log('got enclosure length');
-				console.log(track.enclosure);
 			}
+			trackSrc = player.src;
+			console.log(trackSrc);
 		};
 	}
 </script>

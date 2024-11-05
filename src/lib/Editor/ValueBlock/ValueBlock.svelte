@@ -1,10 +1,11 @@
 <script>
+	import clone from 'just-clone';
 	import EditPerson from './EditPerson.svelte';
 	import EditAddress from './EditAddress.svelte';
 	import Add from '$icons/GroupAdd.svelte';
 	import SmallModal from '$lib/Modals/SmallModal.svelte';
 
-	import { newPerson } from '$/stores';
+	import { newPerson, MSPValue } from '$/stores';
 
 	export let valueBlock = [];
 	let showPersonEdit = true;
@@ -27,6 +28,11 @@
 	function closeModal() {
 		showPersonEdit = false;
 	}
+
+	function addMSP() {
+		valueBlock.unshift(clone(MSPValue));
+		valueBlock = valueBlock;
+	}
 </script>
 
 <value-block>
@@ -48,6 +54,11 @@
 			<button class="add-value" on:click={addPerson}><Add size="24" /></button>
 		</value-header>
 		<ul>
+			{#if !valueBlock?.some((v) => v?.['@_address'] === '035ad2c954e264004986da2d9499e1732e5175e1dcef2453c921c6cdcc3536e9d8')}
+				<button class="add-msp" on:click={addMSP}>
+					Don't be a douche bag, click here to add MSP to your value block.
+				</button>
+			{/if}
 			{#each valueBlock || [] as person, index}
 				<li>
 					<EditPerson
@@ -165,5 +176,10 @@
 		position: absolute;
 		top: -14px;
 		right: 0;
+	}
+
+	.add-msp {
+		margin: 8px auto;
+		width: 100%;
 	}
 </style>

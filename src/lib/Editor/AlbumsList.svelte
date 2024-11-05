@@ -2,12 +2,11 @@
 	import clone from 'just-clone';
 	import { v4 as uuidv4 } from 'uuid';
 	import Add from '$icons/Add.svelte';
-	// import { slide } from 'svelte/transition';
 	import Delete from '$icons/Delete.svelte';
 	import initializeAlbum from '../functions/initializeAlbum';
 	import generateValidGuid from '$functions/generateValidGuid.js';
 
-	import { feeds, editingFeed, _newFeed, remoteServer, feedDB } from '$/stores';
+	import { feeds, editingFeed, _newFeed, remoteServer, feedDB, MSPValue } from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feedKey) {
@@ -16,11 +15,34 @@
 		$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
 
 		const itemsMissingGuids = feed.item.some((item) => !item.guid);
+		const oldMSPValue = feed.item.some((item) =>
+			item?.['podcast:value']?.['podcast:valueRecipient']?.some(
+				(v) =>
+					v?.['@_address'] ===
+						'030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3' &&
+					v?.['@_customKey'] === '696969' &&
+					v?.['@_customValue'] === 'UzrnTK2oEHR55gw7Djmb'
+			)
+		);
 
-		if (itemsMissingGuids) {
+		console.log(oldMSPValue);
+
+		if (itemsMissingGuids || oldMSPValue) {
 			feed.item.forEach((item) => {
 				if (!item.guid) {
 					item.guid = generateUniqueGuid(feed.item);
+				}
+
+				let oldMSPValueIndex = item?.['podcast:value']?.['podcast:valueRecipient']?.findIndex(
+					(v) =>
+						v?.['@_address'] ===
+							'030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3' &&
+						v?.['@_customKey'] === '696969' &&
+						v?.['@_customValue'] === 'UzrnTK2oEHR55gw7Djmb'
+				);
+
+				if (oldMSPValueIndex > -1 && item?.['podcast:value']?.['podcast:valueRecipient']) {
+					item['podcast:value']['podcast:valueRecipient'][oldMSPValueIndex] = clone(MSPValue);
 				}
 			});
 		}

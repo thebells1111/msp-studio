@@ -1,4 +1,5 @@
-import { _newFeed } from '$/stores';
+import { _newFeed, MSPValue } from '$/stores';
+import clone from 'just-clone';
 
 export default function initializeAlbum(obj) {
 	// Clone the input object to avoid direct modification
@@ -45,6 +46,17 @@ export default function initializeAlbum(obj) {
 				item[key] = JSON.parse(JSON.stringify(_newFeed.item[0][key]));
 			}
 		}
+	}
+
+	let oldMSPValueIndex = clonedObj?.['podcast:value']?.['podcast:valueRecipient']?.findIndex(
+		(v) =>
+			v?.['@_address'] === '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3' &&
+			v?.['@_customKey'] === '696969' &&
+			v?.['@_customValue'] === 'UzrnTK2oEHR55gw7Djmb'
+	);
+
+	if (oldMSPValueIndex > -1 && clonedObj?.['podcast:value']?.['podcast:valueRecipient']) {
+		clonedObj['podcast:value']['podcast:valueRecipient'][oldMSPValueIndex] = clone(MSPValue);
 	}
 
 	return clonedObj; // Return the modified clone

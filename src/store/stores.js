@@ -29,9 +29,8 @@ export const _newFeed = {
 				'podcast:valueRecipient': [
 					{
 						'@_name': 'Music Side Project',
-						'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-						'@_customKey': '696969',
-						'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+						'@_type': 'node',
+						'@_address': '035ad2c954e264004986da2d9499e1732e5175e1dcef2453c921c6cdcc3536e9d8',
 						'@_split': 5
 					}
 				]
@@ -55,9 +54,8 @@ export const _newFeed = {
 		'podcast:valueRecipient': [
 			{
 				'@_name': 'Music Side Project',
-				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-				'@_customKey': '696969',
-				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+				'@_type': 'node',
+				'@_address': '035ad2c954e264004986da2d9499e1732e5175e1dcef2453c921c6cdcc3536e9d8',
 				'@_split': 5
 			}
 		]
@@ -106,9 +104,8 @@ export const newTrack = writable({
 		'podcast:valueRecipient': [
 			{
 				'@_name': 'Music Side Project',
-				'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-				'@_customKey': '696969',
-				'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+				'@_type': 'node',
+				'@_address': '035ad2c954e264004986da2d9499e1732e5175e1dcef2453c921c6cdcc3536e9d8',
 				'@_split': 5
 			}
 		]
@@ -120,14 +117,12 @@ export const uploadFileType = writable();
 export const uploadFileText = writable();
 export const wpFeedUrl = writable();
 
-export const MSPValue = writable({
+export const MSPValue = {
 	'@_name': 'Music Side Project',
 	'@_type': 'node',
-	'@_address': '030a58b8653d32b99200a2334cfe913e51dc7d155aa0116c176657a4f1722677a3',
-	'@_customKey': '696969',
-	'@_customValue': 'UzrnTK2oEHR55gw7Djmb',
+	'@_address': '035ad2c954e264004986da2d9499e1732e5175e1dcef2453c921c6cdcc3536e9d8',
 	'@_split': 5
-});
+};
 
 export const newPerson = writable({
 	'@_name': '',
