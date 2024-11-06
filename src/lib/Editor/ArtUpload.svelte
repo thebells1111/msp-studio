@@ -8,6 +8,7 @@
 	export let track = null;
 	export let trackNumber = 1;
 	export let imageType = null;
+	let isUploading = false;
 
 	let imageProps = {
 		albumSquare: {
@@ -81,23 +82,28 @@
 	<h1>
 		{currentProps.uploadText}
 	</h1>
-	<label>
-		<p>Image Url</p>
-		<input
-			class="art-upload"
-			class:bottom-space={!showFileUpload}
-			value={currentProps.filePath}
-			on:input={(e) => {
-				currentProps.update(e);
-			}}
-			placeholder="enter link to image file"
-		/>
-	</label>
+	{#if !isUploading}
+		<label>
+			<p>Image Url</p>
+			<input
+				class="art-upload"
+				class:bottom-space={!showFileUpload}
+				value={currentProps.filePath}
+				on:input={(e) => {
+					currentProps.update(e);
+				}}
+				placeholder="enter link to image file"
+			/>
+		</label>
+	{:else}
+		<spacer />
+	{/if}
 
 	{#if showFileUpload}
 		<FileUploader
 			bind:filePath={currentProps.filePath}
 			bind:fileReload={imageReload}
+			bind:isUploading
 			fileName={currentProps.fileName}
 			folderName={currentProps.folderName}
 			handleUpdate={(e) => {
@@ -127,5 +133,14 @@
 	p {
 		margin: 0;
 		padding: 0;
+	}
+
+	label {
+		height: 78px;
+	}
+
+	spacer {
+		display: block;
+		height: 78px;
 	}
 </style>

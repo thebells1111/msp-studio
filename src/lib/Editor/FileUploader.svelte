@@ -12,7 +12,7 @@
 	let files;
 	let isHighlighted = false;
 	let warning = false;
-	let isUploading = false;
+	export let isUploading = false;
 	let displayText = 'Drag and drop a file here or click to select a file';
 	let timerText = '0:00';
 	let startTime = '';
@@ -26,6 +26,9 @@
 
 	// Function to upload the selected image to the server
 	async function uploadFile(event) {
+		isUploading = true;
+		startTime = new Date().getTime();
+		setTimerText();
 		const selectedFile = event.target.files[0];
 		if (!selectedFile) {
 			uploadStatus = 'Please select an image to upload.';
@@ -107,17 +110,18 @@
 				fileReload = new Date().getTime();
 				handleUpdate({ target: { value: result.url } });
 			}
+			isUploading = false;
 		} catch (error) {
 			console.error('Upload error:', error);
 			uploadStatus = 'Upload failed. Please try again.';
+			isUploading = false;
 		}
 	}
-	
 
 	// Function to handle real-time progress updates from the server
 	onMount(() => {});
 
-	import { uploadFileText, wpFeedUrl, remoteServer } from '$/stores';
+	import { remoteServer } from '$/stores';
 
 	function msToTime(ms) {
 		// Convert milliseconds to seconds
@@ -152,94 +156,6 @@
 		return extension;
 	}
 
-	// function uploadFile() {
-
-	// 		displayText = 'Uploading File';
-	// 		isUploading = true;
-	// 		startTime = new Date().getTime();
-	// 		setTimeout(setTimerText, 1000);
-	// 		warning = false;
-	// 		const formData = new FormData();
-	// 		formData.append('file', file, fileName);
-	// 		console.log($wpFeedUrl);
-	// 		fetch('api/fileupload', {
-	// 			method: 'POST',
-	// 			headers: {
-	// 				'Content-Type': 'application/json'
-	// 			},
-	// 			body: JSON.stringify({ url: $wpFeedUrl })
-	// 		})
-	// 			.then((response) => response.json())
-	// 			.then(async (result) => {
-	// 				const mediaEndpoint = result.url.replace(/\/+$/, '') + '/wp-json/wp/v2/media';
-
-	// 				// Check if the file already exists in WordPress
-	// 				return fetch(`${mediaEndpoint}?search=${fileName}`)
-	// 					.then((response) => response.json())
-	// 					.then((data) => {
-	// 						console.log(data);
-	// 						if (data.length > 0) {
-	// 							const mediaId = data[0].id;
-	// 							return fetch(`${mediaEndpoint}/${mediaId}`, {
-	// 								method: 'PUT',
-	// 								body: formData,
-	// 								headers: {
-	// 									Authorization:
-	// 										'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-	// 									'Content-Disposition': `attachment; filename="${fileName}"`
-	// 								}
-	// 							});
-	// 						} else {
-	// 							return fetch(mediaEndpoint, {
-	// 								method: 'POST',
-	// 								body: formData,
-	// 								headers: {
-	// 									Authorization:
-	// 										'Basic ' + window.btoa(`${result.name}:${result.secret}`).toString('base64'),
-	// 									'Content-Disposition': `form-data; filename="${fileName}"`
-	// 								}
-	// 							});
-	// 						}
-	// 					});
-	// 			})
-	// 			.then(async (response) => {
-	// 				if (response.ok) {
-	// 					const jsonData = await response.json();
-	// 					$uploadCB(jsonData.source_url);
-	// 					$currentModal = '';
-	// 					isUploading = false;
-	// 				} else {
-	// 					isUploading = false;
-	// 					displayText = `Failed to upload file to WordPress: ${response.status} ${
-	// 						response.statusText
-	// 					} ${JSON.stringify(response)}`;
-	// 					warning = true;
-	// 				}
-	// 			})
-	// 			.catch((error) => {
-	// 				isUploading = false;
-	// 				console.error('Error:', error);
-	// 				displayText = 'Error: ' + error;
-	// 			});
-	// 	} else {
-	// 		displayText = `Invalid file type. Please upload an ${type} file.`;
-	// 		warning = true;
-	// 	}
-	// }
-
-	// function handleDrop(e) {
-	// 	isHighlighted = false;
-	// 	files = e.dataTransfer.files;
-	// 	uploadFile();
-	// }
-
-	// if (type === 'feed') {
-	// 	const blob = new Blob([$feedFile], { type: 'application/xml' });
-	// 	const file = new File([blob], `${$selectedAlbum.title}.xml`, { type: 'application/xml' });
-	// 	files = [file];
-	// 	uploadFile();
-	// }
-
 	function handleDrop() {}
 </script>
 
@@ -251,10 +167,11 @@
 
 {#if isUploading}
 	<uploading>
-		<LinearProgress indeterminate class="upload-progress-bar" />
+		<!-- <LinearProgress indeterminate class="upload-progress-bar" /> -->
 		<h2>Uploading File</h2>
 		<h3>upload time: {timerText}</h3>
-		<p>depending on the size of the file, this can take a few minutes</p>
+		<p>depending on the size of the file,</p>
+		<p>this can take a few minutes</p>
 	</uploading>
 {:else}
 	<input
@@ -286,7 +203,17 @@
 		height: 100%;
 		align-items: center;
 		position: relative;
-		margin-top: 100px;
+		height: 385px;
+		width: 385px;
+		text-align: center;
+		margin: 16px 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	uploading > h3 {
+		margin-bottom: 8px;
 	}
 	h2 {
 		text-align: center;
@@ -307,10 +234,14 @@
 	.dropzone {
 		border: 2px dashed #0087f7;
 		border-radius: 5px;
-		padding: 200px 20px;
+		height: 385px;
+		width: 385px;
 		text-align: center;
 		margin: 16px 0;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.highlight {

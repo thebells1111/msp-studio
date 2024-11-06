@@ -1,7 +1,6 @@
 <script>
 	import clone from 'just-clone';
 	import { v4 as uuidv4 } from 'uuid';
-	import MainMenu from '$lib/MainHeader/MainMenu.svelte';
 	import AlbumsList from '$lib/Editor/AlbumsList.svelte';
 	import BunnyCredentials from '$lib/Editor/Bunny/BunnyCredentials.svelte';
 	import Album from '$lib/Editor/Album.svelte';
@@ -48,8 +47,6 @@
 		activePanel = BunnyCredentials;
 	}
 </script>
-
-<MainMenu />
 
 <main>
 	<svelte:component this={activePanel} />

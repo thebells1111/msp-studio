@@ -6,7 +6,7 @@
 	const feedDB = localforage.createInstance({
 		name: 'feedDB'
 	});
-	let feedUrl = 'https://www.doerfelverse.com/feeds/phatty-the-grasshopper.xml';
+	let feedUrl = '';
 	let statusText = 'Upload a feed or paste your link above.';
 
 	async function getFeed({ feedUrl, feedFile }) {

@@ -4,6 +4,8 @@
 	import PlayPauseButton from './PlayPauseButton.svelte';
 	import convertTime from '$lib/functions/convertTime';
 
+	import { remoteServer } from '$/stores';
+
 	export let track;
 	let player;
 	let trackSrc = '';
@@ -20,10 +22,12 @@
 			track['itunes:duration'] = player.duration;
 
 			if (trackSrc && trackSrc !== player.src) {
-				const response = await fetch('/api/enclosureproxy?url=' + track.enclosure['@_url']);
-				let { enclosureLength, enclosureType } = await response.json();
-				track.enclosure['@_length'] = enclosureLength;
-				track.enclosure['@_type'] = enclosureType;
+				const response = await fetch(
+					remoteServer + '/api/msp/enclosure?url=' + track.enclosure['@_url']
+				);
+				let { length, mimeType } = await response.json();
+				track.enclosure['@_length'] = length;
+				track.enclosure['@_type'] = mimeType;
 				if (track?.enclosure?.['@_enclosureLength']) {
 					delete track.enclosure['@_enclosureLength'];
 				}

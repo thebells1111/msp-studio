@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import clone from 'just-clone';
 	import HamburgerIcon from '$icons/Hamburger.svelte';
@@ -19,6 +20,7 @@
 	}
 
 	function selectMenuPanel(menu) {
+		goto('/');
 		$menuPanel = menu;
 	}
 </script>
@@ -49,6 +51,9 @@
 					<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
 				{:else}
 					<li on:click={() => (showLoginModal = true)}>Log In</li>
+					<li>
+						<a href="/">Select Albums</a>
+					</li>
 				{/if}
 				<li
 					on:click={() => {
@@ -56,6 +61,9 @@
 					}}
 				>
 					Tutorial
+				</li>
+				<li>
+					<a href="/importfeed">Import Feeds</a>
 				</li>
 				<li>
 					<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
