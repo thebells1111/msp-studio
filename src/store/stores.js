@@ -65,7 +65,7 @@ export const _newFeed = {
 
 console.log(dev);
 
-export const remoteServer = dev ? 'http://localhost:8000' : '';
+export const remoteServer = dev ? 'http://localhost:8000' : 'https://curiohoster.com';
 
 export const catalogDB = writable();
 export const feedDB = writable();
