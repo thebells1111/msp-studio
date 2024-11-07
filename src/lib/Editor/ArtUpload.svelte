@@ -34,10 +34,7 @@
 				let image = $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
 
 				image['@_src'] = event.target.value;
-				console.log(image);
 				imageProps.albumBanner.filePath = event.target.value;
-				console.log(imageProps);
-
 				$editingFeed = $editingFeed;
 			}
 		},
@@ -74,7 +71,6 @@
 						imageProps.trackBanner.filePath = event.target.value;
 
 						$editingFeed = $editingFeed;
-						console.log($editingFeed);
 					}
 			  }
 			: {}
@@ -114,7 +110,6 @@
 			fileName={currentProps.fileName}
 			folderName={currentProps.folderName}
 			handleUpdate={(e) => {
-				console.log(currentProps);
 				currentProps.update(e);
 			}}
 			type="image"
