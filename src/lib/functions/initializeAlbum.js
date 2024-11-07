@@ -18,8 +18,19 @@ export default function initializeAlbum(obj) {
 		});
 	}
 
-	clonedObj['podcast:aspectImages'] = [].concat(clonedObj['podcast:aspectImages']);
-	if (!clonedObj['podcast:aspectImages'].includes((v) => v['@_aspect-ratio'] === '6/1')) {
+	clonedObj['podcast:aspectImages'] = [].concat(clonedObj['podcast:aspectImages']).filter(
+		(entry, index, self) =>
+			entry !== null &&
+			index ===
+				self.findIndex(
+					(v) =>
+						v !== null && // Check that v is not null
+						v['@_aspect-ratio'] === entry['@_aspect-ratio'] &&
+						v['@_src'] === entry['@_src']
+				)
+	);
+
+	if (!clonedObj['podcast:aspectImages'].some((v) => v['@_aspect-ratio'] === '6/1')) {
 		clonedObj['podcast:aspectImages'].push({
 			'@_aspect-ratio': '6/1',
 			'@_src': ''
@@ -53,8 +64,19 @@ export default function initializeAlbum(obj) {
 			if (!item.hasOwnProperty(key)) {
 				item[key] = JSON.parse(JSON.stringify(_newFeed.item[0][key]));
 			}
-			item['podcast:aspectImages'] = [].concat(item['podcast:aspectImages']);
-			if (!item['podcast:aspectImages'].includes((v) => v['@_aspect-ratio'] === '6/1')) {
+			item['podcast:aspectImages'] = [].concat(item['podcast:aspectImages']).filter(
+				(entry, index, self) =>
+					entry !== null &&
+					index ===
+						self.findIndex(
+							(v) =>
+								v !== null && // Check that v is not null
+								v['@_aspect-ratio'] === entry['@_aspect-ratio'] &&
+								v['@_src'] === entry['@_src']
+						)
+			);
+
+			if (!item['podcast:aspectImages'].some((v) => v['@_aspect-ratio'] === '6/1')) {
 				item['podcast:aspectImages'].push({
 					'@_aspect-ratio': '6/1',
 					'@_src': ''

@@ -2,6 +2,7 @@
 	import { parse } from 'fast-xml-parser';
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
+	import { feeds } from '$/stores';
 
 	const feedDB = localforage.createInstance({
 		name: 'feedDB'
@@ -45,6 +46,7 @@
 						"Your feed doesn't have a podcast guid and wasn't saved. Auto guid creation is being added to a future version of MSP";
 					return;
 				} else {
+					$feeds = ($feeds || []).concat(channel);
 					await feedDB.setItem(channel['podcast:guid'], channel);
 				}
 
