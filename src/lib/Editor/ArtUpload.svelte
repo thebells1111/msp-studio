@@ -48,7 +48,6 @@
 					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
 					uploadText: `Track ${trackNumber} Art`,
 					update: (e) => {
-						console.log('dude');
 						document.querySelectorAll('image-container.track > spinner')[
 							trackNumber - 1
 						].style.display = 'block';

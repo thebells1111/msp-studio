@@ -52,7 +52,6 @@
 
 	const onImageError = (event) => {
 		const image = event.target;
-		console.log(image);
 		const spinner = image.closest('image-container').querySelector('spinner');
 		spinner.style.display = 'none'; // Hide the spinner on error
 	};
