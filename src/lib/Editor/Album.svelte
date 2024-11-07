@@ -9,6 +9,8 @@
 	import AlbumsList from './AlbumsList.svelte';
 
 	let imageReload;
+	let showAlbumArt = false;
+	let showBannerArt = false;
 
 	function updateFeeds() {
 		$editingFeed = $editingFeed;
@@ -58,15 +60,30 @@
 			}}
 		>
 			<h4>Album Art</h4>
-			<image-container class="album">
-				<img
-					src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
-					alt="album art - click to edit"
-					on:load={onImageLoad}
-					on:error={onImageError}
-				/>
-				<spinner />
-			</image-container>
+			{#if $settings.lowBandwidth && !showAlbumArt}
+				<image-container class="album low-bandwidth">
+					<p>Low Bandwidth</p>
+					<p>click to change</p>
+					<button
+						on:click|stopPropagation={() => {
+							showAlbumArt = true;
+						}}
+						class="show-art"
+					>
+						Show
+					</button>
+				</image-container>
+			{:else}
+				<image-container class="album">
+					<img
+						src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
+						alt="album art - click to edit"
+						on:load={onImageLoad}
+						on:error={onImageError}
+					/>
+					<spinner />
+				</image-container>
+			{/if}
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</album-art>
 		<banner-art
@@ -187,8 +204,19 @@
 		border-radius: 5px;
 		position: relative;
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+	}
+
+	image-container > p {
+		margin: 4px;
+		text-align: center;
+		line-height: 0.8;
+	}
+
+	button.show-art {
+		position: absolute;
 	}
 	image-container > img {
 		height: 100%;

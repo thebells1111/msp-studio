@@ -49,6 +49,7 @@
 					<li on:click={logout}>Log Out</li>
 					<li on:click={selectMenuPanel.bind(this, 'albums')}>Select Albums</li>
 					<li on:click={selectMenuPanel.bind(this, 'bunnyCredentials')}>Bunny Credentials</li>
+					<li on:click={selectMenuPanel.bind(this, 'settings')}>Settings</li>
 				{:else}
 					<li on:click={() => (showLoginModal = true)}>Log In</li>
 					<li>

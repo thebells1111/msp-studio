@@ -11,9 +11,8 @@
 
 	async function selectBand(feedKey) {
 		let feed = initializeAlbum($feeds[feedKey]); // Create a new object
-		console.log(feed)
+		console.log(feed);
 		$feeds[feedKey] = feed; // Replace the original feed in $feeds with the new object
-		$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
 
 		const itemsMissingGuids = feed.item.some((item) => !item.guid);
 		const oldMSPValue = feed.item.some((item) =>
@@ -46,6 +45,8 @@
 					item['podcast:value']['podcast:valueRecipient'][oldMSPValueIndex] = clone(MSPValue);
 				}
 			});
+
+			$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
 		}
 
 		function generateUniqueGuid(items) {
