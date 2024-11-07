@@ -42,6 +42,20 @@
 			);
 		}
 	}
+
+	const onImageLoad = (event) => {
+		const image = event.target; // 'this' is the image element
+		const spinner = image.closest('image-container').querySelector('spinner'); // find the spinner within the parent container
+
+		spinner.style.display = 'none'; // Hide the spinner when the image has loaded
+	};
+
+	const onImageError = (event) => {
+		const image = event.target;
+		console.log(image);
+		const spinner = image.closest('image-container').querySelector('spinner');
+		spinner.style.display = 'none'; // Hide the spinner on error
+	};
 </script>
 
 <container>
@@ -78,6 +92,28 @@
 		<li><ExplicitToggle bind:checked={track.explicit} /></li>
 	</ul>
 	<info-2>
+		<track-art
+			on:click={() => {
+				showUpload = true;
+				uploadType = 'image';
+				imageType = 'trackSquare';
+			}}
+		>
+			<h4>Track Art</h4>
+			<image-container class="track">
+				<img
+					data-track={trackNumber}
+					src={track['itunes:image']['@_href']}
+					alt="track art - click to edit"
+					on:load={onImageLoad}
+					on:error={onImageError}
+				/>
+				<spinner />
+			</image-container>
+
+			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
+		</track-art>
+
 		<banner-art
 			on:click={() => {
 				showUpload = true;
@@ -86,29 +122,22 @@
 			}}
 		>
 			<h4>Banner Art</h4>
-			<img
-				src={track?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
-					'@_src'
-				] +
-					'?t=' +
-					imageReload}
-				alt="banner art - click to edit"
-				class="banner"
-			/>
-			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
-		</banner-art>
-		<track-art
-			on:click={() => {
-				showUpload = true;
-				uploadType = 'image';
-				imageType = 'trackSquare';
-			}}
-		>
-			<h4>Album Art</h4>
-			<img src={track['itunes:image']['@_href']} alt="track art - click to edit" class="track" />
+			<image-container class="track-banner">
+				<img
+					src={track?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
+						'@_src'
+					] +
+						'?t=' +
+						imageReload}
+					alt="banner art - click to edit"
+					on:load={onImageLoad}
+					on:error={onImageError}
+				/>
+				<spinner />
+			</image-container>
 
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
-		</track-art>
+		</banner-art>
 
 		<description>
 			<h4>Description</h4>
@@ -195,6 +224,7 @@
 		width: 100%; /* Full width of the container */
 		height: 320px;
 	}
+
 	track-art {
 		grid-column: 1; /* First column */
 		grid-row: 1; /* First row */
@@ -205,12 +235,38 @@
 		flex-direction: column;
 	}
 
-	img.track {
+	image-container.track {
 		cursor: pointer;
 		height: 100px;
 		width: 100px;
 		border: 1px solid black;
 		border-radius: 5px;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	image-container.track-banner {
+		margin-top: 10px;
+		height: 78.2px;
+		min-height: 78.2px;
+		width: calc(78.2px * 6);
+		cursor: pointer;
+		border: 1px solid black;
+		border-radius: 5px;
+		justify-self: flex-end;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	image-container > img {
+		height: 100%;
+		width: 100%;
+		border-radius: 5px;
+		position: absolute;
 	}
 
 	banner-art {
@@ -223,16 +279,24 @@
 		position: relative;
 	}
 
-	/* Adjust the banner to maintain a 6:1 ratio */
-	img.banner {
-		margin-top: 10px;
-		height: 78.2px;
-		min-height: 78.2px;
-		width: calc(78.2px * 6);
-		cursor: pointer;
-		border: 1px solid black;
-		border-radius: 5px;
-		justify-self: flex-end;
+	spinner {
+		display: block;
+		position: absolute;
+		border: 4px solid #f3f3f3;
+		border-top: 4px solid #3498db;
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		animation: spin 2s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	h4 {

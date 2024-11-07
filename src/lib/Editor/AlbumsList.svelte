@@ -11,6 +11,7 @@
 
 	async function selectBand(feedKey) {
 		let feed = initializeAlbum($feeds[feedKey]); // Create a new object
+		console.log(feed)
 		$feeds[feedKey] = feed; // Replace the original feed in $feeds with the new object
 		$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
 

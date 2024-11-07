@@ -17,6 +17,7 @@
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Art',
 			update: (e) => {
+				document.querySelector('image-container.album > spinner').style.display = 'block';
 				$editingFeed['itunes:image']['@_href'] = e.target.value;
 				imageProps.albumSquare.filePath = e.target.value;
 			}
@@ -29,9 +30,9 @@
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Banner 6:1',
 			update: (event) => {
-				console.log(event);
+				document.querySelector('image-container.album-banner > spinner').style.display = 'block';
 				let image = $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
-				console.log(image);
+
 				image['@_src'] = event.target.value;
 				console.log(image);
 				imageProps.albumBanner.filePath = event.target.value;
@@ -47,6 +48,10 @@
 					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
 					uploadText: `Track ${trackNumber} Art`,
 					update: (e) => {
+						console.log('dude');
+						document.querySelectorAll('image-container.track > spinner')[
+							trackNumber - 1
+						].style.display = 'block';
 						track['itunes:image']['@_href'] = e.target.value;
 						imageProps.trackSquare.filePath = e.target.value;
 						$editingFeed = $editingFeed;
@@ -62,6 +67,9 @@
 					folderName: $editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid,
 					uploadText: `Track ${trackNumber} Banner 6:1`,
 					update: (event) => {
+						document.querySelectorAll('image-container.track-banner > spinner')[
+							trackNumber - 1
+						].style.display = 'block';
 						let image = track['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
 						image['@_src'] = event.target.value;
 						imageProps.trackBanner.filePath = event.target.value;

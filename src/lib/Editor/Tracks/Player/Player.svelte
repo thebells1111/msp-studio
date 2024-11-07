@@ -17,7 +17,6 @@
 			player.currentTime = player.currentTime;
 		};
 		player.onloadedmetadata = async () => {
-			console.log('loaded');
 			player.duration = player.duration;
 			track['itunes:duration'] = player.duration;
 
@@ -34,7 +33,6 @@
 				console.log('got enclosure length');
 			}
 			trackSrc = player.src;
-			console.log(trackSrc);
 		};
 	}
 </script>

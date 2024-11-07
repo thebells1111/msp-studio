@@ -6,6 +6,7 @@
 	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
 
 	import { editingFeed, settings } from '$/stores';
+	import AlbumsList from './AlbumsList.svelte';
 
 	let imageReload;
 
@@ -20,6 +21,19 @@
 		showUpload = false;
 		updateFeeds();
 	}
+
+	const onImageLoad = (event) => {
+		const image = event.target; // 'this' is the image element
+		const spinner = image.closest('image-container').querySelector('spinner'); // find the spinner within the parent container
+
+		spinner.style.display = 'none'; // Hide the spinner when the image has loaded
+	};
+
+	const onImageError = (event) => {
+		const image = event.target;
+		const spinner = image.closest('image-container').querySelector('spinner');
+		spinner.style.display = 'none'; // Hide the spinner on error
+	};
 </script>
 
 <section>
@@ -44,31 +58,37 @@
 			}}
 		>
 			<h4>Album Art</h4>
-
-			<img
-				src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
-				alt="album art - click to edit"
-				class="album"
-			/>
+			<image-container class="album">
+				<img
+					src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
+					alt="album art - click to edit"
+					on:load={onImageLoad}
+					on:error={onImageError}
+				/>
+				<spinner />
+			</image-container>
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</album-art>
 		<banner-art
 			on:click={() => {
 				showUpload = true;
 				imageType = 'albumBanner';
-				console.log('yo');
 			}}
 		>
 			<h4>Banner Art</h4>
-			<img
-				src={$editingFeed?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
-					'@_src'
-				] +
-					'?t=' +
-					imageReload}
-				alt="banner art - click to edit"
-				class="banner"
-			/>
+			<image-container class="album-banner">
+				<img
+					src={$editingFeed?.['podcast:aspectImages']?.find(
+						(v) => v?.['@_aspect-ratio'] === '6/1'
+					)?.['@_src'] +
+						'?t=' +
+						imageReload}
+					alt="banner art - click to edit"
+					on:load={onImageLoad}
+					on:error={onImageError}
+				/>
+				<spinner />
+			</image-container>
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</banner-art>
 
@@ -159,12 +179,42 @@
 		flex-direction: column;
 	}
 
-	img.album {
+	image-container.album {
 		cursor: pointer;
 		height: 100px;
 		width: 100px;
 		border: 1px solid black;
 		border-radius: 5px;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	image-container > img {
+		height: 100%;
+		width: 100%;
+		border-radius: 5px;
+		position: absolute;
+	}
+
+	spinner {
+		display: block;
+		position: absolute;
+		border: 4px solid #f3f3f3;
+		border-top: 4px solid #3498db;
+		border-radius: 50%;
+		width: 40px;
+		height: 40px;
+		animation: spin 2s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	banner-art {
@@ -178,7 +228,7 @@
 	}
 
 	/* Adjust the banner to maintain a 6:1 ratio */
-	img.banner {
+	image-container.album-banner {
 		margin-top: 10px;
 		height: 78.2px;
 		min-height: 78.2px;
@@ -187,6 +237,10 @@
 		border: 1px solid black;
 		border-radius: 5px;
 		justify-self: flex-end;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	h4 {

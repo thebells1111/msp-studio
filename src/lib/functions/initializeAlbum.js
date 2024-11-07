@@ -18,6 +18,14 @@ export default function initializeAlbum(obj) {
 		});
 	}
 
+	clonedObj['podcast:aspectImages'] = [].concat(clonedObj['podcast:aspectImages']);
+	if (!clonedObj['podcast:aspectImages'].includes((v) => v['@_aspect-ratio'] === '6/1')) {
+		clonedObj['podcast:aspectImages'].push({
+			'@_aspect-ratio': '6/1',
+			'@_src': ''
+		});
+	}
+
 	// Handle the item array
 	if (!Array.isArray(clonedObj.item)) {
 		clonedObj.item = Array.isArray(_newFeed.item) ? JSON.parse(JSON.stringify(_newFeed.item)) : [];
@@ -44,6 +52,13 @@ export default function initializeAlbum(obj) {
 		for (const key in _newFeed.item[0]) {
 			if (!item.hasOwnProperty(key)) {
 				item[key] = JSON.parse(JSON.stringify(_newFeed.item[0][key]));
+			}
+			item['podcast:aspectImages'] = [].concat(item['podcast:aspectImages']);
+			if (!item['podcast:aspectImages'].includes((v) => v['@_aspect-ratio'] === '6/1')) {
+				item['podcast:aspectImages'].push({
+					'@_aspect-ratio': '6/1',
+					'@_src': ''
+				});
 			}
 		}
 	}

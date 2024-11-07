@@ -59,40 +59,44 @@
 	}
 
 	function handleMouseMove(e) {
-		let left = progress.getBoundingClientRect().left;
-		let right = progress.getBoundingClientRect().right;
-		if (trackMouse) {
-			e.preventDefault(); //prevents highlighting on mouse move
-			if (e.x < left) {
-				player.currentTime = 0;
-				trackPosition = left;
-			} else if (e.x > right) {
-				player.currentTime = player.duration;
-				trackPosition = right;
-			} else {
-				player.currentTime =
-					((e.x - trackPosition) / progress.clientWidth) * player.duration + player.currentTime;
-				trackPosition = e.x;
+		if (progress) {
+			let left = progress.getBoundingClientRect().left;
+			let right = progress.getBoundingClientRect().right;
+			if (trackMouse) {
+				e.preventDefault(); //prevents highlighting on mouse move
+				if (e.x < left) {
+					player.currentTime = 0;
+					trackPosition = left;
+				} else if (e.x > right) {
+					player.currentTime = player.duration;
+					trackPosition = right;
+				} else {
+					player.currentTime =
+						((e.x - trackPosition) / progress.clientWidth) * player.duration + player.currentTime;
+					trackPosition = e.x;
+				}
 			}
 		}
 	}
 	function handleTouchMove(e) {
-		let touch = e.touches[0];
-		let left = progress.getBoundingClientRect().left;
-		let right = progress.getBoundingClientRect().right;
-		if (trackMouse) {
-			e.preventDefault(); //prevents highlighting on mouse move
-			if (touch.clientX < left) {
-				player.currentTime = 0;
-				trackPosition = left;
-			} else if (touch.clientX > right) {
-				player.currentTime = player.duration;
-				trackPosition = right;
-			} else {
-				player.currentTime =
-					((touch.clientX - trackPosition) / progress.clientWidth) * player.duration +
-					player.currentTime;
-				trackPosition = touch.clientX;
+		if (progress) {
+			let touch = e.touches[0];
+			let left = progress.getBoundingClientRect().left;
+			let right = progress.getBoundingClientRect().right;
+			if (trackMouse) {
+				e.preventDefault(); //prevents highlighting on mouse move
+				if (touch.clientX < left) {
+					player.currentTime = 0;
+					trackPosition = left;
+				} else if (touch.clientX > right) {
+					player.currentTime = player.duration;
+					trackPosition = right;
+				} else {
+					player.currentTime =
+						((touch.clientX - trackPosition) / progress.clientWidth) * player.duration +
+						player.currentTime;
+					trackPosition = touch.clientX;
+				}
 			}
 		}
 	}
