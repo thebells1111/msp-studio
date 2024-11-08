@@ -104,10 +104,7 @@
 					data-track={trackNumber}
 					src={track['itunes:image']['@_href']}
 					alt="track art - click to edit"
-					on:load={onImageLoad}
-					on:error={onImageError}
 				/>
-				<spinner />
 			</image-container>
 
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
@@ -129,10 +126,7 @@
 						'?t=' +
 						imageReload}
 					alt="banner art - click to edit"
-					on:load={onImageLoad}
-					on:error={onImageError}
 				/>
-				<spinner />
 			</image-container>
 
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>

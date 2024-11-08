@@ -6,12 +6,19 @@
 	import initializeAlbum from '../functions/initializeAlbum';
 	import generateValidGuid from '$functions/generateValidGuid.js';
 
-	import { feeds, editingFeed, _newFeed, remoteServer, feedDB, MSPValue } from '$/stores';
+	import {
+		feeds,
+		editingFeed,
+		_newFeed,
+		remoteServer,
+		feedDB,
+		MSPValue,
+		selectedFeed
+	} from '$/stores';
 	// import CloudUpload from '$icons/CloudUpload.svelte';
 
 	async function selectBand(feedKey) {
 		let feed = initializeAlbum($feeds[feedKey]); // Create a new object
-		console.log(feed);
 		$feeds[feedKey] = feed; // Replace the original feed in $feeds with the new object
 
 		const itemsMissingGuids = feed.item.some((item) => !item.guid);
@@ -24,8 +31,6 @@
 					v?.['@_customValue'] === 'UzrnTK2oEHR55gw7Djmb'
 			)
 		);
-
-		console.log(oldMSPValue);
 
 		if (itemsMissingGuids || oldMSPValue) {
 			feed.item.forEach((item) => {
@@ -45,9 +50,12 @@
 					item['podcast:value']['podcast:valueRecipient'][oldMSPValueIndex] = clone(MSPValue);
 				}
 			});
-
-			$editingFeed = feed; // Now $editingFeed and the feed in $feeds reference the same object
 		}
+
+		console.log(feed);
+
+		$editingFeed = feed;
+		$selectedFeed = clone(feed);
 
 		function generateUniqueGuid(items) {
 			let guid;
@@ -60,8 +68,6 @@
 
 			return { '@_PermaLink': 'false', '#text': guid };
 		}
-
-		console.log(feed);
 	}
 
 	async function deleteFeed(feed) {
@@ -85,7 +91,7 @@
 		let url =
 			remoteServer +
 			`/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${feed['podcast:guid']}`)}`;
-		console.log(url);
+
 		const res = await fetch(url);
 		const data = await res.json();
 		if (data?.feed?.length) {

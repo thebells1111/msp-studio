@@ -25,8 +25,9 @@ export default function initializeAlbum(obj) {
 				self.findIndex(
 					(v) =>
 						v !== null && // Check that v is not null
-						v['@_aspect-ratio'] === entry['@_aspect-ratio'] &&
-						v['@_src'] === entry['@_src']
+						v?.['@_aspect-ratio'] &&
+						v?.['@_aspect-ratio'] === entry?.['@_aspect-ratio'] &&
+						v?.['@_src'] === entry?.['@_src']
 				)
 	);
 

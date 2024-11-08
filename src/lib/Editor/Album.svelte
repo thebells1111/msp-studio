@@ -3,14 +3,20 @@
 	import ExplicitToggle from '$lib/Editor/ExplicitToggle.svelte';
 	import SmallModal from '$lib/Modals/SmallModal.svelte';
 	import UploadFileIcon from '$icons/UploadFile.svelte';
+	import VisibilityIcon from '$icons/Visibility.svelte';
 	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
 
-	import { editingFeed, settings } from '$/stores';
-	import AlbumsList from './AlbumsList.svelte';
+	import { editingFeed, settings, selectedFeed } from '$/stores';
+	import Visibility from '../icons/Visibility.svelte';
 
 	let imageReload;
 	let showAlbumArt = false;
 	let showBannerArt = false;
+
+	$: if ($selectedFeed) {
+		showAlbumArt = false;
+		showBannerArt = false;
+	}
 
 	function updateFeeds() {
 		$editingFeed = $editingFeed;
@@ -60,17 +66,17 @@
 			}}
 		>
 			<h4>Album Art</h4>
-			{#if $settings.lowBandwidth && !showAlbumArt}
+			{#if $settings.lowBandwidth && !showAlbumArt && $editingFeed?.['itunes:image']?.['@_href']}
 				<image-container class="album low-bandwidth">
-					<p>Low Bandwidth</p>
-					<p>click to change</p>
+					<p>low bandwidth</p>
+					<p>click to edit</p>
 					<button
 						on:click|stopPropagation={() => {
 							showAlbumArt = true;
 						}}
 						class="show-art"
 					>
-						Show
+						<VisibilityIcon size={28} />
 					</button>
 				</image-container>
 			{:else}
@@ -78,10 +84,7 @@
 					<img
 						src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
 						alt="album art - click to edit"
-						on:load={onImageLoad}
-						on:error={onImageError}
 					/>
-					<spinner />
 				</image-container>
 			{/if}
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
@@ -93,19 +96,31 @@
 			}}
 		>
 			<h4>Banner Art</h4>
-			<image-container class="album-banner">
-				<img
-					src={$editingFeed?.['podcast:aspectImages']?.find(
-						(v) => v?.['@_aspect-ratio'] === '6/1'
-					)?.['@_src'] +
-						'?t=' +
-						imageReload}
-					alt="banner art - click to edit"
-					on:load={onImageLoad}
-					on:error={onImageError}
-				/>
-				<spinner />
-			</image-container>
+			{#if $settings.lowBandwidth && !showBannerArt && $editingFeed?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.['@_src']}
+				<image-container class="album-banner low-bandwidth">
+					<p>low bandwidth</p>
+					<p>click to edit</p>
+					<button
+						on:click|stopPropagation={() => {
+							showBannerArt = true;
+						}}
+						class="show-art"
+					>
+						<VisibilityIcon size={28} />
+					</button>
+				</image-container>
+			{:else}
+				<image-container class="album-banner">
+					<img
+						src={$editingFeed?.['podcast:aspectImages']?.find(
+							(v) => v?.['@_aspect-ratio'] === '6/1'
+						)?.['@_src'] +
+							'?t=' +
+							imageReload}
+						alt="banner art - click to edit"
+					/>
+				</image-container>
+			{/if}
 			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
 		</banner-art>
 
@@ -217,6 +232,9 @@
 
 	button.show-art {
 		position: absolute;
+		left: -8px;
+		top: -8px;
+		background-color: var(--color-bg-edit-album);
 	}
 	image-container > img {
 		height: 100%;

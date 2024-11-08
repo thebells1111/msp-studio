@@ -49,6 +49,8 @@
 	} else if ($menuPanel === 'settings') {
 		activePanel = Settings;
 	}
+
+	$: console.log($editingFeed);
 </script>
 
 <main>

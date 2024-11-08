@@ -63,8 +63,6 @@ export const _newFeed = {
 	title: ''
 };
 
-console.log(dev);
-
 export const remoteServer = dev ? 'http://localhost:8000' : 'https://curiohoster.com';
 
 export const catalogDB = writable();
@@ -76,12 +74,10 @@ export const currentModal = writable();
 export const showTutorial = writable(false);
 
 export const feedFile = writable();
-
 export const feeds = writable({});
-
 export const newFeed = writable(clone(_newFeed));
-
 export const editingFeed = writable();
+export const selectedFeed = writable();
 
 export const newTrack = writable({
 	description: '',

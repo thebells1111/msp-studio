@@ -19,7 +19,7 @@
 		settings
 	} from '$/stores';
 
-	let isLoading = true;
+	let isLoading = false;
 
 	onMount(() => {
 		fetch(remoteServer + '/api/msp/refresh', { method: 'GET', credentials: 'include' })
