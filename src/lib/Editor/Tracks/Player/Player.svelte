@@ -9,6 +9,7 @@
 	export let track;
 	let player;
 	let trackSrc = '';
+	let trackInitalized = false;
 
 	onMount(setupPlayer);
 
@@ -22,18 +23,22 @@
 
 			if (trackSrc !== player.src) {
 				trackSrc = player.src;
-				fetch(`${remoteServer}/api/msp/enclosure?url=${track.enclosure['@_url']}`)
-					.then((response) => response.json())
-					.then(({ length, mimeType }) => {
-						// Extract and store length and mimeType from response
-						track.enclosure['@_length'] = length;
-						track.enclosure['@_type'] = mimeType;
+				if (trackInitalized) {
+					fetch(`${remoteServer}/api/msp/enclosure?url=${track.enclosure['@_url']}`)
+						.then((response) => response.json())
+						.then(({ length, mimeType }) => {
+							// Extract and store length and mimeType from response
+							track.enclosure['@_length'] = length;
+							track.enclosure['@_type'] = mimeType;
 
-						// Clean up any deprecated properties
-						delete track.enclosure['@_enclosureLength'];
-						console.log('Fetched enclosure length and type');
-					})
-					.catch((error) => console.error('Failed to fetch enclosure metadata:', error));
+							// Clean up any deprecated properties
+							delete track.enclosure['@_enclosureLength'];
+							console.log('Fetched enclosure length and type');
+						})
+						.catch((error) => console.error('Failed to fetch enclosure metadata:', error));
+				}
+			} else {
+				trackInitalized = true;
 			}
 		};
 	}

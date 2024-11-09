@@ -19,9 +19,10 @@
 		settings
 	} from '$/stores';
 
-	let isLoading = false;
+	let isLoading = true;
 
 	onMount(() => {
+		let startLoadTime = new Date().getTime();
 		fetch(remoteServer + '/api/msp/refresh', { method: 'GET', credentials: 'include' })
 			.then((res) => {
 				return res.json();
@@ -80,9 +81,14 @@
 						console.log(err);
 					});
 			}
-			setTimeout(() => {
-				isLoading = false;
-			}, 1000);
+
+			let endLoadTime = new Date().getTime();
+			let timeDiff = 1250 - (endLoadTime - startLoadTime);
+			if (timeDiff > 0) {
+				setTimeout(() => {
+					isLoading = false;
+				}, timeDiff);
+			} else isLoading = false;
 		});
 	});
 
@@ -160,7 +166,7 @@
 	.record {
 		height: 300px;
 		width: 300px;
-		animation: spin 2s infinite linear;
+		animation: spin 1.25s infinite linear;
 		border-radius: 50%;
 		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
 	}

@@ -41,7 +41,6 @@
 	}
 
 	let activePanel = AlbumsList;
-	$: console.log($menuPanel);
 	$: if ($menuPanel === 'albums') {
 		activePanel = AlbumsList;
 	} else if ($menuPanel === 'bunnyCredentials') {
@@ -49,8 +48,6 @@
 	} else if ($menuPanel === 'settings') {
 		activePanel = Settings;
 	}
-
-	$: console.log($editingFeed);
 </script>
 
 <main>

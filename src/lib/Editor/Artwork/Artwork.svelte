@@ -30,8 +30,6 @@
 		showUpload = false;
 		updateFeeds();
 	}
-
-	console.log(src);
 </script>
 
 <button
