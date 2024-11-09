@@ -5,30 +5,18 @@
 	import SmallModal from '$lib/Modals/SmallModal.svelte';
 	import UploadFileIcon from '$icons/UploadFile.svelte';
 	import DeleteIcon from '$icons/Delete.svelte';
-	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
 	import Player from '$lib/Editor/Tracks/Player/Player.svelte';
+	import Artwork from '$lib/Editor/Artwork/Artwork.svelte';
 
 	import clone from 'just-clone';
 
 	import { newTrack, editingFeed, settings } from '$/stores';
 
-	function updateFeeds() {
-		$editingFeed = $editingFeed;
-	}
-
 	export let track = clone($newTrack);
 	export let trackNumber = 1;
 
-	let imageReload = 1;
 	let audioReload = 1;
 	let showUpload = false;
-	let uploadType = 'image';
-	let imageType = 'trackSquare';
-
-	$: if (imageReload || audioReload) {
-		showUpload = false;
-		updateFeeds();
-	}
 
 	function deleteTrack() {
 		const confirmed = window.confirm(
@@ -42,19 +30,6 @@
 			);
 		}
 	}
-
-	const onImageLoad = (event) => {
-		const image = event.target; // 'this' is the image element
-		const spinner = image.closest('image-container').querySelector('spinner'); // find the spinner within the parent container
-
-		spinner.style.display = 'none'; // Hide the spinner when the image has loaded
-	};
-
-	const onImageError = (event) => {
-		const image = event.target;
-		const spinner = image.closest('image-container').querySelector('spinner');
-		spinner.style.display = 'none'; // Hide the spinner on error
-	};
 </script>
 
 <container>
@@ -82,7 +57,6 @@
 				class:hide={!$settings?.bunny?.active}
 				on:click={() => {
 					showUpload = true;
-					uploadType = 'audio';
 				}}
 			>
 				<UploadFileIcon size="18" />
@@ -91,45 +65,27 @@
 		<li><ExplicitToggle bind:checked={track.explicit} /></li>
 	</ul>
 	<info-2>
-		<track-art
-			on:click={() => {
-				showUpload = true;
-				uploadType = 'image';
-				imageType = 'trackSquare';
-			}}
-		>
+		<track-art>
 			<h4>Track Art</h4>
-			<image-container class="track">
-				<img
-					data-track={trackNumber}
-					src={track['itunes:image']['@_href']}
-					alt="track art - click to edit"
-				/>
-			</image-container>
-
-			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
+			<Artwork
+				src={track['itunes:image']['@_href']}
+				alt="track art - click to edit"
+				parent="track"
+				shape="square"
+				{track}
+			/>
 		</track-art>
-
-		<banner-art
-			on:click={() => {
-				showUpload = true;
-				uploadType = 'image';
-				imageType = 'trackBanner';
-			}}
-		>
+		<banner-art>
 			<h4>Banner Art</h4>
-			<image-container class="track-banner">
-				<img
-					src={track?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
-						'@_src'
-					] +
-						'?t=' +
-						imageReload}
-					alt="banner art - click to edit"
-				/>
-			</image-container>
-
-			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
+			<Artwork
+				src={track?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
+					'@_src'
+				]}
+				alt="banner art - click to edit"
+				parent="track"
+				shape="banner"
+				{track}
+			/>
 		</banner-art>
 
 		<description>
@@ -148,18 +104,14 @@
 			showUpload = false;
 		}}
 	>
-		{#if uploadType === 'audio'}
-			<FileUploader
-				bind:filePath={track.enclosure['@_url']}
-				bind:fileReload={audioReload}
-				fileName="audio"
-				folderName={$editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid}
-				type={uploadType}
-				uploadText="Track #{trackNumber} Audio"
-			/>
-		{:else}
-			<ArtUpload bind:imageReload imageParent="track" {track} {trackNumber} {imageType} />
-		{/if}
+		<FileUploader
+			bind:filePath={track.enclosure['@_url']}
+			bind:fileReload={audioReload}
+			fileName="audio"
+			folderName={$editingFeed['podcast:guid'] + '/' + track.guid['#text'] || track.guid}
+			type="audio"
+			uploadText="Track #{trackNumber} Audio"
+		/>
 	</SmallModal>
 {/if}
 

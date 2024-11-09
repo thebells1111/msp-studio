@@ -7,7 +7,7 @@
 	export let folderName;
 	export let fileName;
 	export let type;
-	export let uploadText;
+	export let uploadText = '';
 	export let handleUpdate = () => {};
 	let files;
 	let isHighlighted = false;

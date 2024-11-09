@@ -16,23 +16,25 @@
 		player.ontimeupdate = () => {
 			player.currentTime = player.currentTime;
 		};
-		player.onloadedmetadata = async () => {
+		player.onloadedmetadata = () => {
 			player.duration = player.duration;
 			track['itunes:duration'] = player.duration;
 
-			if (trackSrc && trackSrc !== player.src) {
-				const response = await fetch(
-					remoteServer + '/api/msp/enclosure?url=' + track.enclosure['@_url']
-				);
-				let { length, mimeType } = await response.json();
-				track.enclosure['@_length'] = length;
-				track.enclosure['@_type'] = mimeType;
-				if (track?.enclosure?.['@_enclosureLength']) {
-					delete track.enclosure['@_enclosureLength'];
-				}
-				console.log('got enclosure length');
+			if (trackSrc !== player.src) {
+				trackSrc = player.src;
+				fetch(`${remoteServer}/api/msp/enclosure?url=${track.enclosure['@_url']}`)
+					.then((response) => response.json())
+					.then(({ length, mimeType }) => {
+						// Extract and store length and mimeType from response
+						track.enclosure['@_length'] = length;
+						track.enclosure['@_type'] = mimeType;
+
+						// Clean up any deprecated properties
+						delete track.enclosure['@_enclosureLength'];
+						console.log('Fetched enclosure length and type');
+					})
+					.catch((error) => console.error('Failed to fetch enclosure metadata:', error));
 			}
-			trackSrc = player.src;
 		};
 	}
 </script>

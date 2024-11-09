@@ -1,47 +1,9 @@
 <script>
 	import ValueBlock from '$lib/Editor/ValueBlock/ValueBlock.svelte';
 	import ExplicitToggle from '$lib/Editor/ExplicitToggle.svelte';
-	import SmallModal from '$lib/Modals/SmallModal.svelte';
-	import UploadFileIcon from '$icons/UploadFile.svelte';
-	import VisibilityIcon from '$icons/Visibility.svelte';
-	import ArtUpload from '$lib/Editor/ArtUpload.svelte';
+	import Artwork from '$lib/Editor/Artwork/Artwork.svelte';
 
-	import { editingFeed, settings, selectedFeed } from '$/stores';
-	import Visibility from '../icons/Visibility.svelte';
-
-	let imageReload;
-	let showAlbumArt = false;
-	let showBannerArt = false;
-
-	$: if ($selectedFeed) {
-		showAlbumArt = false;
-		showBannerArt = false;
-	}
-
-	function updateFeeds() {
-		$editingFeed = $editingFeed;
-	}
-
-	let showUpload = false;
-	let imageType = 'albumSquare';
-
-	$: if (imageReload) {
-		showUpload = false;
-		updateFeeds();
-	}
-
-	const onImageLoad = (event) => {
-		const image = event.target; // 'this' is the image element
-		const spinner = image.closest('image-container').querySelector('spinner'); // find the spinner within the parent container
-
-		spinner.style.display = 'none'; // Hide the spinner when the image has loaded
-	};
-
-	const onImageError = (event) => {
-		const image = event.target;
-		const spinner = image.closest('image-container').querySelector('spinner');
-		spinner.style.display = 'none'; // Hide the spinner on error
-	};
+	import { editingFeed } from '$/stores';
 </script>
 
 <section>
@@ -53,75 +15,25 @@
 	</ul>
 
 	<ul class="inputs">
-		<li><input bind:value={$editingFeed['itunes:author']} on:input={updateFeeds} /></li>
-		<li><input bind:value={$editingFeed.title} on:input={updateFeeds} /></li>
+		<li><input bind:value={$editingFeed['itunes:author']} /></li>
+		<li><input bind:value={$editingFeed.title} /></li>
 		<li><input bind:value={$editingFeed.link} /></li>
-		<li><ExplicitToggle bind:checked={$editingFeed.explicit} handleInput={updateFeeds} /></li>
+		<li><ExplicitToggle bind:checked={$editingFeed.explicit} /></li>
 	</ul>
 	<info-2>
-		<album-art
-			on:click={() => {
-				showUpload = true;
-				imageType = 'albumSquare';
-			}}
-		>
+		<album-art>
 			<h4>Album Art</h4>
-			{#if $settings.lowBandwidth && !showAlbumArt && $editingFeed?.['itunes:image']?.['@_href']}
-				<image-container class="album low-bandwidth">
-					<p>low bandwidth</p>
-					<p>click to edit</p>
-					<button
-						on:click|stopPropagation={() => {
-							showAlbumArt = true;
-						}}
-						class="show-art"
-					>
-						<VisibilityIcon size={28} />
-					</button>
-				</image-container>
-			{:else}
-				<image-container class="album">
-					<img
-						src={$editingFeed?.['itunes:image']?.['@_href'] + '?t=' + imageReload}
-						alt="album art - click to edit"
-					/>
-				</image-container>
-			{/if}
-			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
+			<Artwork src={$editingFeed?.['itunes:image']?.['@_href']} parent="album" shape="square" />
 		</album-art>
-		<banner-art
-			on:click={() => {
-				showUpload = true;
-				imageType = 'albumBanner';
-			}}
-		>
+		<banner-art>
 			<h4>Banner Art</h4>
-			{#if $settings.lowBandwidth && !showBannerArt && $editingFeed?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.['@_src']}
-				<image-container class="album-banner low-bandwidth">
-					<p>low bandwidth</p>
-					<p>click to edit</p>
-					<button
-						on:click|stopPropagation={() => {
-							showBannerArt = true;
-						}}
-						class="show-art"
-					>
-						<VisibilityIcon size={28} />
-					</button>
-				</image-container>
-			{:else}
-				<image-container class="album-banner">
-					<img
-						src={$editingFeed?.['podcast:aspectImages']?.find(
-							(v) => v?.['@_aspect-ratio'] === '6/1'
-						)?.['@_src'] +
-							'?t=' +
-							imageReload}
-						alt="banner art - click to edit"
-					/>
-				</image-container>
-			{/if}
-			<button class:hide={!$settings?.bunny?.active}><UploadFileIcon size="20" /></button>
+			<Artwork
+				src={$editingFeed?.['podcast:aspectImages']?.find((v) => v?.['@_aspect-ratio'] === '6/1')?.[
+					'@_src'
+				]}
+				parent="album"
+				shape="banner"
+			/>
 		</banner-art>
 
 		<description>
@@ -133,16 +45,6 @@
 		</value>
 	</info-2>
 </section>
-
-{#if showUpload}
-	<SmallModal
-		closeModal={() => {
-			showUpload = false;
-		}}
-	>
-		<ArtUpload bind:imageReload imageParent="album" {imageType} />
-	</SmallModal>
-{/if}
 
 <style>
 	section {

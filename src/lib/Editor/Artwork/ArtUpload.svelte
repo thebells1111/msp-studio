@@ -1,27 +1,30 @@
 <script>
-	import FileUploader from './FileUploader.svelte';
+	import FileUploader from '../FileUploader.svelte';
 
 	import { editingFeed, loggedIn, settings } from '$/stores';
 
 	export let imageReload = '';
-	export let imageParent = 'album';
 	export let track = null;
 	export let trackNumber = 1;
 	export let imageType = null;
 	let isUploading = false;
 
+	$: console.log(imageType);
+	$: console.log(currentProps);
+	$: console.log(track);
+
 	let imageProps = {
-		albumSquare: {
+		'album-square': {
 			filePath: $editingFeed['itunes:image']['@_href'],
 			fileName: 'album-art',
 			folderName: $editingFeed['podcast:guid'],
 			uploadText: 'Album Art',
 			update: (e) => {
 				$editingFeed['itunes:image']['@_href'] = e.target.value;
-				imageProps.albumSquare.filePath = e.target.value;
+				imageProps['album-square'].filePath = e.target.value;
 			}
 		},
-		albumBanner: {
+		'album-banner': {
 			filePath: $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1')[
 				'@_src'
 			],
@@ -31,11 +34,11 @@
 			update: (event) => {
 				let image = $editingFeed['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
 				image['@_src'] = event.target.value;
-				imageProps.albumBanner.filePath = event.target.value;
+				imageProps['album-banner'].filePath = event.target.value;
 				$editingFeed = $editingFeed;
 			}
 		},
-		trackSquare: track
+		'track-square': track
 			? {
 					filePath: track?.['itunes:image']['@_href'],
 					fileName: 'track-art',
@@ -43,12 +46,12 @@
 					uploadText: `Track ${trackNumber} Art`,
 					update: (e) => {
 						track['itunes:image']['@_href'] = e.target.value;
-						imageProps.trackSquare.filePath = e.target.value;
+						imageProps['track-square'].filePath = e.target.value;
 						$editingFeed = $editingFeed;
 					}
 			  }
 			: {},
-		trackBanner: track
+		'track-banner': track
 			? {
 					filePath: track['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1')[
 						'@_src'
@@ -59,7 +62,7 @@
 					update: (event) => {
 						let image = track['podcast:aspectImages'].find((v) => v['@_aspect-ratio'] === '6/1');
 						image['@_src'] = event.target.value;
-						imageProps.trackBanner.filePath = event.target.value;
+						imageProps['track-banner'].filePath = event.target.value;
 
 						$editingFeed = $editingFeed;
 					}

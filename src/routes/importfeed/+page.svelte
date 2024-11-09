@@ -46,14 +46,10 @@
 						"Your feed doesn't have a podcast guid and wasn't saved. Auto guid creation is being added to a future version of MSP";
 					return;
 				} else {
-					$feeds = ($feeds || []).concat(channel);
+					$feeds = [channel].concat($feeds || []);
 					await feedDB.setItem(channel['podcast:guid'], channel);
 				}
 
-				console.log(channel);
-				console.log(channel?.['podcast:guid']);
-
-				//
 				statusText = 'Feed Imported';
 				setTimeout(() => {
 					statusText = 'Upload a feed or paste your link above.';
