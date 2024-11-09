@@ -1,7 +1,21 @@
 <script>
+	import { onMount } from 'svelte';
 	import Close from '../../lib/icons/Close.svelte';
 
 	export let closeModal = () => {};
+
+	onMount(() => {
+		const handleKeyDown = (event) => {
+			if (event.key === 'Escape') {
+				closeModal();
+			}
+		};
+
+		document.addEventListener('keydown', handleKeyDown);
+
+		// Cleanup function to remove event listener
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	});
 </script>
 
 <blurred-background on:mousedown|self={closeModal} on:touchend|self={closeModal}>

@@ -9,10 +9,6 @@
 	export let imageType = null;
 	let isUploading = false;
 
-	$: console.log(imageType);
-	$: console.log(currentProps);
-	$: console.log(track);
-
 	let imageProps = {
 		'album-square': {
 			filePath: $editingFeed['itunes:image']['@_href'],
