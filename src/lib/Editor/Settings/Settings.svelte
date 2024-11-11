@@ -1,5 +1,5 @@
 <script>
-	import BunnyToggle from '$lib/Editor/Bunny/BunnyToggle.svelte';
+	import BunnyToggle from '$lib/Bunny/BunnyToggle.svelte';
 	let enableLowBandwidth = $settings?.lowBandwidth || false;
 	import { remoteServer, settings } from '$/stores';
 

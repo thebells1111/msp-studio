@@ -2,7 +2,6 @@
 	import clone from 'just-clone';
 	import { v4 as uuidv4 } from 'uuid';
 	import AlbumsList from '$lib/Editor/AlbumsList.svelte';
-	import BunnyCredentials from '$lib/Editor/Bunny/BunnyCredentials.svelte';
 	import Settings from '$lib/Editor/Settings/Settings.svelte';
 	import Album from '$lib/Editor/Album.svelte';
 	import Track from '$lib/Editor/Tracks/Track.svelte';
@@ -43,8 +42,6 @@
 	let activePanel = AlbumsList;
 	$: if ($menuPanel === 'albums') {
 		activePanel = AlbumsList;
-	} else if ($menuPanel === 'bunnyCredentials') {
-		activePanel = BunnyCredentials;
 	} else if ($menuPanel === 'settings') {
 		activePanel = Settings;
 	}

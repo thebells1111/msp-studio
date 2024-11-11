@@ -6,7 +6,15 @@
 	import Login from '$lib/Login/Login.svelte';
 	import Tutorial from '$lib/Tutorial/Tutorial.svelte';
 
-	import { showTutorial, menuPanel, loggedIn, remoteServer, settings, _settings } from '$/stores';
+	import {
+		showTutorial,
+		menuPanel,
+		mainPanel,
+		loggedIn,
+		remoteServer,
+		settings,
+		_settings
+	} from '$/stores';
 
 	let expandMenu = false;
 	$showTutorial = false;
@@ -22,6 +30,11 @@
 	function selectMenuPanel(menu) {
 		goto('/');
 		$menuPanel = menu;
+		if (menu === 'bunnyCredentials') {
+			$mainPanel = 'bunnyTutorial';
+		} else {
+			$mainPanel = 'editor';
+		}
 	}
 </script>
 

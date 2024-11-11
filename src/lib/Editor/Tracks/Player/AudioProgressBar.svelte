@@ -32,8 +32,6 @@
 		player.ontimeupdate = () => null;
 		trackMouse = true;
 		trackPosition = touch.clientX;
-		// $posterSwiper.allowSlideNext = false;
-		// $posterSwiper.allowSlidePrev = false;
 
 		if (e.target !== handle) {
 			player.currentTime = (touch.clientX / progress.clientWidth) * player.duration;
