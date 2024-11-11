@@ -1,0 +1,31 @@
+{
+	"generator": "Music Side Project Studio",
+	"itunes:category": {
+		"#text": "Music"
+	},
+	"itunes:keywords": "music",
+	"podcast:medium": "music",
+	"itunes:author": "",
+	"itunes:owner": {
+		"@_itunes:name": "",
+		"@_itunes:email": ""
+	},
+	"title": "",
+	"description": "",
+	"itunes:image": {
+		"@_href": ""
+	},
+	"podcast:aspectImages": {
+		"@_aspect-ratio": "6/1",
+		"@_src": ""
+	},
+	"itunes:explicit": "no",
+	"link": "",
+	"podcast:value": {
+		"@_type": "lightning",
+		"@_method": "keysend",
+		"podcast:valueRecipient": []
+	},
+	"podcast:guid": "",
+	"item": []
+}

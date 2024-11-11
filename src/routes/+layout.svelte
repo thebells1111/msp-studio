@@ -1,53 +1,182 @@
 <script>
 	import './styles.css';
-	import MainMenu from './MainMenu.svelte';
+	import clone from 'just-clone';
+	import { onMount } from 'svelte';
+	import localforage from 'localforage';
+	import generateValidGuid from '$functions/generateValidGuid.js';
+	import updateMSPdb from '$functions/updateMSPdb.js';
+	import MainMenu from '$lib/MainHeader/MainMenu.svelte';
+
+	import {
+		catalogDB,
+		feedDB,
+		feeds,
+		loggedIn,
+		_newFeed,
+		remoteServer,
+		editingFeed,
+		_settings,
+		settings
+	} from '$/stores';
+
+	let isLoading = true;
+
+	onMount(() => {
+		let startLoadTime = new Date().getTime();
+		fetch(remoteServer + '/api/msp/refresh', { method: 'GET', credentials: 'include' })
+			.then((res) => {
+				return res.json();
+			})
+			.then((data) => {
+				console.log(data);
+				$loggedIn = data.status === 'success';
+				$settings = data.settings || clone(_settings);
+				console.log($settings);
+			});
+		//all of this catalogDB stuff is vestigal from MSP v1 and is used to xfr the db format
+		$catalogDB = localforage.createInstance({
+			name: 'catalogDB'
+		});
+
+		$feedDB = localforage.createInstance({
+			name: 'feedDB'
+		});
+
+		$feedDB.keys().then(async function (keys) {
+			let _feeds = keys.map((v) => $feedDB.getItem(v));
+			$feeds = await Promise.all(_feeds);
+			console.log($feeds);
+			if (!$feeds.length) {
+				$catalogDB
+					.keys()
+					.then(async function (keys) {
+						let _catalog = keys.map((v) => $catalogDB.getItem(v));
+						let library = await Promise.all(_catalog);
+
+						let oldFormat = library.some((v) => v?.albums?.length);
+
+						if (oldFormat) {
+							$feeds = await updateMSPdb(library);
+
+							let updated = $feeds.map(async (v, i) => {
+								if (!v?.['podcast:guid']) {
+									v['podcast:guid'] = generateValidGuid();
+									await checkPodcastGuid(v);
+								}
+								$catalogDB.removeItem(keys[i]);
+								return $catalogDB.setItem(v['podcast:guid'], v);
+							});
+							await Promise.all(updated);
+						} else {
+							$feeds = [];
+						}
+
+						$feeds = $feeds.map((v) => {
+							v.item = (v.item || []).map((item) => addMissingKeys(item, _newFeed.item[0]));
+
+							return addMissingKeys(v, _newFeed);
+						});
+					})
+					.catch(function (err) {
+						console.log(err);
+					});
+			}
+
+			let endLoadTime = new Date().getTime();
+			let timeDiff = 1250 - (endLoadTime - startLoadTime);
+			if (timeDiff > 0) {
+				setTimeout(() => {
+					isLoading = false;
+				}, timeDiff);
+			} else isLoading = false;
+		});
+	});
+
+	async function checkPodcastGuid(feed) {
+		let url =
+			remoteServer +
+			`/api/queryindex?q=${encodeURIComponent(`podcasts/byguid?guid=${feed['podcast:guid']}`)}`;
+		console.log(url);
+		const res = await fetch(url);
+		const data = await res.json();
+		if (data?.feed?.length) {
+			feed['podcast:guid'] = generateValidGuid();
+			await checkPodcastGuid(feed);
+		}
+	}
+
+	function addMissingKeys(obj, template) {
+		for (const key in template) {
+			if (!(key in obj)) {
+				obj[key] = template[key]; // Add missing key
+			} else if (typeof template[key] === 'object' && !Array.isArray(template[key])) {
+				addMissingKeys(obj[key], template[key]); // Recurse for nested objects
+			} else if (Array.isArray(template[key])) {
+				if (!Array.isArray(obj[key])) {
+					obj[key] = template[key]; // Add missing array
+				} else {
+					obj[key].forEach((item, index) => {
+						if (typeof item === 'object') {
+							addMissingKeys(item, template[key][0]); // Recurse for each item in array
+						}
+					});
+				}
+			}
+		}
+		return obj;
+	}
+
+	let updateTimeout;
+
+	function updateFeeds() {
+		if ($feedDB && $editingFeed?.['podcast:guid']) {
+			clearTimeout(updateTimeout);
+			$feeds = $feeds;
+			updateTimeout = setTimeout(() => {
+				console.log('Feed Saved');
+
+				$feedDB.setItem($editingFeed['podcast:guid'], $editingFeed);
+			}, 500);
+		}
+	}
+
+	$: updateFeeds($editingFeed);
 </script>
 
-<MainMenu />
-<main class="main-slot">
+{#if isLoading}
+	<div class="record-container">
+		<img src="/msp-record-300.png" alt="Record" class="record" />
+	</div>
+{:else}
+	<MainMenu />
 	<slot />
-</main>
-
-<background>
-	<div class="header-background" />
-	<div class="main-background" />
-</background>
+{/if}
 
 <style>
-	main {
-		padding: 8px;
-		position: relative;
-		height: calc(100% - 106px);
-		overflow: auto;
-	}
-	background {
+	.record-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		position: absolute;
-		top: 0;
 		height: 100%;
 		width: 100%;
-		z-index: -1;
-	}
-	.header-background {
-		position: absolute;
 		top: 0;
-		height: 100px;
-		width: 100%;
-		background-color: var(--color-bg-2);
-		background-image: linear-gradient(
-			180deg,
-			var(--color-bg-0) 0%,
-			var(--color-bg-1) 40%,
-			var(--color-bg-2) 100%
-		);
-		z-index: -1;
 	}
 
-	.main-background {
-		background-attachment: fixed;
-		background-color: var(--color-bg-2);
-		z-index: -2;
-		position: absolute;
-		height: 100%;
-		width: 100%;
+	.record {
+		height: 300px;
+		width: 300px;
+		animation: spin 1.25s infinite linear;
+		border-radius: 50%;
+		box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.75);
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
 	}
 </style>

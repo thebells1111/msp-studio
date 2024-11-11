@@ -1,4 +1,3 @@
-// src/routes/api/weather/[city].json/+server.js
 import { text } from '@sveltejs/kit';
 
 export async function GET({ url }) {

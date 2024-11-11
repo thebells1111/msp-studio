@@ -2,24 +2,26 @@
 	import { parse } from 'fast-xml-parser';
 	import { decode } from 'html-entities';
 	import localforage from 'localforage';
-	import { saveAs } from 'file-saver';
-	import clone from 'just-clone';
-	const catalogDB = localforage.createInstance({
-		name: 'catalogDB'
+	import { feeds } from '$/stores';
+
+	const feedDB = localforage.createInstance({
+		name: 'feedDB'
 	});
-
 	let feedUrl = '';
-	let feedImported = false;
-	let importing = false;
-	let badUrl = false;
+	let statusText = 'Upload a feed or paste your link above.';
 
-	async function getFeed(url) {
+	async function getFeed({ feedUrl, feedFile }) {
 		try {
-			badUrl = false;
-			console.log(url);
-			const response = await fetch('/api/proxy?q=' + encodeURIComponent(url));
-			const feed = (await response.text()) || {};
-			console.log(feed);
+			statusText = '';
+			let feed = {};
+			if (feedUrl) {
+				const response = await fetch('/api/proxy?q=' + encodeURIComponent(feedUrl));
+				feed = (await response.text()) || {};
+			} else if (feedFile) {
+				feed = feedFile;
+			} else {
+				return;
+			}
 			const parserOptions = {
 				attributeNamePrefix: '@_',
 				ignoreAttributes: false,
@@ -30,136 +32,42 @@
 			let xmlJson = parse(feed, parserOptions);
 			let channel = xmlJson.rss.channel;
 			if (channel) {
-				importing = true;
-				console.log(channel);
-				const transformedData = transformPodcastData(channel);
-				console.log(transformedData);
-				let dbData = await catalogDB.getItem(channel['itunes:author']);
-				if (!dbData) {
-					dbData = { title: channel['itunes:author'], artwork: '', albums: [] };
+				statusText = 'Importing Feed';
+				if (feedUrl) {
+					channel.enclosureUrl = feedUrl;
 				}
 
-				dbData.albums = [].concat(dbData.albums);
+				if (channel.item) {
+					channel.item = [].concat(channel.item);
+				}
+				console.log();
+				if (!channel?.['podcast:guid']) {
+					statusText =
+						"Your feed doesn't have a podcast guid and wasn't saved. Auto guid creation is being added to a future version of MSP";
+					return;
+				} else {
+					$feeds = [channel].concat($feeds || []);
+					await feedDB.setItem(channel['podcast:guid'], channel);
+				}
 
-				dbData.albums.push(transformedData);
-				console.log(dbData);
-				await catalogDB.setItem(channel['itunes:author'], dbData);
-				importing = false;
-				feedImported = true;
+				statusText = 'Feed Imported';
 				setTimeout(() => {
-					feedImported = false;
+					statusText = 'Upload a feed or paste your link above.';
 				}, 2000);
 			} else {
-				badUrl = true;
+				statusText = 'Upload a feed or paste your link above.';
 			}
 		} catch (err) {
-			badUrl = true;
+			statusText = "That Link doesn't return a feed.";
 			console.log('getFeeds Error:', err);
 		}
-	}
-
-	function transformPodcastData(data) {
-		// Function to transform individual track data
-		function transformTrack(item, channel) {
-			console.log(item);
-			const itemData = {
-				title: item.title,
-				artwork: item?.['itunes:image']?.['@_href'] || '',
-				url: item.enclosure['@_url'],
-
-				description: data.description,
-				explicit: item['itunes:explicit'],
-				enclosure: {
-					url: item.enclosure['@_url'],
-					enclosureLength: item.enclosure?.['@_length'] || '',
-					type: item?.enclosure?.['@_type'] || ''
-				},
-				guid: item.guid
-			};
-
-			if (!item['podcast:value']) {
-				item['podcast:value'] = clone(channel['podcast:value']);
-			}
-			console.log(item?.['podcast:value']?.['podcast:valueRecipient']);
-
-			itemData.value = (
-				item?.['podcast:value']?.['podcast:valueRecipient']
-					? [].concat(item?.['podcast:value']?.['podcast:valueRecipient'])
-					: []
-			).map((recipient) => ({
-				name: recipient['@_name'],
-				address: recipient['@_address'],
-				key: recipient['@_customKey'],
-				value: recipient['@_customValue'],
-				split: recipient['@_split']
-			}));
-
-			return itemData;
-		}
-
-		// If data.item is an array, map each item. If not, put the single item into an array and map it.
-		const tracks = Array.isArray(data.item)
-			? data.item.map(transformTrack)
-			: [transformTrack(data.item, data)];
-
-		const podcastData = {
-			title: data.title,
-			artwork: data['itunes:image']['@_href'],
-			tracks: tracks,
-
-			description: data.description,
-			explicit: data['itunes:explicit'],
-			link: data.link, // No corresponding value in the input object
-			enclosureUrl: data.enclosureUrl, // No corresponding value in the input object
-			guid: data['podcast:guid']
-		};
-
-		if (data?.['podcast:value']) {
-			podcastData.value = (
-				data?.['podcast:value']?.['podcast:valueRecipient']
-					? [].concat(data?.['podcast:value']?.['podcast:valueRecipient'])
-					: []
-			).map((recipient) => ({
-				name: recipient['@_name'],
-				address: recipient['@_address'],
-				key: recipient['@_customKey'],
-				value: recipient['@_customValue'],
-				split: recipient['@_split']
-			}));
-		}
-
-		return podcastData;
-	}
-
-	async function exportFeeds() {
-		let jsonVariable = {};
-
-		try {
-			const keys = await catalogDB.keys();
-			for (const key of keys) {
-				const value = await catalogDB.getItem(key);
-				jsonVariable[key] = value;
-			}
-		} catch (err) {
-			console.log(err);
-		}
-
-		const blob = new Blob([JSON.stringify(jsonVariable)], {
-			type: 'application/json;charset=utf-8'
-		});
-		saveAs(blob, 'catalog.json');
 	}
 
 	async function importFeeds(file) {
 		const reader = new FileReader();
 		reader.onload = async (event) => {
-			const jsonVariable = JSON.parse(event.target.result);
 			try {
-				for (const [key, value] of Object.entries(jsonVariable)) {
-					await catalogDB.setItem(key, value);
-				}
-				console.log('Data imported successfully.');
-				feedImported = true;
+				getFeed({ feedFile: event.target.result });
 			} catch (err) {
 				console.log(err);
 			}
@@ -191,24 +99,15 @@
 <main>
 	<find-feed>
 		<input bind:value={feedUrl} placeholder="paste your feed link here" />
-		<button on:click={getFeed.bind(this, feedUrl)}>Find Feed</button>
+		<button on:click={getFeed.bind(this, { feedUrl })}>Find Feed</button>
 	</find-feed>
-	<button class="export" on:click={exportFeeds}>Export Feeds</button>
 	<drop-box
 		on:dragover={handleDragOver}
 		on:dragleave={handleDragLeave}
 		on:drop={handleDrop}
 		class:dragOver
 	>
-		{#if feedImported}
-			<h2>Feed Imported.</h2>
-		{:else if importing}
-			<h2>Importing</h2>
-		{:else if badUrl}
-			<h2>That Link doesn't return a feed.</h2>
-		{:else}
-			<h2>Drag & Drop your Exported Feed here</h2>
-		{/if}
+		<h2>{statusText}</h2>
 		<input type="file" hidden bind:files on:change={importFeeds} />
 	</drop-box>
 </main>
