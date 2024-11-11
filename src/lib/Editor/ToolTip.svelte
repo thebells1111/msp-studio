@@ -50,7 +50,7 @@
 	on:mouseover={handleMouseOver}
 	on:mouseleave={handleMouseLeave}
 >
-	?
+	<span>?</span>
 </div>
 
 {#if tooltipVisible}
@@ -81,12 +81,17 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 20px;
-		height: 20px;
+		width: 16px;
+		height: 16px;
 		border-radius: 50%;
 		background-color: #999;
 		color: white;
-		font-size: 16px;
+		font-size: 14px;
 		cursor: pointer;
+		position: relative;
+	}
+	.question > span {
+		position: relative;
+		top: 1px;
 	}
 </style>
