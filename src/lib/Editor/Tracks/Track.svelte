@@ -53,7 +53,7 @@
 		<li>
 			<h4>Link to mp3</h4>
 			<ToolTip>
-				<p class="tooltip">Enter the name of your Album</p>
+				<p class="tooltip">The URL where your track's mp3 file resides on the internet</p>
 			</ToolTip>
 		</li>
 		<li>
@@ -85,7 +85,11 @@
 			<div>
 				<h4>Track Art</h4>
 				<ToolTip>
-					<p class="tooltip">Click the image to change the URL to the artwork for this track</p>
+					<p class="tooltip">
+						Click the image to change the URL to the artwork for this track
+						<br />
+						If left empty most players will display your album art.
+					</p>
 				</ToolTip>
 			</div>
 			<Artwork
@@ -119,10 +123,11 @@
 			<div>
 				<h4>Description</h4>
 				<ToolTip>
-					<p class="tooltip">
-						Interesting facts about this album. Could be anything <br />
-						such as list of band members, genre of music, date album was recorded,<br />
-						fun facts about the album. Whatever you want to share with the audience.
+					<p class="tooltip"></p>
+						Interesting facts about this track. <br />
+						Could be anything such as list of performers, <br />
+						fun facts about the track. <br />
+						Whatever you want to share with the audience.
 					</p>
 				</ToolTip>
 			</div>

@@ -4,6 +4,7 @@
 	import EditAddress from './EditAddress.svelte';
 	import Add from '$icons/GroupAdd.svelte';
 	import SmallModal from '$lib/Modals/SmallModal.svelte';
+	import ToolTip from '$lib/Editor/ToolTip.svelte';
 
 	import { newPerson, MSPValue } from '$/stores';
 
@@ -39,6 +40,15 @@
 	<left-pane>
 		<header>
 			<h4>Value Recipients</h4>
+			<ToolTip>
+				<p class="tooltip">
+					In this section we determine who gets a share of any value (bitcoin) <br />
+					that is received by this album. Could be each band member, and / or anyone <br />
+					who had a key role in the creation of the album that you would like <br />
+					to split incoming bitcoin with. Could also be infrastructure costs such as <br />
+					hosting, indexing, boostagram bots, etc.
+				</p>
+			</ToolTip>
 		</header>
 		{#if valueBlock?.length}
 			<instructions>for splits, use whole numbers only</instructions>
@@ -131,7 +141,8 @@
 	}
 
 	h4 {
-		margin: 0;
+		margin: 0 8px 0 0;
+
 		text-align: left;
 	}
 
@@ -181,5 +192,11 @@
 	.add-msp {
 		margin: 8px auto;
 		width: 100%;
+	}
+
+	p.tooltip {
+		padding: 0%;
+		color: white;
+		margin: 0;
 	}
 </style>
