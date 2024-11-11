@@ -69,13 +69,13 @@
 						<a href="/">Select Albums</a>
 					</li>
 				{/if}
-				<li
+				<!-- <li
 					on:click={() => {
 						$showTutorial = true;
 					}}
 				>
 					Tutorial
-				</li>
+				</li> -->
 				<li>
 					<a href="/importfeed">Import Feeds</a>
 				</li>
