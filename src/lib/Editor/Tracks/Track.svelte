@@ -123,7 +123,7 @@
 			<div>
 				<h4>Description</h4>
 				<ToolTip>
-					<p class="tooltip"></p>
+					<p class="tooltip">
 						Interesting facts about this track. <br />
 						Could be anything such as list of performers, <br />
 						fun facts about the track. <br />
