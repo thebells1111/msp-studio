@@ -5,7 +5,7 @@ const _newTrack = {
 		['@_enclosureLength']: 33,
 		['@_type']: 'mp3'
 	},
-	explicit: 'no',
+	'itunes:explicit': 'no',
 	'itunes:image': { '@_href': '' },
 	'podcast:aspectImages': [
 		{

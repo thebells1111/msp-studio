@@ -78,7 +78,7 @@
 				<UploadFileIcon size="18" />
 			</button>
 		</li>
-		<li><ExplicitToggle bind:checked={track.explicit} /></li>
+		<li><ExplicitToggle bind:checked={track['itunes:explicit']} /></li>
 	</ul>
 	<info-2>
 		<track-art>

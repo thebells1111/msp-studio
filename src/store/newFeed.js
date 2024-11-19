@@ -1,6 +1,6 @@
 const __newFeed = {
 	description: '',
-	explicit: 'no',
+	'itunes:explicit': 'no',
 	item: [
 		{
 			description: '',
@@ -9,7 +9,7 @@ const __newFeed = {
 				['@_enclosureLength']: 33,
 				['@_type']: 'mp3'
 			},
-			explicit: 'no',
+			'itunes:explicit': 'no',
 			'itunes:image': { '@_href': '' },
 			'podcast:aspectImages': [
 				{

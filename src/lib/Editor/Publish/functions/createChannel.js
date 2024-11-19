@@ -32,11 +32,7 @@ export default async function createChannel({ feed, errors }) {
 		errors.push('Album needs some artwork');
 	}
 
-	if (!feed?.explicit) {
-		errors.push('Is the album explicit?');
-	}
-
-	if (feed?.['itunes:explicit']) {
+	if (!feed?.['itunes:explicit']) {
 		errors.push('Is the album explicit?');
 	}
 
@@ -68,6 +64,8 @@ export default async function createChannel({ feed, errors }) {
 	if (!feed?.['podcast:aspectImages']?.length) {
 		delete feed['podcast:aspectImages'];
 	}
+
+	delete feed.explicit;
 
 	return { feed, errors };
 }
