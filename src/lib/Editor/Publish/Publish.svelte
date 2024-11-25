@@ -117,6 +117,8 @@
 			if (!track?.['podcast:aspectImages']?.length) {
 				delete track['podcast:aspectImages'];
 			}
+
+			delete track.explicit;
 		});
 
 		console.log(feed);
@@ -160,7 +162,6 @@
 		});
 
 		xmlFile = js2xml.parse(xmlJson);
-		console.log(xmlFile);
 		if (rssErrors.length) {
 			showErrorModal = true;
 		} else {
@@ -200,8 +201,6 @@
 			// Return duration in iTunes format
 			return durationInITunesFormat;
 		}
-
-		console.log(rssErrors);
 	}
 </script>
 

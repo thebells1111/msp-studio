@@ -42,7 +42,7 @@
 		<li><input bind:value={$editingFeed['itunes:author']} /></li>
 		<li><input bind:value={$editingFeed.title} /></li>
 		<li><input bind:value={$editingFeed.link} /></li>
-		<li><ExplicitToggle bind:checked={$editingFeed.explicit} /></li>
+		<li><ExplicitToggle bind:checked={$editingFeed['itunes:explicit']} /></li>
 	</ul>
 	<info-2>
 		<album-art>
