@@ -6,7 +6,7 @@ const __newFeed = {
 			description: '',
 			enclosure: {
 				['@_url']: '',
-				['@_enclosureLength']: 33,
+				['@_length']: 33,
 				['@_type']: 'mp3'
 			},
 			explicit: 'no',
