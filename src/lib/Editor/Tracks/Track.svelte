@@ -40,9 +40,7 @@
 			<DeleteIcon />
 		</button>
 	</track-header>
-	{#if track?.enclosure?.['@_url']}
-		<Player bind:track />
-	{/if}
+	<Player bind:track />
 	<ul>
 		<li>
 			<h4>Title</h4>

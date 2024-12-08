@@ -27,6 +27,8 @@
 					fetch(`${remoteServer}/api/msp/enclosure?url=${track.enclosure['@_url']}`)
 						.then((response) => response.json())
 						.then(({ length, mimeType }) => {
+							console.log(length);
+							console.log(mimeType);
 							// Extract and store length and mimeType from response
 							track.enclosure['@_length'] = length;
 							track.enclosure['@_type'] = mimeType;
@@ -36,9 +38,9 @@
 							console.log('Fetched enclosure length and type');
 						})
 						.catch((error) => console.error('Failed to fetch enclosure metadata:', error));
+				} else {
+					trackInitalized = true;
 				}
-			} else {
-				trackInitalized = true;
 			}
 		};
 	}
@@ -47,12 +49,12 @@
 <audio
 	playsinline
 	preload="metadata"
-	class:hide={!track?.['itunes:duration']}
+	class:hide={!track?.['itunes:duration'] || !track?.enclosure?.['@_url']}
 	bind:this={player}
 	src={track.enclosure['@_url']}
 />
 
-{#if track?.['itunes:duration']}
+{#if track?.['itunes:duration'] && track?.enclosure?.['@_url']}
 	<player>
 		<h2>{track.title || 'Track Audio'}</h2>
 		<player-a>
