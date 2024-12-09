@@ -13,15 +13,22 @@
 </svelte:head>
 
 <nav><a class="back" href="/">Back</a></nav>
-<Spiel />
+<div>
+	<Spiel />
+</div>
 
 <style>
 	nav {
-		margin-top: 8px;
+		margin: 8px 0;
 	}
 
 	.back {
-		margin-top: 8px;
+		margin: 0;
 		padding: 8px;
+	}
+
+	div {
+		height: calc(100% - 60px);
+		overflow: auto;
 	}
 </style>
