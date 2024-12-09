@@ -3,6 +3,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import AlbumsList from '$lib/Editor/AlbumsList.svelte';
 	import Settings from '$lib/Editor/Settings/Settings.svelte';
+	import Spiel from '$routes/about/Spiel.svelte';
 	import Album from '$lib/Editor/Album.svelte';
 	import Track from '$lib/Editor/Tracks/Track.svelte';
 	import AddIcon from '$icons/Add.svelte';
@@ -78,6 +79,8 @@
 			{#each $editingFeed.item as track, i}
 				<Track bind:track trackNumber={i + 1} />
 			{/each}
+		{:else}
+			<Spiel />
 		{/if}
 	</editors>
 	{#if $editingFeed}

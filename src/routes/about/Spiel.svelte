@@ -1,15 +1,3 @@
-<svelte:head>
-	<meta
-		property="og:title"
-		content="Not your hosting, Not your feed - Why bitcoin podcasters and musicians should consider self-hosting"
-	/>
-	<meta property="og:type" content="blog" />
-	<meta property="og:url" content="https://musicsideproject.com/blog" />
-	<meta property="og:image" content="https://musicsideproject.com/msp-record-300.png" />
-</svelte:head>
-
-<nav><a class="back" href="/">Back</a></nav>
-
 <article>
 	<h2>Not Your Hosting, Not Your Feed</h2>
 	<h3>Why Bitcoin Podcasters and Musicians should consider self-hosting</h3>
@@ -18,34 +6,35 @@
 	<p>
 		As a Bitcoiner, you may already know this, but for value 4 value Lightning payments, you need a
 		hosted solution that is always connected to the internet so you can receive your sats at any
-		time. There are several options, such as Alby, Mash, LNPay, Wavlake or Fountain in which your
-		wallet is held by others. These options are often the easiest, but rely on a degree of trust
-		that the company won't close its doors and walk away with your sats. You can mitigate this risk
-		by determining the amount you're comfortable with keeping on the custodial wallet before
+		time. There are several options, such as coinos, Wavlake or Fountain in which your wallet is
+		held by others. These options are often the easiest, but rely on a degree of trust that the
+		company won't close its doors and walk away with your sats. You can mitigate this risk by
+		determining the amount you're comfortable with keeping on the custodial wallet before
 		transferring the sats to your non-custodial wallet. This way, you'll never lose more than the
 		amount being kept in someone else's wallet. This is by no means to disparage any of the
-		custodial wallets. In fact, I recommend Alby, and all of my apps require a user to sign up for
-		an Alby wallet, it's only to point out that there is a level of trust inherent in the system.
+		custodial wallets. If you're looking for a recommendation, I think Fountain is probably the
+		easiest.
 	</p>
 	<p>
 		The other option is to take control of your own wallet, which is more difficult, because now you
 		have to manage your own channels and are responsible for keeping track of your keys, but you
 		maintain complete ownership of the wallet. There are solutions that allow you to keep your
 		wallet on someone else's infrastructure, such as Voltage, or you can keep the wallet on your own
-		infrastructure with a Raspberry Pi, Start 9, or even an old laptop stored in your bathroom. This
-		is the most sovereign way, but with sovereignty comes responsibility.
+		infrastructure with a Raspberry Pi, Start 9, or even an old laptop stored in your bathroom. Even
+		more amazing is with Alby Hub, you can connect your wallet with several apps to easily send
+		payments. This is the most sovereign way, but with sovereignty comes responsibility.
 	</p>
 	<h4>RSS and Digital Sovereignty</h4>
 	<p>
-		As a Bitcoiner, you know the adage, “Not your wallet, not your Bitcoin”. Well, the same applies
-		to your RSS feed. I understand many of you think a podcast is something complicated, and you
-		need a dedicated podcast hosting company to handle all the complicated stuff for you. And if
-		you're a musician, you may not be the most tech savvy, because you were too busy learning the
-		guitar and dating beautiful people and never messed around much with computers. The reality
-		though, is RSS is simple, Really Simple. It allows you to Syndicate your content Simply, Really
-		Simply, sort of like a Really Simple Syndication (RSS). I think we've forgotten that, and have
-		offloaded our digital sovereignty to tech nerds and are willing to pay them $10 a month or 10%
-		of what our fans send us for doing something we can do ourselves.
+		As a Bitcoiner, you know the adage, “Not your keys, not your coins”. Well, the same applies to
+		your RSS feed. I understand many of you think a podcast is something complicated, and you need a
+		dedicated podcast hosting company to handle all the complicated stuff for you. And if you're a
+		musician, you may not be the most tech savvy, because you were too busy learning the guitar and
+		dating beautiful people and never messed around much with computers. The reality though, is RSS
+		is simple, Really Simple. It allows you to Syndicate your content Simply, Really Simply, sort of
+		like a Really Simple Syndication (RSS). I think we've forgotten that, and have offloaded our
+		digital sovereignty to tech nerds and are willing to pay them $10 a month or 10% of what our
+		fans send us for doing something we can do ourselves.
 	</p>
 	<p>
 		Now I get it. I can change my own oil in my car. I just don't like to. I don't want to get the
@@ -68,7 +57,7 @@
 	<h4>The Financial Aspect of Hosting</h4>
 	<p>
 		Hosting your own feed isn't free (although there are ‘free' ways to do it if you have a reliable
-		internet connection and something like a Raspberry Pi or Start 9 server). You will need to pay
+		internet connection and something like a Raspberry Pi or an old computer). You will need to pay
 		for a hosting company to host your files. I like Digital Ocean for $5 a month, and even have a
 		video tutorial on how easy it really is, but others are using a shared hosting solution through
 		a company like DreamHost to host their website. If you're already hosting a WordPress website,
@@ -142,14 +131,5 @@
 	h4 {
 		margin: 8px 0;
 		text-decoration: underline;
-	}
-
-	nav {
-		margin-top: 8px;
-	}
-
-	.back {
-		margin-top: 8px;
-		padding: 8px;
 	}
 </style>

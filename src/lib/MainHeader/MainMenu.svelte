@@ -80,6 +80,9 @@
 					<a href="/importfeed">Import Feeds</a>
 				</li>
 				<li>
+					<a href="/about">About</a>
+				</li>
+				<li>
 					<a href="https://t.me/self_hosters" target="_blank" rel="noopener noreferrer">Help</a>
 				</li>
 			</ul>
