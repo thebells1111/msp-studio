@@ -1,17 +1,15 @@
 <script>
-	import BunnyCredentials from '$lib/Bunny/BunnyCredentials.svelte';
-	import SignUp from './Tutorial/SignUp.svelte';
-	import CreateStorageZone from './Tutorial/CreateStorageZone.svelte';
-	import CreatePullZone from './Tutorial/CreatePullZone.svelte';
-	import SetupCDN from './Tutorial/SetupCDN.svelte';
-	import AddCredentials from './Tutorial/Add Credentials.svelte';
+	import SignUp from '$lib/Bunny//Tutorial/SignUp.svelte';
+	import CreateStorageZone from '$lib/Bunny//Tutorial/CreateStorageZone.svelte';
+	import CreatePullZone from '$lib/Bunny//Tutorial/CreatePullZone.svelte';
+	import SetupCDN from '$lib/Bunny//Tutorial/SetupCDN.svelte';
+	import AddCredentials from '$lib/Bunny//Tutorial/Add Credentials.svelte';
 
 	let components = [SignUp, CreateStorageZone, CreatePullZone, SetupCDN, AddCredentials];
 	let activePage = 0;
 </script>
 
 <main>
-	<BunnyCredentials />
 	<section>
 		<component>
 			<svelte:component this={components[activePage]} />
@@ -42,7 +40,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
-		width: calc(100% - 260px);
+		width: 100%;
 	}
 
 	component {

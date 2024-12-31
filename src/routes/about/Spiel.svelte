@@ -45,10 +45,10 @@
 	</p>
 	<p>
 		So, you could pay a company to host your music, and they'll handle some of the more technical
-		stuff for you. <a href="https://rssblue.com/blog/improved-pricing-for-short-episodes"
-			>RSS Blue</a
-		>
-		has a great plan that starts at $6 a month, and
+		stuff for you. <a href="https://rssblue.com/#pricing">RSS Blue</a>
+		has a plan that is $0.50/track with a minimum $5 a month and a 2% split,
+		<a href="https://www.podhome.fm/pricing">Podhome</a>
+		has an unlimited plan for $15.99 per month, and
 		<a href="https://www.wavlake.com/studio">Wavlake</a> makes it super easy for a 10% cut of your listener
 		support. But much like changing your oil, if you know what's going on and how to do it yourself,
 		you can decide if it's something you don't want to hassle with, or if it's something you're more
@@ -58,17 +58,17 @@
 	<p>
 		Hosting your own feed isn't free (although there are ‘free' ways to do it if you have a reliable
 		internet connection and something like a Raspberry Pi or an old computer). You will need to pay
-		for a hosting company to host your files. I like Digital Ocean for $5 a month, and even have a
-		video tutorial on how easy it really is, but others are using a shared hosting solution through
-		a company like DreamHost to host their website. If you're already hosting a WordPress website,
-		uploading your mp3s and album art to your website makes a ton of sense, and you can host your
-		podcast for no extra cost because you're already paying for your website. And really, all a
-		podcast is, is some cover art, some mp3s, and an RSS feed that tells the apps where they can
-		download your cover art and mp3s. If you can upload files to your email account, you can upload
-		them to your server. (I'm going to let you in on a little secret, a server, and the cloud,
-		they're just someone else's computer that has files that are always available to the internet.
-		Your personal computer could just as easily be a server. This stuff is Really Simple, you just
-		need someone to show you behind the curtain.)
+		for a hosting company to host your files. I like Bunny CDN for $1 a month, and even have
+		automatic uploads built into Music Side Project. Others are using a shared hosting solution
+		through a company like DreamHost to host their website. If you're already hosting a WordPress
+		website, uploading your mp3s and album art to your website makes a ton of sense, and you can
+		host your podcast for no extra cost because you're already paying for your website. And really,
+		all a podcast is, is some cover art, some mp3s, and an RSS feed that tells the apps where they
+		can download your cover art and mp3s. If you can upload files to your email account, you can
+		upload them to your server. (I'm going to let you in on a little secret, a server, and the
+		cloud, they're just someone else's computer that has files that are always available to the
+		internet. Your personal computer could just as easily be a server. This stuff is Really Simple,
+		you just need someone to show you behind the curtain.)
 	</p>
 	<h4>RSS and Music: A New Paradigm</h4>
 	<p>
