@@ -30,8 +30,10 @@
 				if (info.status === 'OK') {
 					selectedPerson['@_address'] = info.pubkey;
 					if (info.customData[0]) {
-						selectedPerson.value = info?.customData?.[0]?.customValue || '';
-						selectedPerson.key = info?.customData?.[0]?.customKey || '';
+						selectedPerson['@_customValue'] = info?.customData?.[0]?.customValue || '';
+						selectedPerson['@_customKey'] = info?.customData?.[0]?.customKey || '';
+						delete selectedPerson.value;
+						delete selectedPerson.key;
 					} else {
 						selectedPerson['@_customValue'] = '';
 						selectedPerson['@_customKey'] = '';
@@ -54,8 +56,10 @@
 				if (info.status === 'OK') {
 					selectedPerson['@_address'] = info.pubkey;
 					if (info.customData[0]) {
-						selectedPerson.value = info?.customData?.[0]?.customValue || '';
-						selectedPerson.key = info?.customData?.[0]?.customKey || '';
+						selectedPerson['@_customValue'] = info?.customData?.[0]?.customValue || '';
+						selectedPerson['@_customKey'] = info?.customData?.[0]?.customKey || '';
+						delete selectedPerson.value;
+						delete selectedPerson.key;
 					} else {
 						selectedPerson['@_customValue'] = '';
 						selectedPerson['@_customKey'] = '';
