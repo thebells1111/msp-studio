@@ -3,7 +3,7 @@ const _newTrack = {
 	enclosure: {
 		['@_url']: '',
 		['@_length']: 33,
-		['@_type']: 'mp3'
+		['@_type']: 'audio/mpeg'
 	},
 	'itunes:explicit': 'no',
 	'itunes:image': { '@_href': '' },
