@@ -96,6 +96,13 @@
 		userFound = false;
 		showAdvanced = show;
 	}
+
+	function changeWalletType(type) {
+		selectedPerson['@_type'] = type;
+		selectedPerson['@_address'] = '';
+		selectedPerson['@_customValue'] = '';
+		selectedPerson['@_customKey'] = '';
+	}
 </script>
 
 {#if showProviderInput}
@@ -117,6 +124,16 @@
 		</wallet-provider>
 	{/if}
 {:else}
+	<div class="wallet-type">
+		<button
+			class:active={selectedPerson?.['@_type'] === 'lnaddress'}
+			on:click={changeWalletType.bind(this, 'lnaddress')}>LN Address</button
+		>
+		<button
+			class:active={selectedPerson?.['@_type'] === 'node'}
+			on:click={changeWalletType.bind(this, 'node')}>Keysend</button
+		>
+	</div>
 	<label class="user-name">
 		<h4>Name</h4>
 		<input
@@ -126,30 +143,43 @@
 		/>
 	</label>
 
-	<h4>Choose Wallet Provider</h4>
-	<wallets>
-		<button class="provider alby" on:click={handleProviderSelect.bind(this, 'Alby')}>
-			<img src="alby.png" />
-			<span>Alby</span>
-		</button>
-		<button class="provider fountain" on:click={handleProviderSelect.bind(this, 'Fountain')}>
-			<img src="fountain.png" />
-			<span>Fountain</span>
-		</button>
-		<button class="provider v4vapp" on:click={handleProviderSelect.bind(this, 'v4v.app')}>
-			<img src="v4vapp.webp" />
-			<span>v4v.app</span>
-		</button>
-	</wallets>
-	<advanced-button>
-		<button
-			on:click={() => {
-				showAdvanced = !showAdvanced;
-			}}
-		>
-			{showAdvanced ? 'Hide Avanced Options' : 'Show Advanced Options'}
-		</button>
-	</advanced-button>
+	{#if selectedPerson?.['@_type'] === 'lnaddress'}
+		<lnaddress>
+			<label>
+				<h4>Lightning Network Address</h4>
+				<input
+					type="text"
+					bind:value={selectedPerson['@_address']}
+					placeholder="Lightning Network Address"
+				/>
+			</label>
+		</lnaddress>
+	{:else}
+		<h4>Choose Wallet Provider</h4>
+		<wallets>
+			<button class="provider alby" on:click={handleProviderSelect.bind(this, 'Alby')}>
+				<img src="alby.png" />
+				<span>Alby</span>
+			</button>
+			<button class="provider fountain" on:click={handleProviderSelect.bind(this, 'Fountain')}>
+				<img src="fountain.png" />
+				<span>Fountain</span>
+			</button>
+			<button class="provider v4vapp" on:click={handleProviderSelect.bind(this, 'v4v.app')}>
+				<img src="v4vapp.webp" />
+				<span>v4v.app</span>
+			</button>
+		</wallets>
+		<advanced-button>
+			<button
+				on:click={() => {
+					showAdvanced = !showAdvanced;
+				}}
+			>
+				{showAdvanced ? 'Hide Avanced Options' : 'Show Advanced Options'}
+			</button>
+		</advanced-button>
+	{/if}
 	{#if showAdvanced}
 		<advanced>
 			<label>
@@ -280,8 +310,25 @@
 		display: block;
 	}
 
-	advanced input {
+	advanced input,
+	lnaddress input {
 		margin: 0 8px;
 		width: calc(100% - 24px);
+	}
+
+	.wallet-type {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.wallet-type > button {
+		padding: 0 4px;
+
+		border-radius: 0;
+		background-color: transparent;
+	}
+
+	.wallet-type > button.active {
+		border-bottom: 1px solid;
 	}
 </style>
