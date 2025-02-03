@@ -1,6 +1,6 @@
 const _newPerson = {
 	'@_name': '',
-	'@_type': 'lnaddress',
+	'@_type': 'node',
 	'@_address': '',
 	'@_customKey': '',
 	'@_customValue': '',

@@ -124,7 +124,7 @@
 		</wallet-provider>
 	{/if}
 {:else}
-	<div class="wallet-type">
+	<!-- <div class="wallet-type">
 		<button
 			class:active={selectedPerson?.['@_type'] === 'lnaddress'}
 			on:click={changeWalletType.bind(this, 'lnaddress')}>LN Address</button
@@ -133,7 +133,7 @@
 			class:active={selectedPerson?.['@_type'] === 'node'}
 			on:click={changeWalletType.bind(this, 'node')}>Keysend</button
 		>
-	</div>
+	</div> -->
 	<label class="user-name">
 		<h4>Name</h4>
 		<input
