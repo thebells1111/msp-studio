@@ -176,7 +176,7 @@
 					showAdvanced = !showAdvanced;
 				}}
 			>
-				{showAdvanced ? 'Hide Avanced Options' : 'Show Advanced Options'}
+				{showAdvanced ? 'Hide Advanced Options' : 'Show Advanced Options'}
 			</button>
 		</advanced-button>
 	{/if}
