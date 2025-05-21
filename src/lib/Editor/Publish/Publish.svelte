@@ -4,6 +4,7 @@
 	import clone from 'just-clone';
 	import normalizeSplits from './functions/normalizeSplits.js';
 	import createChannel from './functions/createChannel.js';
+	import rss2nostr from './functions/rss2nostr.js';
 
 	import PublishModal from './PublishModal.svelte';
 	import ErrorModal from './ErrorModal.svelte';
@@ -165,7 +166,7 @@
 		if (rssErrors.length) {
 			showErrorModal = true;
 		} else {
-			showPublishModal = true;
+			// showPublishModal = true;
 		}
 
 		function generateTrackGuid() {
@@ -201,6 +202,8 @@
 			// Return duration in iTunes format
 			return durationInITunesFormat;
 		}
+
+		console.log(rss2nostr(feed));
 	}
 </script>
 
