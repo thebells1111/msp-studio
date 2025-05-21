@@ -83,6 +83,7 @@
 	async function addFeed() {
 		$editingFeed = clone(_newFeed);
 		$editingFeed['podcast:guid'] = await generateValidGuid();
+		$editingFeed.item[0].guid = uuidv4();
 		await checkPodcastGuid($editingFeed);
 		$feeds = $feeds.concat($editingFeed);
 	}

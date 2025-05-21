@@ -26,9 +26,13 @@
 			}`
 		);
 		if (confirmed) {
-			$editingFeed.item = $editingFeed.item.filter(
-				(v) => !(v.guid === track.guid || v.guid['#text'] === track.guid['#text'])
-			);
+			$editingFeed.item = $editingFeed.item.filter((v, i) => {
+				console.log(v);
+				console.log(track);
+				if (v?.guid) {
+					return !(v.guid === track.guid || v.guid['#text'] === track.guid['#text']);
+				}
+			});
 		}
 	}
 </script>
